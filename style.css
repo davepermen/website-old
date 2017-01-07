@@ -395,11 +395,14 @@ section[blog] {
 section[blog] pre {
     /*font-size: 1.1em;
     line-height: 1.5em;*/
-    margin: 0 -8em 0;
-    padding: 2em 12em;
+    margin: 0;
+    padding: 1.5rem 0;
     font-size: 1.5em;
     background-color: #484848;
     box-shadow: #242424 0 0 8em inset;
+}
+section[blog] pre code {
+    padding: 0.5rem 3rem;
 }
     
 section[blog] img {
