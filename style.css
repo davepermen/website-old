@@ -401,12 +401,6 @@ section[blog] pre {
     background-color: #484848;
     box-shadow: #242424 0 0 8em inset;
 }
-
-    section[blog] pre code,
-    section[blog] pre code * {
-        font-family: 'Cutive Mono', monospace;
-        color: #C4E4E8;
-    }
     
 section[blog] img {
     max-width: 100%;
