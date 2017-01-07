@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
@@ -44,7 +44,7 @@
                 <p>C# 6 will make it a bit less verbose (but not that much yet ☹)</p>
                 <h1>Some usage examples</h1>
             </section>
-            <pre><code class="c#">var first = new Camera(
+            <pre><code class="csharp">var first = new Camera(
     position: Vector3.Zero,
     target: Vector3.UnitZ,
     up: Vector3.UnitY,
@@ -64,7 +64,7 @@ var modifiedPosition = new Camera(
                 <p>The class has two constructors, one setting all values (and require to set all), and one using a previous class instance.</p>
                 <p>On the second constructor, all parameters are optional, except for the previous class. This, combined with named parameters, allows to just change the part of the state one wants.</p>
             </section>
-            <pre><code class="c#">namespace Runtime.Views
+            <pre><code class="csharp">namespace Runtime.Views
 {
     using System.Numerics;
     public class Camera
@@ -98,7 +98,7 @@ var modifiedPosition = new Camera(
                 <p>One could consider, instead of the second constructor, a ‘Modify’ method (choose what ever name you like) that returns a new object.</p>
                 <p>For demo purposes, I’ve implemented Modify using the first constructor as an extension method. Usage below is quite nice to read, I think. I’m considering switching to that approach now (while writing the blogpost.. horray)</p>
             </section>
-            <pre><code class="c#">public static class CameraHelper
+            <pre><code class="csharp">public static class CameraHelper
 {
     public static Camera Modify(this Camera previous, Vector3? position = null, Vector3? target = null, Vector3? up = null, float? eyeDistance = null)
     {
@@ -113,7 +113,7 @@ var modifiedPosition = new Camera(
             <section>
                 <p>With the new 'Modify' extension method, usage is like this</p>
             </section>
-            <pre><code class="c#">var first = new Camera(
+            <pre><code class="csharp">var first = new Camera(
     position: Vector3.Zero,
     target: Vector3.UnitZ,
     up: Vector3.UnitY,
