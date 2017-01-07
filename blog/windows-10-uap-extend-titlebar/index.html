@@ -27,8 +27,9 @@
     <meta name="theme-color" content="#ffffff">
 
     <meta name="viewport" content="width=device-width">
-    <script src="/microlight.js"></script>
-    <!--<link href="https://fonts.googleapis.com/css?family=Cutive+Mono" rel="stylesheet">-->
+    <link rel="stylesheet" href="/highlight.css">
+    <script src="/highlight.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
     <link rel='stylesheet' href='/style.css' type='text/css' />
     <title>windows 10 uap extend titlebar - davepermen.net</title>
 </head>
@@ -42,7 +43,7 @@
                 <p>In my case, I want an App to be completely black, with no Titlebar (but the minimize, maximize, close Buttons available and visible).</p>
                 <p>In Mainpage.xaml.cs, I put this piece of code:</p>
             </section>
-            <pre><code class='microlight'>public sealed partial class MainPage : Page
+            <pre><code class='csharp'>public sealed partial class MainPage : Page
 {
     public MainPage()
     {
@@ -57,7 +58,7 @@
             <section>
                 <p>And in Mainpage.xaml, I made everything black, and some test-’Hello, World’ that should show up at the top of the window, like this:</p>
             </section>
-            <pre><code class='microlight'>&lt;Page x:Class="App1.MainPage"
+            <pre><code class='csharp'>&lt;Page x:Class="App1.MainPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:local="using:App1"
