@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>SNAKE</title>
+  <style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html {
+  font-family: 'segoe ui';
+  font-weight: 100;
+  font-size: 10vw;
+  line-height: 10vw;
+  background: white;
+  color: black;
+  height: 100%;
+  width: 100%;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+}
+section {
+  font-size: 0.5rem;
+  line-height: 0.5rem;
+}
+canvas {
+  margin: 0.5rem 0;
+  width: 100%;
+  box-shadow: 0 0.25rem 0.75rem #f7f7f7;
+}
+main {
+  width: 90%;
+}
+</style>
+</head>
+  <body>
+    <main>
+      SNAKE
+      <section>
+        Score: <span id='score'>0</span>
+        <br>
+        Highscore: <span id='highscore'>0</span>
+      </section>
+      <canvas width='512' height='512'></canvas>
+    </main>
+  <script>
+let next_apple = tiles => {
+  return {
+    x: Math.floor(Math.random() * tiles),
+    y: Math.floor(Math.random() * tiles)
+  }
+};
+
+let init = (highscore, tiles) => {
+  return {
+    apple: next_apple(tiles),
+    player: {
+      pos: {
+        x: Math.floor(tiles / 2),
+        y: Math.floor(tiles / 2)
+      },
+      speed: {
+        dx: 0,
+        dy: 0
+      }
+    },
+    tail: {
+      links: [],
+      length: 5
+    },
+    score: 0,
+    highscore: highscore
+  }
+};
+
+let next_speed = (speed, key) => {
+  if(key.left || key.up || key.right || key.down) {
+    return {
+      dx: (key.right ? 1 : 0) - (key.left ? 1 : 0),
+      dy: (key.down ? 1 : 0) - (key.up ? 1 : 0)
+    }
+  } else {
+    return {
+      dx: speed.dx,
+      dy: speed.dy
+    }
+  }
+};
+
+let is_moving = (speed) => speed.dx !== 0 || speed.dy !== 0;
+
+let move_player = (player, tiles, key) => {
+  let speed = next_speed(player.speed, key);
+  return {
+    pos: {
+      x: (player.pos.x + speed.dx + tiles) % tiles,
+      y: (player.pos.y + speed.dy + tiles) % tiles
+    },
+    speed: {
+      dx: speed.dx,
+      dy: speed.dy
+    }
+  }
+};
+
+let is_apple_eating = (pos, apple) => pos.x === apple.x && pos.y === apple.y;
+
+let bites_link = (pos, link) => link.x === pos.x && link.y === pos.y;
+let bites_links = (pos, links) => links.find(link => bites_link(pos, link)) !== undefined;
+let bites_himself = (player, tail) => is_moving(player.speed) && bites_links(player.pos, tail.links);
+
+let next_tail = (tail, pos, is_growing) => {
+  if(is_growing === true) {
+    return {
+      links: tail.links.concat(pos),
+      length: tail.length + 1
+    };
+  } else {
+    return {
+      links: tail.links.concat(pos).slice(-tail.length),
+      length: tail.length
+    };
+  }
+};
+
+let update = (state, tiles, key) => {
+
+  let player = move_player(state.player, tiles, key);
+  
+  let eaten = is_apple_eating(player.pos, state.apple);
+  let bitten = bites_himself(player, state.tail);
+
+  if(bitten === true) {
+
+    return init(state.highscore, tiles);
+
+  } else if(eaten === true) {
+
+    let score = state.score + 1;
+    let highscore = score > state.highscore ? score : state.highscore;
+    return {
+      apple: next_apple(tiles),
+      player: player,
+      tail: next_tail(state.tail, player.pos, true),
+      score: score,
+      highscore: highscore
+    };
+
+  } else {
+
+    return {
+      apple: state.apple,
+      player: player,
+      tail: next_tail(state.tail, player.pos, false),
+      score: state.score,
+      highscore: state.highscore
+    };
+
+  }
+};
+
+let draw_rect = (pos, grid_size, shift, color, context) => {
+
+  context.fillStyle = color;
+  context.shadowColor = color;
+  context.shadowBlur = grid_size * 4;
+  context.shadowOffsetX = 0;
+  context.shadowOffsetY = 0;
+  context.fillRect(
+    pos.x * grid_size + shift,
+    pos.y * grid_size + shift,
+    grid_size - 2 * shift,
+    grid_size - 2 * shift
+  );
+
+}
+
+let draw = (state, ui, tiles) => {
+  let grid_size = ui.width / tiles;
+  draw_rect({ x:0, y:0 }, ui.width, 0, '#EEE', ui.context);
+  state.tail.links.forEach((link, index) => {
+    var scale = 1 - index / state.tail.length;
+    draw_rect(link, grid_size, grid_size * scale * 0.25, 'darkgreen', ui.context);
+  });
+  draw_rect(state.player.pos, grid_size, 1, 'green', ui.context);
+  draw_rect(state.apple, grid_size, 1, 'red', ui.context);
+
+  ui.score.innerText = state.score;
+  ui.highscore.innerText = state.highscore;
+};
+
+// the one function that modifies stuff
+let update_key = keys => { 
+
+  let key = keys.pop();
+  while(keys.length > 0) {
+    keys.pop();
+  }
+  
+  return {
+    left: key === 0,
+    up: key === 1,
+    right: key === 2,
+    down: key === 3
+  }
+}
+
+window.onload = () => {
+  
+  let canvas = document.querySelector('canvas');
+  
+  let keys = [];
+  var key = undefined;
+  document.addEventListener('keydown', event => keys.push(event.keyCode - 37));
+  
+  let tiles = 16;
+
+  let ui = {
+    context: canvas.getContext('2d'),
+    width: canvas.width,
+    height: canvas.height,
+    score: document.getElementById('score'),
+    highscore: document.getElementById('highscore')
+  };
+  
+  var state = init(0, tiles);
+  setInterval(() => {
+    key = update_key(keys);
+    state = update(state, tiles, key);
+    draw(state, ui, tiles);
+  }, 1000/15);
+};
+</script>
+
+
+</body>
+</html>
