@@ -1,0 +1,122 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Charging Zoe</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="manifest" href="/icons/site.webmanifest">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#000000">
+    <link rel="shortcut icon" href="/icons/favicon.ico">
+    <meta name="apple-mobile-web-app-title" content="ZOE Charging">
+    <meta name="application-name" content="ZOE Charging">
+    <meta name="msapplication-TileColor" content="#000000">
+    <meta name="msapplication-config" content="/icons/browserconfig.xml">
+    <meta name="theme-color" content="#000000">
+    <meta name="msapplication-notification" content="frequency=30;polling-uri=http://charging.davepermen.net/livetile.xml" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            background: black;
+            color: white;
+            font-family: 'segoe ui', sans-serif;
+            font-weight: 100;
+            font-size: 3rem;
+            margin-left: 1rem;
+        }
+
+        h1 {
+            font-size: 1rem;
+        }
+
+        a {
+            color: white;
+            font-size: 3rem;
+            border: 0.5rem solid #FFC83D;
+            border-radius: 50%;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0.5rem;
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        li {
+            margin-left: 0;
+            font-size: 0.5rem;
+        }
+    </style>
+    <script>
+        function toggle() {
+            fetch('/home/toggle').then(() => {
+                refresh();
+            });
+            return false;
+        }
+        function set(state) {
+            for (const name in state) {
+                document.querySelector(`[data-state="${name}"]`).innerText = state[name];
+            }
+        }
+
+        var timeoutId = null;
+        function refresh() {
+            clearTimeout(timeoutId);
+            fetch('/home/state')
+                .then(response => response.json())
+                .then(state => {
+                    console.log('refreshing with state', state);
+                    if (state.current.name !== null) {
+                        set({
+                            'name': state.current.name,
+                            'duration': 'Charging since ' + Math.round(state.current.duration / 60) + ':' + (Math.round(state.current.duration % 60) > 9 ? Math.round(state.current.duration % 60) : ('0' + Math.round(state.current.duration % 60))) + ' minutes',
+                            'speed': 'Charging Speed ' + state.current.activePower.toPrecision(3) + ' kW',
+                            'energy': 'Amount of Charge ' + state.current.energyUsed.toPrecision(3) + ' kWh',
+                            'recent': `Charge in the last few hours: ${state.recent.toPrecision(3)} kWh`
+                        });
+                    } else {
+                        set({
+                            'name': '',
+                            'duration': '',
+                            'speed': '',
+                            'energy': '',
+                            'recent': `Charge in the last few hours: ${state.recent.toPrecision(3)} kWh`
+                        });
+                    }
+                })
+                .then(() => {
+                    timeoutId = setTimeout(refresh, 5000);
+                });
+        }
+        refresh();
+    </script>
+</head>
+
+<body>
+
+    <div>
+        <h1>Charging Zoe</h1>
+        <p>
+            <a href='/' onclick='toggle()'>⚡</a>
+        </p>
+        <ul>
+            <li data-state='name'></li>
+            <li data-state='duration'></li>
+            <li data-state='speed'></li>
+            <li data-state='energy'></li>
+        </ul>
+        <ul>
+            <li data-state='recent'></li>
+        </ul>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/icons/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="/icons/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/icons/android-chrome-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="/icons/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/icons/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="/icons/manifest.json">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/icons/favicon.ico">
+    <meta name="apple-mobile-web-app-title" content="Davepermen">
+    <meta name="application-name" content="Davepermen">
+    <meta name="msapplication-TileColor" content="#b8a275">
+    <meta name="msapplication-TileImage" content="/icons/mstile-144x144.png">
+    <meta name="msapplication-config" content="/icons/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="/highlight.css">
+    <script src="/highlight.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <link rel='stylesheet' href='/style.css' type='text/css' />
+    <title>simple immutable poco types in c# - davepermen.net</title>
+</head>
+<body>
+    <section blog>
+        <article>
+            <header style="background: url('hero.jpg')">
+                <h1>Simple Immutable POCO Types in C#</h1>
+            </header>
+            <section>
+                <p>I wrote some simple POCO that’s immutable, and flexible in modification on the fly by constructing a new one.</p>
+                <p>C# 6 will make it a bit less verbose (but not that much yet ☹)</p>
+                <h1>Some usage examples</h1>
+            </section>
+            <pre><code class="csharp">var first = new Camera(
+    position: Vector3.Zero,
+    target: Vector3.UnitZ,
+    up: Vector3.UnitY,
+    eyeDistance: 1
+);
+var modifiedEyeDistance = new Camera(
+    previous: first,
+    eyeDistance: 2
+);
+var modifiedPosition = new Camera(
+    previous: modifiedEyeDistance,
+    position: modifiedEyeDistance.Position + Vector3.UnitY - Vector3.UnitZ
+);
+</code></pre>
+            <section>
+                <h1>Class used in the examples, and it’s implementation</h1>
+                <p>The class has two constructors, one setting all values (and require to set all), and one using a previous class instance.</p>
+                <p>On the second constructor, all parameters are optional, except for the previous class. This, combined with named parameters, allows to just change the part of the state one wants.</p>
+            </section>
+            <pre><code class="csharp">namespace Runtime.Views
+{
+    using System.Numerics;
+    public class Camera
+    {
+        readonly Vector3 position;
+        readonly Vector3 target;
+        readonly Vector3 up;
+        readonly float eyeDistance;
+        public Vector3 Position => position;
+        public Vector3 Target => target;
+        public Vector3 Up => up;
+        public float EyeDistance => eyeDistance;
+        public Camera(Vector3 position, Vector3 target, Vector3 up, float eyeDistance)
+        {
+            this.position = position;
+            this.target = target;
+            this.up = up;
+            this.eyeDistance = eyeDistance;
+        }
+        public Camera(Camera previous, Vector3? position = null, Vector3? target = null, Vector3? up = null, float? eyeDistance = null)
+        {
+            this.position = position ?? previous.position;
+            this.target = target ?? previous.target;
+            this.up = up ?? previous.up;
+            this.eyeDistance = eyeDistance ?? previous.eyeDistance;
+        }
+    }
+}</code></pre>
+            <section>
+                <h1>Optional different syntax</h1>
+                <p>One could consider, instead of the second constructor, a Modified method (choose what ever name you like) that returns a new object.</p>
+                <p>For demo purposes, I’ve implemented Modified using the first constructor as an extension method. Usage below is quite nice to read, I think. I’m considering switching to that approach now (while writing the blogpost.. horray)</p>
+            </section>
+            <pre><code class="csharp">public static class CameraHelper
+{
+    public static Camera Modified(this Camera previous, Vector3? position = null, Vector3? target = null, Vector3? up = null, float? eyeDistance = null)
+    {
+        return new Camera(
+            position: position ?? previous.Position,
+            target: target ?? previous.Target,
+            up: up ?? previous.Up,
+            eyeDistance: eyeDistance ?? previous.EyeDistance
+        );
+    }
+}</code></pre>
+            <section>
+                <p>With the new 'Modified' extension method, usage is like this</p>
+            </section>
+            <pre><code class="csharp">var first = new Camera(
+    position: Vector3.Zero,
+    target: Vector3.UnitZ,
+    up: Vector3.UnitY,
+    eyeDistance: 1
+);
+var modifiedEyeDistance = first.Modified(
+    eyeDistance: 2
+);
+var modifiedPosition = modifiedEyeDistance.Modified(
+    position: modifiedEyeDistance.Position + Vector3.UnitY - Vector3.UnitZ
+);</code></pre>
+        </article>
+    </section>
+</body>
+</html>

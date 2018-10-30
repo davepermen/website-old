@@ -1,0 +1,52 @@
+@model Fitness.HomeControllerModel
+<!doctype html>
+<html>
+<head>
+    <title>add pushups</title>
+    <meta name="viewport" content="width=device-width" />
+    <link rel='stylesheet' href='/style.css' type='text/css' />
+    <style>
+        input {
+            font-size: 0.5rem;
+            color: hsl(30, 100%, 60%);
+            border: 0;
+            text-shadow: inherit;
+            overflow: visible;
+            cursor: pointer;
+            background: inherit;
+            font-weight: 900;
+            pointer-events: all;
+        }
+
+        form {
+            margin: 0.5rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div id='background'></div>
+    <div id='foreground'>
+        <main>
+            <header id='pushups'><br><br>PUSHUPS</header>
+            <section>
+                <article id='pushups'>
+                    @Model.Pushups ✔
+                </article>
+            </section>
+            <section>
+                <form action="/add" method="POST">
+                    <input type="hidden" name="pushups" value="10">
+                    <input type="submit" value="add 10 pushups">
+                </form>
+                <form action="/add" method="POST">
+                    <input type="hidden" name="pushups" value="20">
+                    <input type="submit" value="add 20 pushups">
+                </form>
+            </section>
+            <section style="font-size: 0.5rem">
+                <a href="/">home</a>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

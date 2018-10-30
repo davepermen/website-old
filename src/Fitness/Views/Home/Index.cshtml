@@ -1,0 +1,38 @@
+@model Fitness.HomeControllerModel
+<!doctype html>
+<html>
+    <head>
+        <title>Fitness</title>
+        <meta name="viewport" content="width=device-width" />
+        <link rel='stylesheet' href='/style.css' type='text/css' />
+    </head>
+    <body>
+        <div id='background'></div>
+        <div id='foreground'>
+            <main>
+                <header id='pushups'><br><br>PUSHUPS</header>
+                <section>
+                    <article id='pushups'>
+                        @Model.Pushups ✔
+                    </article>
+                    <article style='font-size: 0.5rem; line-height: 0.5rem'>
+                        &nbsp;<br/>
+                        @(Model.Pushups / 50)% of year goal<br/>
+                        &nbsp;<br/>
+                        @(5000 - Model.Pushups) to do<br/>
+                        @(Model.Pushups / (DateTime.Now - new DateTime(2018, 1, 1)).Days) per day<br/>
+                        &nbsp;
+                    </article>
+                    <article>
+                        <svg style="height: 1.5rem; border-left: 2px solid white; border-bottom: 2px solid white; filter: drop-shadow(0 5px 10px #000);" viewBox="0 0 365 100" class="chart">
+                            <polyline fill="hsla(32, 100%, 22%, 0.25)" stroke="none" stroke-width="0" points="@Model.SummedPushupsGraphBackground" transform="translate(0, 100) scale(1,-1)" />
+                            <polyline fill="hsla(208, 100%, 22%, 0.25)" stroke="none" stroke-width="0" points="@Model.DailyPushupsGraphBackground" transform="translate(0, 100) scale(1,-1)" />
+                            <polyline fill="none" stroke="hsla(208, 100%, 44%, 1)" stroke-width="2" points="@Model.DailyPushupsGraph" transform="translate(0, 100) scale(1,-1)" />
+                            <polyline fill="none" stroke="hsla(32, 100%, 44%, 1)" stroke-width="2" points="@Model.SummedPushupsGraph" transform="translate(0, 100) scale(1,-1)" />
+                        </svg>
+                    </article>
+                </section>
+            </main>
+        </div>
+    </body>
+</html>
