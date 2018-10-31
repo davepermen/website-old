@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EvHomeCharging", "EvHomeCha
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fitness", "Fitness\Fitness.csproj", "{8813A520-9EAF-4209-919F-95D15B1441CE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateFromGithub", "UpdateFromGithub\UpdateFromGithub.csproj", "{04368BA5-2F9B-43E1-B92E-D8324E5372C0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{8813A520-9EAF-4209-919F-95D15B1441CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8813A520-9EAF-4209-919F-95D15B1441CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8813A520-9EAF-4209-919F-95D15B1441CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04368BA5-2F9B-43E1-B92E-D8324E5372C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04368BA5-2F9B-43E1-B92E-D8324E5372C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04368BA5-2F9B-43E1-B92E-D8324E5372C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04368BA5-2F9B-43E1-B92E-D8324E5372C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
