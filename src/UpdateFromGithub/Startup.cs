@@ -12,10 +12,11 @@ namespace UpdateFromGithub
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             IApplicationLifetime applicationLifetime = app.ApplicationServices.GetRequiredService<IApplicationLifetime>();
-            IConfiguration configuration = app.ApplicationServices.GetRequiredService<IConfiguration>();
 
             app.Run(async (context) =>
             {
+                var configuration = app.ApplicationServices.GetRequiredService<IConfiguration>();
+
                 if (context.Request.Method == "POST"
                     && configuration["X-GitHub-Event"] == context.Request.Headers["X-GitHub-Event"]
                     && configuration["X-Hub-Signature"] == context.Request.Headers["X-Hub-Signature"])
