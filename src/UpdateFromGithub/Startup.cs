@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.IO;
+using System.Text;
 
 namespace UpdateFromGithub
 {
@@ -11,19 +12,40 @@ namespace UpdateFromGithub
     {
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            IApplicationLifetime applicationLifetime = app.ApplicationServices.GetRequiredService<IApplicationLifetime>();
-
             app.Run(async (context) =>
             {
                 var configuration = app.ApplicationServices.GetRequiredService<IConfiguration>();
 
-                if (context.Request.Method == "POST"
-                    && configuration["X-GitHub-Event"] == context.Request.Headers["X-GitHub-Event"]
-                    && configuration["X-Hub-Signature"] == context.Request.Headers["X-Hub-Signature"])
+                var secret = configuration["secret"];
+
+                var sha1Prefix = "sha1=";
+
+                if (context.Request.Method == "POST")
                 {
-                    File.WriteAllText("request.txt", "update now");
-                    await context.Response.WriteAsync("ok");
-                    //applicationLifetime.StopApplication();
+                    var signature = context.Request.Headers["X-Hub-Signature"].ToString();
+
+                    using (var reader = new StreamReader(context.Request.Body, Encoding.UTF8))
+                    {
+                        var content = await reader.ReadToEndAsync();
+
+                        var computedSignature = Matterhook.NET.Code.Util.CalculateSignature(content, signature, secret, sha1Prefix);
+
+                        if (computedSignature == signature)
+                        {
+                            var batchPath = Path.Combine(Path.GetTempPath(), "build.cmd");
+                            File.WriteAllText(batchPath,
+                            $@"
+                            cd {configuration["project-directory"]}
+                            FOR /D %%A IN (*) DO (
+                                cd %%A
+                                dotnet publish -p:PublishDir={configuration["target-directory"]}%%A
+                                cd ..
+                            )");
+                            System.Diagnostics.Process.Start(batchPath).WaitForExit();
+                            File.WriteAllText("request.txt", $"updated from github");
+                            await context.Response.WriteAsync("ok");
+                        }
+                    }
                 }
                 await context.Response.WriteAsync("");
             });
