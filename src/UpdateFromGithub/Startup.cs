@@ -16,7 +16,11 @@ namespace UpdateFromGithub
             {
                 if (context.Request.Method == "POST")
                 {
-                    File.WriteAllText("request.txt", await new StreamReader(context.Request.Body).ReadToEndAsync());
+                    await File.WriteAllLinesAsync("request.txt", new string[] {
+                        "X-Github-Delivery = " + context.Request.Headers["X-Github-Delivery"],
+                        "X-GitHub-Event = " + context.Request.Headers["X-GitHub-Event"],
+                        "X-Hub-Signature = " + context.Request.Headers["X-Hub-Signature"]
+                    });
                     await context.Response.WriteAsync(await new StreamReader(context.Request.Body).ReadToEndAsync());
                     //applicationLifetime.StopApplication();
                 }
