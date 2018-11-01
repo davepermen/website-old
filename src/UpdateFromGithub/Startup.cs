@@ -3,7 +3,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Diagnostics;
 using System.IO;
+using System.Net.Http;
+using System.Security;
 using System.Text;
 
 namespace UpdateFromGithub
@@ -16,33 +20,27 @@ namespace UpdateFromGithub
             {
                 var configuration = app.ApplicationServices.GetRequiredService<IConfiguration>();
 
-                var secret = configuration["secret"];
 
-                var sha1Prefix = "sha1=";
+                string secret = configuration["secret"];
+
+                string sha1Prefix = "sha1=";
 
                 if (context.Request.Method == "POST")
                 {
-                    var signature = context.Request.Headers["X-Hub-Signature"].ToString();
+                    string signature = context.Request.Headers["X-Hub-Signature"].ToString();
 
-                    using (var reader = new StreamReader(context.Request.Body, Encoding.UTF8))
+                    using (StreamReader reader = new StreamReader(context.Request.Body, Encoding.UTF8))
                     {
-                        var content = await reader.ReadToEndAsync();
+                        string content = await reader.ReadToEndAsync();
 
-                        var computedSignature = Matterhook.NET.Code.Util.CalculateSignature(content, signature, secret, sha1Prefix);
+                        string computedSignature = Matterhook.NET.Code.Util.CalculateSignature(content, signature, secret, sha1Prefix);
 
                         if (computedSignature == signature)
                         {
-                            var batchPath = Path.Combine(Path.GetTempPath(), "build.cmd");
-                            File.WriteAllText(batchPath,
-                            $@"
-                            cd {configuration["project-directory"]}
-                            FOR /D %%A IN (*) DO (
-                                cd %%A
-                                dotnet publish -p:PublishDir={configuration["target-directory"]}%%A
-                                cd ..
-                            )");
-                            System.Diagnostics.Process.Start(batchPath).WaitForExit();
-                            File.WriteAllText("request.txt", $"updated from github");
+                            using (var httpClient = new HttpClient())
+                            {
+                                await httpClient.GetAsync($@"http://localhost:5000/?deploymenttype=Server%20Deployment&solutionpath=C:\Users\davep\source\repos\website\");
+                            }
                             await context.Response.WriteAsync("ok");
                         }
                     }
