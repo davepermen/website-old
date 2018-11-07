@@ -1,4 +1,8 @@
-@model Fitness.HomeControllerModel
+
+                <form action="/add" method="POST">
+                    <input type="hidden" name="pushups" value="20">
+                    <input type="submit" value="add 20 pushups">
+                </form>@model Fitness.HomeControllerModel
 <!doctype html>
 <html>
 <head>
@@ -41,6 +45,10 @@
                 <form action="/add" method="POST">
                     <input type="hidden" name="pushups" value="20">
                     <input type="submit" value="add 20 pushups">
+                </form>
+                <form action="/add" method="POST">
+                    <input type="hidden" name="pushups" value="30">
+                    <input type="submit" value="add 30 pushups">
                 </form>
             </section>
             <section style="font-size: 0.5rem">
