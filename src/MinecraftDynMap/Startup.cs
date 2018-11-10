@@ -5,11 +5,23 @@ namespace MinecraftDynMap
 {
     public class Startup
     {
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env) => app.RunProxy(new ProxyOptions()
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            Host = "localhost",
-            Port = 8123.ToString(),
-            Scheme = "http"
-        });
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseHsts();
+            }
+            app.UseHttpsRedirection();
+            app.RunProxy(new ProxyOptions()
+            {
+                Host = "localhost",
+                Port = 8123.ToString(),
+                Scheme = "http"
+            });
+        }
     }
 }
