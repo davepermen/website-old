@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -20,12 +19,6 @@ namespace Homepage
                 options.IncludeSubDomains = true;
                 options.MaxAge = TimeSpan.FromDays(365);
             });
-
-            services.AddHttpsRedirection(options =>
-            {
-                options.RedirectStatusCode = StatusCodes.Status308PermanentRedirect;
-                options.HttpsPort = 443;
-            });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -39,7 +32,6 @@ namespace Homepage
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
             app.UseDefaultFiles();
 
             var provider = new FileExtensionContentTypeProvider();

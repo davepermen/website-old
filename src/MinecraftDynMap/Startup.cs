@@ -1,10 +1,22 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace MinecraftDynMap
 {
     public class Startup
     {
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddHsts(options =>
+            {
+                options.Preload = true;
+                options.IncludeSubDomains = true;
+                options.MaxAge = TimeSpan.FromDays(365);
+            });
+        }
+
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -15,7 +27,7 @@ namespace MinecraftDynMap
             {
                 app.UseHsts();
             }
-            app.UseHttpsRedirection();
+
             app.RunProxy(new ProxyOptions()
             {
                 Host = "localhost",
