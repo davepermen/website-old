@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UpdateFromGithub", "UpdateF
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinecraftDynMap", "MinecraftDynMap\MinecraftDynMap.csproj", "{1C799097-83E1-4816-AA26-EE506B903CF0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedirectToHttps", "RedirectToHttps\RedirectToHttps.csproj", "{432E1BE9-68E0-4E55-B0EB-4EC692715271}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedirectToHttps", "RedirectToHttps\RedirectToHttps.csproj", "{432E1BE9-68E0-4E55-B0EB-4EC692715271}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteApplications", "RemoteApplications\RemoteApplications.csproj", "{B0DC0267-F3D5-4E5A-91B3-7CBCE5FAADB1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{432E1BE9-68E0-4E55-B0EB-4EC692715271}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{432E1BE9-68E0-4E55-B0EB-4EC692715271}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{432E1BE9-68E0-4E55-B0EB-4EC692715271}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0DC0267-F3D5-4E5A-91B3-7CBCE5FAADB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0DC0267-F3D5-4E5A-91B3-7CBCE5FAADB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0DC0267-F3D5-4E5A-91B3-7CBCE5FAADB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0DC0267-F3D5-4E5A-91B3-7CBCE5FAADB1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

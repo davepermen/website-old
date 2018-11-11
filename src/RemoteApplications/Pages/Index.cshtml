@@ -1,0 +1,36 @@
+﻿@page
+@model RemoteApplications.Pages.IndexModel
+@{
+    Layout = null;
+    Response.ContentType = "application/xml";
+}
+<ResourceCollection PubDate="@Model.PublishDate.ToString("o")" SchemaVersion="1.1" xmlns="http://schemas.microsoft.com/ts/2007/05/tswf">
+    <Publisher LastUpdated="@Model.PublishDate.ToString("o")" Name="@Model.RemoteServer" ID="@Model.RemoteServer" Description="">
+        <Resources>
+            @foreach (var application in Model.AllApplictions)
+            {
+                <Resource ID="@application.Name" Alias="@application.Name" Title="@application.Name" LastUpdated="@application.PublishDate.ToString("o")" Type="RemoteApp">
+                    @if (application.Icons.Length > 0)
+                    {
+                        <Icons>
+                            @foreach (var icon in application.Icons)
+                            {
+                                <@icon.TagType FileType="@icon.Type" FileURL="@icon.File" @Html.Raw(icon.Size != null ? $"Dimensions=\"{icon.Size}\"" : "") />
+                            }
+                        </Icons>
+                    }
+                    <FileExtensions />
+                    <HostingTerminalServers>
+                        <HostingTerminalServer>
+                            <ResourceFile FileExtension=".rdp" URL="@application.RdpName" />
+                            <TerminalServerRef Ref="@Model.RemoteServer" />
+                        </HostingTerminalServer>
+                    </HostingTerminalServers>
+                </Resource>
+            }
+        </Resources>
+        <TerminalServers>
+            <TerminalServer ID="@Model.RemoteServer" Name="Applications on Davepermen.net" LastUpdated="@Model.PublishDate.ToString("o")" />
+        </TerminalServers>
+    </Publisher>
+</ResourceCollection>
