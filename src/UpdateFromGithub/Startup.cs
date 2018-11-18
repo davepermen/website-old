@@ -79,10 +79,8 @@ namespace UpdateFromGithub
                                     await httpClient.GetAsync($@"http://localhost:5000/?deploymenttype=Server%20Deployment&repository={payload.Repository.Name}");
                                 }
                             }
-                            catch (Exception exception)
+                            catch (Exception)
                             {
-                                context.Response.StatusCode = 500;
-                                await context.Response.WriteAsync(exception.Message);
                             }
                             context.Response.StatusCode = 200;
                             await context.Response.WriteAsync("ok");
