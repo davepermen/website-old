@@ -35,6 +35,7 @@ namespace UpdateFromGithub
                 app.UseHsts();
             }
 
+
             var fileExtensionContentTypeProvider = new FileExtensionContentTypeProvider();
             fileExtensionContentTypeProvider.Mappings.Clear();
             fileExtensionContentTypeProvider.Mappings[".application"] = "application/x-ms-application";
