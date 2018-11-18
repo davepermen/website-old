@@ -71,10 +71,18 @@ namespace UpdateFromGithub
                         var computedSignature = Matterhook.NET.Code.Util.CalculateSignature(payloadContent, signature, secret, sha1Prefix);
                         if (computedSignature == signature)
                         {
-                            using (var httpClient = new HttpClient())
+                            try
                             {
-                                var payload = JsonConvert.DeserializeObject<Payload>(payloadContent);
-                                await httpClient.GetAsync($@"http://localhost:5000/?deploymenttype=Server%20Deployment&repository={payload.Repository.Name}");
+                                using (var httpClient = new HttpClient())
+                                {
+                                    var payload = JsonConvert.DeserializeObject<Payload>(payloadContent);
+                                    await httpClient.GetAsync($@"http://localhost:5000/?deploymenttype=Server%20Deployment&repository={payload.Repository.Name}");
+                                }
+                            }
+                            catch (Exception exception)
+                            {
+                                context.Response.StatusCode = 500;
+                                await context.Response.WriteAsync(exception.Message);
                             }
                             context.Response.StatusCode = 200;
                             await context.Response.WriteAsync("ok");
