@@ -42,7 +42,7 @@ namespace UpdateFromGithub
             fileExtensionContentTypeProvider.Mappings[".deploy"] = "application/octet-stream";
             fileExtensionContentTypeProvider.Mappings[".exe"] = "image/png";
 
-            var physicalFileProvider = new PhysicalFileProvider($@"{Directory.GetCurrentDirectory()}\..\{typeof(Program).Namespace}\ContinuousDeployment");
+            var physicalFileProvider = new PhysicalFileProvider($@"{Directory.GetCurrentDirectory()}\..\data\{typeof(Program).Namespace}\ContinuousDeployment");
 
             app.UseStaticFiles(new StaticFileOptions
             {
