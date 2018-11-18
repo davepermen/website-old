@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using System;
 using System.IO;
 using System.Net.Http;
@@ -32,6 +34,25 @@ namespace UpdateFromGithub
             {
                 app.UseHsts();
             }
+
+            var fileExtensionContentTypeProvider = new FileExtensionContentTypeProvider();
+            fileExtensionContentTypeProvider.Mappings.Clear();
+            fileExtensionContentTypeProvider.Mappings[".application"] = "application/x-ms-application";
+            fileExtensionContentTypeProvider.Mappings[".manifest"] = "application/x-ms-manifest";
+            fileExtensionContentTypeProvider.Mappings[".deploy"] = "application/octet-stream";
+            fileExtensionContentTypeProvider.Mappings[".exe"] = "image/png";
+
+            var physicalFileProvider = new PhysicalFileProvider($@"{Directory.GetCurrentDirectory()}\..\{typeof(Program).Namespace}\ContinuousDeployment");
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                ContentTypeProvider = fileExtensionContentTypeProvider,
+                FileProvider = physicalFileProvider,
+                RequestPath = "/cd"
+            });
+
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
 
             app.Run(async (context) =>
             {
