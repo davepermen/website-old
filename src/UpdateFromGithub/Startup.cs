@@ -76,6 +76,7 @@ namespace UpdateFromGithub
                                 var payload = JsonConvert.DeserializeObject<Payload>(payloadContent);
                                 await httpClient.GetAsync($@"http://localhost:5000/?deploymenttype=Server%20Deployment&repository={payload.Repository.Name}");
                             }
+                            context.Response.StatusCode = 200;
                             await context.Response.WriteAsync("ok");
                         }
                     }
