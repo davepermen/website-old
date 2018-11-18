@@ -74,7 +74,7 @@ namespace UpdateFromGithub
                             using (var httpClient = new HttpClient())
                             {
                                 var payload = JsonConvert.DeserializeObject<Payload>(payloadContent);
-                                await httpClient.GetAsync($@"http://localhost:5000/?deploymenttype=Server%20Deployment&repository={payload.Repository}");
+                                await httpClient.GetAsync($@"http://localhost:5000/?deploymenttype=Server%20Deployment&repository={payload.Repository.Name}");
                             }
                             await context.Response.WriteAsync("ok");
                         }
