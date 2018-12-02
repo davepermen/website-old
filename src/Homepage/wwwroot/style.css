@@ -290,74 +290,69 @@ section[blog] {
         animation: 0.7s linear forwards article-fadein3d;
         overflow: hidden;
     }
-
-        section[blog] article h1 {
-            font-weight: 600;
-            font-size: 2em;
-            margin: 1em 0;
-        }
-
-        section[blog] article header {
-            background: url('hero.jpg');
-            background-size: cover;
-            background-position: center center;
-            margin: 0;
-            padding: 0;
-            height: 20em;
-            overflow: hidden;
-            position: relative;
+        section[blog] article h1:first-of-type {
+            padding: 1em 1em 0 1em;
+            vertical-align: bottom;
+            line-height: 1em;
+            font-size: 4em;
+            width: 60em;
+            height: 5em;
+            display: table-cell;
+            vertical-align: middle;
             color: white;
             text-shadow: 0 0 0.5em black;
+            background-size: cover;
+            background-position: center center;
         }
 
-            section[blog] article header h1 {
-                margin: 0;
-                padding: 1em;
-                line-height: 1em;
-                font-size: 4em;
-                position: absolute;
-                bottom: 0;
-            }
+        section[blog] article h1:not(:first-of-type) {
+            font-weight: 600;
+            font-size: 2em;
+            background: none;
+            margin: 1em 2em;
+        }
 
-            section[blog] article header h2 {
-                margin: 0;
-                padding: 0.6em 2em;
-                opacity: 0.8;
-                font-size: 2em;
-                font-weight: 100;
-                position: absolute;
-                bottom: 0;
-            }
-
-        section[blog] article section {
+        section[blog] article {
             margin: 4em;
         }
 
-        section[blog] article p {
-            line-height: 1.6em;
-            font-size: 1.4em;
-            font-family: 'georgia', 'times new roman', serif;
-            margin: 0.72em 0;
+            section[blog] article p {
+                line-height: 1.6em;
+                font-weight: inherit;
+                font-size: 1.4em;
+                font-family: 'georgia', 'times new roman', serif;
+                margin: 0.72em 2.9em;
+            }
+                section[blog] article p:first-of-type {
+                    margin-top: 2.8em;
+                }
+
+        section[blog] article pre {
+            margin-top: 2.8em;
+            margin-bottom: 2.8em;
         }
 
-        section[blog] article p:first-of-type:not(:only-of-type)::first-letter {
-            font-size: 3.5em;
-            font-weight: 900;
-            float: left;
-            line-height: 1em;
-            margin-right: 0.06em;
-            margin-top: -0.06em;
-            text-shadow: 0.07rem 0.125rem 0.25rem 0.25rem lightgray;
-        }
+            section[blog] article section p:first-of-type:not(:only-child)::first-letter {
+                font-size: 3.5em;
+                font-weight: 900;
+                float: left;
+                line-height: 1em;
+                margin-right: 0.06em;
+                margin-top: -0.06em;
+                text-shadow: 0.07rem 0.125rem 0.25rem 0.25rem lightgray;
+            }
 
 @keyframes article-fadein3d {
     from {
-        transform: translateZ(30rem) rotateX(-40deg);
+        /*transform: translateZ(30) rotate(-40deg);*/
+        zoom: 1.5;
         opacity: 0;
     }
 
     to {
-        transform: translateZ(0rem) rotateX(0deg);
+        /*transform: none;*/
+        transform: none;
+        zoom: 1;
         opacity: 1;
     }
 }
@@ -395,16 +390,14 @@ section[blog] {
 }
 
 section[blog] pre {
-    /*font-size: 1.1em;
-    line-height: 1.5em;*/
     margin: 0;
-    padding: 1.5rem 0;
-    font-size: 1.5em;
+    padding: 0;
+    font-size: 1.33em;
     background-color: #484848;
     box-shadow: #242424 0 0 8em inset;
 }
 section[blog] pre code {
-    padding: 0.5rem 3rem;
+    padding: 1rem 2rem;
 }
 
 code {

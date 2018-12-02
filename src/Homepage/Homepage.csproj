@@ -6,13 +6,39 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Content\Blog\index.html" />
+    <None Remove="Content\Blog\run cleanup tasks in windows.md" />
+    <None Remove="Content\Blog\uwp app for kiosk mode.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Content\Blog\run cleanup tasks in windows.md">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Content\Blog\simple immutable poco types in csharp.md" />
+    <Content Include="Content\Blog\uwp app for kiosk mode.md">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Content\Blog\windows 10 uap extend titlebar.md" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="Properties\PublishProfiles\Localhost.pubxml.user" />
     <None Include="Properties\PublishProfiles\Server Deployment.pubxml.user" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Markdig" Version="0.15.4" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.6" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Pages\_Layout.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
   </ItemGroup>
 
 </Project>
