@@ -20,7 +20,7 @@
     var blog = default(string);
     if (slug != null)
     {
-        var path = $"Content/Blog/{slug.Replace('-', ' ')}.md";
+        var path = $@"{Program.DataRoot}\blog\{slug.Replace('-', ' ')}\index.md";
         if (System.IO.File.Exists(path))
         {
             var markdown = await System.IO.File.ReadAllTextAsync(path);
@@ -29,6 +29,10 @@
             var hero = $"/blog/{slug}/hero.jpg";
 
             blog = AddSections(blog.ReplaceFirst("<h1>", $"<h1 style=\"background-image: url('{hero}')\">"));
+        }
+        else
+        {
+            blog = "404";
         }
     }
 }

@@ -1,5 +1,8 @@
 ﻿@page
 @model Homepage.Pages.IndexModel
+
+@using Homepage
+
 @{
     Layout = "_Layout";
 }
@@ -23,9 +26,9 @@
             <article>
                 <h1>blog</h1>
                 <ul>
-                    @foreach (var file in System.IO.Directory.GetFiles("Content/Blog", "*.md").Select(f => System.IO.Path.GetFileNameWithoutExtension(f)))
+                    @foreach (var path in System.IO.Directory.GetDirectories($@"{Program.DataRoot}\blog").Select(d => System.IO.Path.GetFileName(d)))
                     {
-                        <li>@file<a href='/blog/@file.Replace(' ', '-')'>►</a></li>
+                        <li>@path<a href='/blog/@path.Replace(' ', '-')'>►</a></li>
                     }
                 </ul>
             </article>
