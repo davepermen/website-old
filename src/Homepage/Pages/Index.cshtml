@@ -29,7 +29,7 @@
                 <ul>
                     @foreach (var slug in IO.Directory.GetDirectories($@"{Program.DataRoot}\blog").Select(d => IO.Path.GetFileName(d)))
                     {
-                        <li>@slug<a href='/blog/@slug'>►</a></li>
+                        <li>@slug.Replace('-', ' ')<a href='/blog/@slug'>►</a></li>
                     }
                 </ul>
             </article>
