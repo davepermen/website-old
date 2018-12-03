@@ -35,16 +35,11 @@ namespace Homepage
             app.UseDefaultFiles();
             app.UseStaticFiles();
 
-            // kinda dumb atm, but till i properly serve the static files myself
-            // or maybe i should stop the '-' ' ' flipping? then it'd work easier
-            foreach(var path in System.IO.Directory.GetDirectories($@"{Program.DataRoot}\blog"))
+            app.UseStaticFiles(new StaticFileOptions
             {
-                app.UseStaticFiles(new StaticFileOptions
-                {
-                    FileProvider = new PhysicalFileProvider(path),
-                    RequestPath = $"/blog/{System.IO.Path.GetFileName(path).Replace(' ', '-')}"
-                });
-            }
+                FileProvider = new PhysicalFileProvider($@"{Program.DataRoot}\blog"),
+                RequestPath = "/blog"
+            });
 
             app.UseMvc();
         }

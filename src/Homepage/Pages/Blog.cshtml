@@ -20,7 +20,7 @@
     var blog = default(string);
     if (slug != null)
     {
-        var path = $@"{Program.DataRoot}\blog\{slug.Replace('-', ' ')}\index.md";
+        var path = $@"{Program.DataRoot}\blog\{slug}\index.md";
         if (System.IO.File.Exists(path))
         {
             var markdown = await System.IO.File.ReadAllTextAsync(path);

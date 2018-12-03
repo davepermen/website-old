@@ -2,6 +2,7 @@
 @model Homepage.Pages.IndexModel
 
 @using Homepage
+@using IO = System.IO
 
 @{
     Layout = "_Layout";
@@ -26,9 +27,9 @@
             <article>
                 <h1>blog</h1>
                 <ul>
-                    @foreach (var path in System.IO.Directory.GetDirectories($@"{Program.DataRoot}\blog").Select(d => System.IO.Path.GetFileName(d)))
+                    @foreach (var slug in IO.Directory.GetDirectories($@"{Program.DataRoot}\blog").Select(d => IO.Path.GetFileName(d)))
                     {
-                        <li>@path<a href='/blog/@path.Replace(' ', '-')'>►</a></li>
+                        <li>@slug<a href='/blog/@slug'>►</a></li>
                     }
                 </ul>
             </article>
