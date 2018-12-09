@@ -21,7 +21,7 @@ namespace Homepage.Pages
         public async Task<IActionResult> OnGet(string slug)
         {
             var path = $@"{Program.DataRoot}\blog\{slug}\index.md";
-            if (path.Contains(@"\..\") == false && System.IO.File.Exists(path))
+            if (System.IO.File.Exists(path))
             {
                 this.HeroImage = $"/blog/{slug}/hero.jpg";
 
