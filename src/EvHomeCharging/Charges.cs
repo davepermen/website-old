@@ -19,7 +19,13 @@ namespace EvHomeCharging
         {
             if (Directory.Exists(log))
             {
-                var files = Directory.GetFiles(log, "*.json").Select(f => new FileInfo(f));
+                var today = DateTime.UtcNow.ToString("s").Replace(":", "-").Substring(0, 4 + 1 + 2 + 1 + 2);
+                var yesterday = DateTime.UtcNow.AddDays(-1).ToString("s").Replace(":", "-").Substring(0, 4 + 1 + 2 + 1 + 2);
+
+                var filesOfToday = Directory.GetFiles(log, $"{today}*.json").Select(f => new FileInfo(f));
+                var filesOfYesterday = Directory.GetFiles(log, $"{yesterday}*.json").Select(f => new FileInfo(f));
+
+                var files = filesOfToday.Concat(filesOfYesterday);
 
                 var recentFiles = files.Where(f => (DateTime.UtcNow - f.LastWriteTimeUtc).TotalHours < recentHours);
 
