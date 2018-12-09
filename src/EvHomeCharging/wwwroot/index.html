@@ -16,44 +16,28 @@
     <meta name="msapplication-config" content="/icons/browserconfig.xml">
     <meta name="theme-color" content="#000000">
     <meta name="msapplication-notification" content="frequency=30;polling-uri=http://charging.davepermen.net/livetile.xml" />
+    <link rel='stylesheet' href='/style.css' type='text/css' />
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
+        main p {
+            padding: 3rem 0;
         }
-
-        html {
+        main p a {
+            color: white;
+            font-size: 5rem;
+            line-height: 5rem;
+            border: 1rem solid #FFC83D;
+            box-shadow: 0 0 2rem black;
             background: black;
-            color: white;
-            font-family: 'segoe ui', sans-serif;
-            font-weight: 100;
-            font-size: 3rem;
-            margin-left: 1rem;
-        }
-
-        h1 {
-            font-size: 1rem;
-        }
-
-        a {
-            color: white;
-            font-size: 3rem;
-            border: 0.5rem solid #FFC83D;
             border-radius: 50%;
             text-decoration: none;
-            display: inline-block;
             margin: 0.5rem;
         }
-
-        ul {
-            list-style-type: none;
-        }
-
-        li {
-            margin-left: 0;
-            font-size: 0.5rem;
+        main ul {
+            margin-bottom: 1rem !important;
         }
     </style>
+
     <script>
         function toggle() {
             fetch('/home/toggle').then(() => {
@@ -63,7 +47,7 @@
         }
         function set(state) {
             for (const name in state) {
-                document.querySelector(`[data-state="${name}"]`).innerText = state[name];
+                document.querySelector(`[data-state="${name}"]`).innerHTML = state[name];
             }
         }
 
@@ -84,10 +68,10 @@
                         });
                     } else {
                         set({
-                            'name': '',
-                            'duration': '',
-                            'speed': '',
-                            'energy': '',
+                            'name': '&nbsp;',
+                            'duration': '&nbsp;',
+                            'speed': '&nbsp;',
+                            'energy': '&nbsp;',
                             'recent': `Charge in the last few hours: ${state.recent.toPrecision(3)} kWh`
                         });
                     }
@@ -101,21 +85,23 @@
 </head>
 
 <body>
-
-    <div>
-        <h1>Charging Zoe</h1>
-        <p>
-            <a href='/' onclick='toggle()'>⚡</a>
-        </p>
-        <ul>
-            <li data-state='name'></li>
-            <li data-state='duration'></li>
-            <li data-state='speed'></li>
-            <li data-state='energy'></li>
-        </ul>
-        <ul>
-            <li data-state='recent'></li>
-        </ul>
+    <div id='background'></div>
+    <div id='foreground'>
+        <main>
+            <h1>Charging Zoe</h1>
+            <p>
+                <a onclick='toggle()'>⚡</a>
+            </p>
+            <ul>
+                <li data-state='recent'></li>
+            </ul>
+            <ul>
+                <li data-state='name'></li>
+                <li data-state='duration'></li>
+                <li data-state='speed'></li>
+                <li data-state='energy'></li>
+            </ul>
+        </main>
     </div>
 </body>
 

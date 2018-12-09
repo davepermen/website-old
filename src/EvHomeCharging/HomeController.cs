@@ -1,16 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace HomeCharging
+using IO = System.IO;
+
+namespace EvHomeCharging
 {
-    using System.IO;
     public class HomeController : Controller
     {
         private readonly IHttpClientFactory httpClientFactory;
+        private readonly string activePath = $@"{Program.DataRoot}\active";
 
         public HomeController(IHttpClientFactory httpClientFactory)
         {
@@ -19,12 +20,12 @@ namespace HomeCharging
 
         public async Task<JsonResult> Toggle()
         {
-            if (System.IO.File.Exists("active") == false)
+            if (IO.File.Exists(activePath) == false)
             {
-                System.IO.File.WriteAllText("active", "no");
+                IO.File.WriteAllText(activePath, "no");
             }
 
-            if (System.IO.File.ReadAllText("active") == "no")
+            if (IO.File.ReadAllText(activePath) == "no")
             {
                 await Start();
             }
@@ -35,14 +36,14 @@ namespace HomeCharging
 
             return Json(new
             {
-                Active = System.IO.File.ReadAllText("active")
+                Active = IO.File.ReadAllText(activePath)
             });
         }
 
         public JsonResult State()
         {
             var recent = Charges.GetRecentCharges();
-            if (System.IO.File.Exists("active") == true && System.IO.File.ReadAllText("active") == "yes")
+            if (IO.File.Exists(activePath) == true && IO.File.ReadAllText(activePath) == "yes")
             {
                 var charge = Charges.GetLastCharge();
                 return Json(new
@@ -82,7 +83,7 @@ namespace HomeCharging
             var client = httpClientFactory.CreateClient("ECarUp");
             await client.PostAsync("api/ActivateStation/" + id + "?seconds=" + seconds, null);
 
-            System.IO.File.WriteAllText("active", "yes");
+            IO.File.WriteAllText(activePath, "yes");
         }
 
         private async Task StopCharging()
@@ -90,7 +91,7 @@ namespace HomeCharging
             var id = "e6d1a1fb-c667-42d6-836b-a5704cd87fe8";
 
             var client = httpClientFactory.CreateClient("ECarUp");
-            System.IO.File.WriteAllText("active", "no");
+            IO.File.WriteAllText(activePath, "no");
             await client.PostAsync("api/DeactivateStation/" + id, null);
         }
 
@@ -105,7 +106,7 @@ namespace HomeCharging
                 var stations = await response.Content.ReadAsAsync<ChargingState[]>();
 
                 var hasStations = stations.Any();
-                var shouldBeStopped = hasStations == false || System.IO.File.ReadAllText("active") == "no";
+                var shouldBeStopped = hasStations == false || IO.File.ReadAllText(activePath) == "no";
 
                 if (hasStations)
                 {
@@ -120,7 +121,7 @@ namespace HomeCharging
                 }
             }
 
-            System.IO.File.WriteAllText("active", "no");
+            IO.File.WriteAllText(activePath, "no");
         }
 
         public JsonResult Recent() => Json(Charges.GetRecentCharges());
@@ -130,9 +131,9 @@ namespace HomeCharging
         private void UpdateLiveTile()
         {
             var recent = Charges.GetRecentCharges();
-            var template = System.IO.File.ReadAllText("wwwroot\\livetile.xml.template");
+            var template = IO.File.ReadAllText("wwwroot\\livetile.xml.template");
             var content = template.Replace("{{recent}}", Math.Round(recent, 1).ToString());
-            System.IO.File.WriteAllText("wwwroot\\livetile.xml", content);
+            IO.File.WriteAllText("wwwroot\\livetile.xml", content);
         }
     }
 }

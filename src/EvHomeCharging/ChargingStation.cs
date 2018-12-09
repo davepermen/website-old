@@ -1,4 +1,4 @@
-﻿namespace HomeCharging
+﻿namespace EvHomeCharging
 {
     public class ChargingStation
     {
