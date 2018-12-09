@@ -1,0 +1,32 @@
+<tile>
+  <visual>
+    <binding template="TileSmall">
+      <image placement="background" hint-overlay="60" src="https://fitness.davepermen.net/icons/mstile-70x70.png"/>
+      <text id="1">Pushups</text>
+      <text id="2"></text>
+      <text id="3">0✔</text>
+    </binding>
+
+    <binding template="TileMedium">
+      <image placement="background" hint-overlay="60" src="https://fitness.davepermen.net/icons/mstile-150x150.png"/>
+      <text id="1">Pushups</text>
+      <text id="2"></text>
+      <text id="3">0 ✔ done</text>
+    </binding>
+
+    <binding template="TileWide">
+      <image placement="background" hint-overlay="60" src="https://fitness.davepermen.net/icons/mstile-310x150.png"/>
+      <text id="1">Pushups</text>
+      <text id="2"></text>
+      <text id="3">0 ✔ done</text>
+    </binding>
+
+    <binding template="TileLarge">
+      <image placement="background" hint-overlay="60" src="https://fitness.davepermen.net/icons/mstile-310x310.png"/>
+      <text id="1">ZOE Charging</text>
+      <text id="2"></text>
+      <text id="3">0 ✔ done</text>
+    </binding>
+
+  </visual>
+</tile>

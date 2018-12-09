@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
+using IO = System.IO;
 
 namespace Fitness
 {
@@ -22,12 +23,21 @@ namespace Fitness
 
         private void Log(int pushups)
         {
-            System.IO.Directory.CreateDirectory($@"{Program.DataRoot}\{training}");
-            System.IO.Directory.CreateDirectory($@"{Program.DataRoot}\{training}\{user}");
+            IO.Directory.CreateDirectory($@"{Program.DataRoot}\{training}");
+            IO.Directory.CreateDirectory($@"{Program.DataRoot}\{training}\{user}");
 
             var filename = $@"{Program.DataRoot}\{training}\{user}\{DateTime.UtcNow:yyyy-MM-dd}.txt";
-            var current = System.IO.File.Exists(filename) ? int.Parse(System.IO.File.ReadAllText(filename)) : 0;
-            System.IO.File.WriteAllText(filename, $"{current + pushups}");
+            var current = IO.File.Exists(filename) ? int.Parse(IO.File.ReadAllText(filename)) : 0;
+            IO.File.WriteAllText(filename, $"{current + pushups}");
+
+            UpdateLiveTile(new HomeControllerModel(training, user));
+        }
+
+        private void UpdateLiveTile(HomeControllerModel model)
+        {
+            var template = IO.File.ReadAllText("wwwroot\\livetile.xml.template");
+            var content = template.Replace("{{recent}}", model.Pushups.ToString());
+            IO.File.WriteAllText("wwwroot\\livetile.xml", content);
         }
     }
 }
