@@ -6,8 +6,6 @@ namespace Fitness
 {
     public class HomeControllerModel
     {
-        private static readonly string pushups = $@"{Program.DataRoot}\pushups";
-
         List<int> dailyPushups = new List<int>();
         List<int> summedPushups = new List<int>();
 

@@ -1,38 +1,49 @@
 @model Fitness.HomeControllerModel
 <!doctype html>
 <html>
-    <head>
-        <title>Fitness</title>
-        <meta name="viewport" content="width=device-width" />
-        <link rel='stylesheet' href='/style.css' type='text/css' />
-    </head>
-    <body>
-        <div id='background'></div>
-        <div id='foreground'>
-            <main>
-                <header id='pushups'><br><br>PUSHUPS</header>
-                <section>
-                    <article id='pushups'>
-                        @Model.Pushups ✔
-                    </article>
-                    <article style='font-size: 0.5rem; line-height: 0.5rem'>
-                        &nbsp;<br />
-                        @(Model.Pushups / 50)% of year goal<br />
-                        &nbsp;<br />
-                        @(5000 - Model.Pushups) or @((5000 - Model.Pushups) / (new DateTime(2018, 12, 31) - DateTime.Now).Days) per day to do<br />
-                        @(Model.Pushups / (DateTime.Now - new DateTime(2018, 1, 1)).Days) done per day<br />
-                        &nbsp;
-                    </article>
-                    <article>
-                        <svg style="height: 1.5rem; border-left: 2px solid white; border-bottom: 2px solid white; filter: drop-shadow(0 5px 10px #000);" viewBox="0 0 365 100" class="chart">
-                            <polyline fill="hsla(32, 100%, 22%, 0.25)" stroke="none" stroke-width="0" points="@Model.SummedPushupsGraphBackground" transform="translate(0, 100) scale(1,-1)" />
-                            <polyline fill="hsla(208, 100%, 22%, 0.25)" stroke="none" stroke-width="0" points="@Model.DailyPushupsGraphBackground" transform="translate(0, 100) scale(1,-1)" />
-                            <polyline fill="none" stroke="hsla(208, 100%, 44%, 1)" stroke-width="2" points="@Model.DailyPushupsGraph" transform="translate(0, 100) scale(1,-1)" />
-                            <polyline fill="none" stroke="hsla(32, 100%, 44%, 1)" stroke-width="2" points="@Model.SummedPushupsGraph" transform="translate(0, 100) scale(1,-1)" />
-                        </svg>
-                    </article>
-                </section>
-            </main>
-        </div>
-    </body>
+<head>
+    <title>Fitness</title>
+    <meta name="viewport" content="width=device-width" />
+    <link rel='stylesheet' href='/style.css' type='text/css' />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="manifest" href="/icons/site.webmanifest">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#000000">
+    <link rel="shortcut icon" href="/icons/favicon.ico">
+    <meta name="apple-mobile-web-app-title" content="Fitness">
+    <meta name="application-name" content="Fitness">
+    <meta name="msapplication-TileColor" content="#000000">
+    <meta name="msapplication-config" content="/icons/browserconfig.xml">
+    <meta name="theme-color" content="#000000">
+</head>
+<body>
+    <div id='background'></div>
+    <div id='foreground'>
+        <main>
+            <header id='pushups'><br><br>PUSHUPS HERE</header>
+            <section>
+                <article id='pushups'>
+                    @Model.Pushups ✔
+                </article>
+                <article style='font-size: 0.5rem; line-height: 0.5rem'>
+                    &nbsp;<br />
+                    @(Model.Pushups / 50)% of year goal<br />
+                    &nbsp;<br />
+                    @(5000 - Model.Pushups) or @((5000 - Model.Pushups) / (new DateTime(2018, 12, 31) - DateTime.Now).Days) per day to do<br />
+                    @(Model.Pushups / (DateTime.Now - new DateTime(2018, 1, 1)).Days) done per day<br />
+                    &nbsp;
+                </article>
+                <article>
+                    <svg style="height: 1.5rem; border-left: 2px solid white; border-bottom: 2px solid white; filter: drop-shadow(0 5px 10px #000);" viewBox="0 0 365 100" class="chart">
+                        <polyline fill="hsla(32, 100%, 22%, 0.25)" stroke="none" stroke-width="0" points="@Model.SummedPushupsGraphBackground" transform="translate(0, 100) scale(1,-1)" />
+                        <polyline fill="hsla(208, 100%, 22%, 0.25)" stroke="none" stroke-width="0" points="@Model.DailyPushupsGraphBackground" transform="translate(0, 100) scale(1,-1)" />
+                        <polyline fill="none" stroke="hsla(208, 100%, 44%, 1)" stroke-width="2" points="@Model.DailyPushupsGraph" transform="translate(0, 100) scale(1,-1)" />
+                        <polyline fill="none" stroke="hsla(32, 100%, 44%, 1)" stroke-width="2" points="@Model.SummedPushupsGraph" transform="translate(0, 100) scale(1,-1)" />
+                    </svg>
+                </article>
+            </section>
+        </main>
+    </div>
+</body>
 </html>

@@ -6,10 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="Properties\PublishProfiles\Localhost.pubxml.user" />
     <None Include="Properties\PublishProfiles\Server Deployment.pubxml.user" />
   </ItemGroup>
