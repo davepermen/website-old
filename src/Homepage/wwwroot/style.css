@@ -93,6 +93,10 @@ body {
             text-shadow: 0px 0.25rem 1rem #555, 0px 0.25rem 1rem #555;
         }
 
+        #foreground a[onlyonhover]:not(:hover) {
+            text-decoration: none;
+        }
+
     #foreground section {
         margin: 1rem 0 0 0;
     }
