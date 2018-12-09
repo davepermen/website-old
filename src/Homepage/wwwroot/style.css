@@ -11,7 +11,7 @@ html {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    cursor: arrow;
+    cursor: default;
 }
 
 * {
@@ -290,22 +290,42 @@ section[blog] {
         animation: 0.7s linear forwards article-fadein3d;
         overflow: hidden;
     }
-        section[blog] article h1:first-of-type {
-            padding: 1em 1em 0 1em;
-            vertical-align: bottom;
+        section[blog] article header {
+            padding: 0 1em 0 1em;
             line-height: 1em;
-            font-size: 4em;
-            width: 60em;
-            height: 5em;
-            display: table-cell;
-            vertical-align: middle;
+            height: 20em;
+            position: relative;
+            margin: 0;
             color: white;
             text-shadow: 0 0 0.5em black;
             background-size: cover;
             background-position: center center;
         }
 
-        section[blog] article h1:not(:first-of-type) {
+            section[blog] article header h1 {
+                font-size: 4em;
+                line-height: 1em;
+                margin: 0;
+                padding: 1em 1em 0 1em;
+            }
+
+            section[blog] article header section[meta] {
+                position: absolute;
+                right: 1em;
+                bottom: 1em;
+            }
+
+                section[blog] article header section[meta] p {
+                    text-align: right;
+                    margin: 0;
+                    padding: 0;
+                    font-family: sans-serif;
+                    font-weight: bold;
+                    font-size: 1em;
+                    text-shadow: 0 0 1em black, 0 0 1em black;
+                }
+
+        section[blog] article h1 {
             font-weight: 600;
             font-size: 2em;
             background: none;
@@ -332,13 +352,12 @@ section[blog] {
             margin-bottom: 2.8em;
         }
 
-            section[blog] article section p:first-of-type:not(:only-child)::first-letter {
+            section[blog] article > section > p:first-of-type:not(:only-child)::first-letter {
                 font-size: 3.5em;
                 font-weight: 900;
                 float: left;
-                line-height: 1em;
-                margin-right: 0.06em;
-                margin-top: -0.06em;
+                padding: 0.1em 0.05em 0 0;
+                line-height: 0.625em;
                 text-shadow: 0.07rem 0.125rem 0.25rem 0.25rem lightgray;
             }
 
@@ -398,6 +417,7 @@ section[blog] pre {
 }
 section[blog] pre code {
     padding: 1rem 2rem;
+    cursor: text;
 }
 
 code {

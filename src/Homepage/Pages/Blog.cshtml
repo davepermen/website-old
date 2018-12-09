@@ -1,4 +1,4 @@
-﻿@page "{Slug}"
+﻿@page "{slug}"
 @model Homepage.Pages.BlogModel
 
 @using Homepage
@@ -7,13 +7,18 @@
     Layout = "_Layout";
 }
 
-@if(Model.HasBlogContent)
+@if (Model.HasContent)
 {
     <section blog>
         <article>
-            <section>
-                @Html.Raw(Model.BlogContent)
-            </section>
+            <header style="background-image: url('@Model.HeroImage')">
+                <h1>@Model.Metadata.Title</h1>
+                <section meta>
+                    <p>written by @Model.Metadata.Author</p>
+                    <p>published on the @Model.Metadata.Date.ToShortDateString()</p>
+                </section>
+            </header>
+            @Html.Raw(Model.BlogContent)
         </article>
     </section>
 }
