@@ -36,7 +36,7 @@ namespace Fitness
         private void UpdateLiveTile(HomeControllerModel model)
         {
             var template = IO.File.ReadAllText("wwwroot\\livetile.xml.template");
-            var content = template.Replace("{{recent}}", model.Pushups.ToString());
+            var content = template.Replace("{{amount}}", model.Pushups.ToString());
             IO.File.WriteAllText("wwwroot\\livetile.xml", content);
         }
     }
