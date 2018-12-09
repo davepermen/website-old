@@ -6,23 +6,26 @@ namespace Fitness
 {
     public class HomeControllerModel
     {
-        int allpushups = 0;
+        private static readonly string pushups = $@"{Program.DataRoot}\pushups";
+
         List<int> dailyPushups = new List<int>();
         List<int> summedPushups = new List<int>();
-        public HomeControllerModel(string db)
+
+        public HomeControllerModel(string training, string user)
         {
-            foreach(var file in Directory.GetFiles(db, "*.txt"))
+            var path = $@"{Program.DataRoot}\{training}\{user}";
+            foreach (var file in Directory.GetFiles(path, "*.txt"))
             {
                 var pushup = int.Parse(File.ReadAllText(file));
                 dailyPushups.Add(pushup);
-                allpushups += pushup;
-                summedPushups.Add(allpushups);
+                Pushups += pushup;
+                summedPushups.Add(Pushups);
             }
         }
 
         public string Me { get; set; }
 
-        public int Pushups => allpushups;
+        public int Pushups { get; } = 0;
 
         public string DailyPushupsGraph => string.Join(" ", dailyPushups.Select((value, index) => $"{index}, {value * .5f}")); // format for svg polyline
         public string DailyPushupsGraphBackground => DailyPushupsGraph + " 364, 0";
