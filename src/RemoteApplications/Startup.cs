@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Conesoft;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +12,8 @@ namespace RemoteApplications
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDataSources();
+
             services.AddHsts(options =>
             {
                 options.Preload = true;
@@ -21,7 +24,7 @@ namespace RemoteApplications
             services.AddMvc();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDataSources dataSources)
         {
             if (env.IsDevelopment())
             {
@@ -32,7 +35,7 @@ namespace RemoteApplications
                 app.UseHsts();
             }
 
-            var fileProvider = new PhysicalFileProvider(Program.DataRoot);
+            var fileProvider = new PhysicalFileProvider(dataSources.LocalDirectory);
 
             var contentTypeProvider = new FileExtensionContentTypeProvider();
             contentTypeProvider.Mappings[".rdp"] = "application/x-rdp";

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Conesoft;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -9,27 +11,20 @@ namespace RemoteApplications.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly IConfiguration configuration;
-
-        public IndexModel(IConfiguration configuration)
+        public void OnGet([FromServices] IConfiguration configuration, [FromServices] IDataSources dataSources)
         {
-            this.configuration = configuration;
-        }
-
-        public void OnGet()
-        {
-            var applications = Directory.GetFiles(Program.DataRoot, "*.rdp").Select(f => Path.GetFileNameWithoutExtension(f)).ToArray();
+            var applications = Directory.GetFiles(dataSources.LocalDirectory, "*.rdp").Select(f => Path.GetFileNameWithoutExtension(f)).ToArray();
 
             AllApplictions = applications.Select(file =>
             {
-                var publishDate = new FileInfo(Path.Combine(Program.DataRoot, $"{file}.rdp")).CreationTimeUtc;
+                var publishDate = new FileInfo(Path.Combine(dataSources.LocalDirectory, $"{file}.rdp")).CreationTimeUtc;
 
                 var icons = new List<Icon>();
-                if (System.IO.File.Exists(Path.Combine(Program.DataRoot, $"{file}.ico")))
+                if (System.IO.File.Exists(Path.Combine(dataSources.LocalDirectory, $"{file}.ico")))
                 {
                     icons.Add(new Icon { Type = "Ico", TagType = "IconRaw", File = $"{file}.ico", Size = null });
                 }
-                if (System.IO.File.Exists(Path.Combine(Program.DataRoot, $"{file}.png")))
+                if (System.IO.File.Exists(Path.Combine(dataSources.LocalDirectory, $"{file}.png")))
                 {
                     icons.Add(new Icon { Type = "Png", TagType = "Icon32", File = $"{file}.png", Size = "32x32" });
                 }
@@ -52,21 +47,5 @@ namespace RemoteApplications.Pages
         public DateTime PublishDate { get; private set; }
 
         public string RemoteServer { get; private set; }
-    }
-
-    public class Application
-    {
-        public string Name { get; set; }
-        public string RdpName => Name + ".rdp";
-        public Icon[] Icons { get; set; }
-        public DateTime PublishDate { get; set; }
-    }
-
-    public class Icon
-    {
-        public string Type { get; set; }
-        public string TagType { get; set; }
-        public string File { get; set; }
-        public string Size { get; set; }
     }
 }
