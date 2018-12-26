@@ -10,6 +10,13 @@ namespace Homepage.Pages
 {
     public class BlogModel : PageModel
     {
+        readonly DataSources.Root root;
+
+        public BlogModel(DataSources.Root root)
+        {
+            this.root = root;
+        }
+
         static readonly MarkdownPipeline pipeline = new MarkdownPipelineBuilder().UseYamlFrontMatter().Build();
 
         public string BlogContent { get; private set; } = null;
@@ -20,7 +27,7 @@ namespace Homepage.Pages
 
         public async Task<IActionResult> OnGet(string slug)
         {
-            var path = $@"{Program.DataRoot}\blog\{slug}\index.md";
+            var path = $@"{root.LocalDirectory}\blog\{slug}\index.md";
             if (slug.Contains(@"\") == false && slug.Contains(@"..") == false && System.IO.File.Exists(path))
             {
                 this.HeroImage = $"/blog/{slug}/hero.jpg";

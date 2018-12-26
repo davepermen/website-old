@@ -19,6 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\libraries\DataSources\DataSources.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Update="Pages\_Layout.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>

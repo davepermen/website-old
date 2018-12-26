@@ -12,6 +12,7 @@ namespace Homepage
         {
             services.AddDirectoryBrowser();
             services.AddMvc();
+            services.AddSingleton<DataSources.Root>();
 
             services.AddHsts(options =>
             {
@@ -21,7 +22,7 @@ namespace Homepage
             });
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, DataSources.Root root)
         {
             if (env.IsDevelopment())
             {
@@ -37,7 +38,7 @@ namespace Homepage
 
             app.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider($@"{Program.DataRoot}\blog"),
+                FileProvider = new PhysicalFileProvider($@"{root.LocalDirectory}\blog"),
                 RequestPath = "/blog"
             });
 
