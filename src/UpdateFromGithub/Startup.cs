@@ -18,6 +18,7 @@ namespace UpdateFromGithub
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDataSources();
             services.AddHsts(options =>
             {
                 options.Preload = true;
@@ -77,6 +78,7 @@ namespace UpdateFromGithub
                                 using (var httpClient = new HttpClient())
                                 {
                                     var payload = JsonConvert.DeserializeObject<Payload>(payloadContent);
+                                    File.WriteAllText("payload-content.json", payloadContent);
                                     await httpClient.GetAsync($@"http://localhost:5000/?deploymenttype=Server%20Deployment&repository={payload.Repository.Name}");
                                 }
                             }
