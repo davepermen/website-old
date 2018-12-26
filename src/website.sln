@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RemoteApplications", "Remot
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{E6C138F8-C8AE-488F-9634-F41C45A70534}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataSources", "libraries\DataSources\DataSources.csproj", "{FBE05E60-72DE-47BC-9FA3-FE8B2F8759C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Conesoft.DataSources", "libraries\DataSources\Conesoft.DataSources.csproj", "{FBE05E60-72DE-47BC-9FA3-FE8B2F8759C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

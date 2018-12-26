@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Conesoft;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,17 +9,11 @@ namespace Homepage.Pages
 {
     public class IndexModel : PageModel
     {
-        readonly DataSources.Root root;
-
-        public IndexModel(DataSources.Root root)
-        {
-            this.root = root;
-        }
         public IEnumerable<(string Title, string Path)> BlogPosts { get; private set; } = null;
 
-        public void OnGet()
+        public void OnGet([FromServices] IDataSources dataSources)
         {
-            BlogPosts = Directory.GetDirectories($@"{root.LocalDirectory}\blog").Select(p =>
+            BlogPosts = Directory.GetDirectories($@"{dataSources.LocalDirectory}\blog").Select(p =>
             {
                 var name = Path.GetFileName(p);
 

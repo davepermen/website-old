@@ -1,15 +1,16 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Linq;
 using System.Reflection;
 using IO = System.IO;
 
-namespace DataSources
+namespace Conesoft
 {
-    public class Root
+    public class DataSources : IDataSources
     {
         readonly Type rootType;
 
-        public Root()
+        public DataSources()
         {
             rootType = Assembly.GetEntryAssembly().ExportedTypes.Where(t => t.Name == "Program" && t.GetMethod("Main") != null).FirstOrDefault();
         }
@@ -28,5 +29,9 @@ namespace DataSources
         public string SharedDatabase(string name) => $@"{SharedDirectory}\{name}.sqlite";
 
         public string SharedUserDatabase => SharedDatabase("users");
+
+        public string LocalConfiguration => $@"{IO.Directory.GetCurrentDirectory()}\..\{rootType.Namespace}";
+
+        static public string Configuration => new DataSources().LocalConfiguration;
     }
 }

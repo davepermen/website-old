@@ -1,4 +1,5 @@
-﻿using Markdig;
+﻿using Conesoft;
+using Markdig;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
@@ -10,13 +11,6 @@ namespace Homepage.Pages
 {
     public class BlogModel : PageModel
     {
-        readonly DataSources.Root root;
-
-        public BlogModel(DataSources.Root root)
-        {
-            this.root = root;
-        }
-
         static readonly MarkdownPipeline pipeline = new MarkdownPipelineBuilder().UseYamlFrontMatter().Build();
 
         public string BlogContent { get; private set; } = null;
@@ -25,9 +19,9 @@ namespace Homepage.Pages
         public bool HasContent => BlogContent != null;
 
 
-        public async Task<IActionResult> OnGet(string slug)
+        public async Task<IActionResult> OnGet(string slug, [FromServices] IDataSources dataSources)
         {
-            var path = $@"{root.LocalDirectory}\blog\{slug}\index.md";
+            var path = $@"{dataSources.LocalDirectory}\blog\{slug}\index.md";
             if (slug.Contains(@"\") == false && slug.Contains(@"..") == false && System.IO.File.Exists(path))
             {
                 this.HeroImage = $"/blog/{slug}/hero.jpg";
@@ -55,14 +49,14 @@ namespace Homepage.Pages
             public Metadata_(string markdown)
             {
                 var splits = markdown.Split(new string[] { "---" }, StringSplitOptions.None);
-                if(splits.Length == 3)
+                if (splits.Length == 3)
                 {
                     var metadata = splits[1];
 
-                    foreach(var line in metadata.Split('\n').Select(l => l.Trim()))
+                    foreach (var line in metadata.Split('\n').Select(l => l.Trim()))
                     {
                         var keyValue = line.Split(':').Select(l => l.Trim()).ToArray();
-                        if(keyValue.Length == 2)
+                        if (keyValue.Length == 2)
                         {
                             var key = keyValue[0];
                             var value = keyValue[1];
@@ -74,14 +68,14 @@ namespace Homepage.Pages
 
             private void TrySet(string key, string value)
             {
-                switch(key.ToLower())
+                switch (key.ToLower())
                 {
                     case "author":
                         Author = value;
                         break;
 
                     case "date":
-                        if(DateTime.TryParse(value, out var date))
+                        if (DateTime.TryParse(value, out var date))
                         {
                             Date = date;
                         }

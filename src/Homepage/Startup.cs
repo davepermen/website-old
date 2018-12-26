@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Conesoft;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -12,7 +13,7 @@ namespace Homepage
         {
             services.AddDirectoryBrowser();
             services.AddMvc();
-            services.AddSingleton<DataSources.Root>();
+            services.AddDataSources();
 
             services.AddHsts(options =>
             {
@@ -22,7 +23,7 @@ namespace Homepage
             });
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, DataSources.Root root)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDataSources dataSource)
         {
             if (env.IsDevelopment())
             {
@@ -38,7 +39,7 @@ namespace Homepage
 
             app.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider($@"{root.LocalDirectory}\blog"),
+                FileProvider = new PhysicalFileProvider($@"{dataSource.LocalDirectory}\blog"),
                 RequestPath = "/blog"
             });
 

@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore;
+﻿using Conesoft;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.IO;
 
 namespace Homepage
 {
@@ -17,13 +16,8 @@ namespace Homepage
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration(builder =>
                 {
-                    builder.AddJsonFile($@"{Directory.GetCurrentDirectory()}\..\{typeof(Program).Namespace}.json", optional: true, reloadOnChange: true);
+                    builder.AddJsonFile(DataSources.Configuration, optional: true, reloadOnChange: true);
                 })
                 .UseStartup<Startup>();
-
-        //public static string DataRoot = Directory.Exists($@"{Directory.GetCurrentDirectory()}\..\data\{typeof(Program).Namespace}")
-        //    ? $@"{Directory.GetCurrentDirectory()}\..\data\{typeof(Program).Namespace}"
-        //    : $@"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\Webseiten\data\{typeof(Program).Namespace}"
-        //    ;
     }
 }
