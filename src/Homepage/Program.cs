@@ -1,7 +1,6 @@
 ﻿using Conesoft;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 
 namespace Homepage
 {
@@ -14,10 +13,7 @@ namespace Homepage
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration(builder =>
-                {
-                    builder.AddJsonFile(DataSources.Configuration, optional: true, reloadOnChange: true);
-                })
+                .AddDataSourceConfiguration()
                 .UseStartup<Startup>();
     }
 }

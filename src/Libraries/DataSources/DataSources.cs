@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
+﻿using System;
 using System.Linq;
 using System.Reflection;
 using IO = System.IO;
@@ -30,8 +29,8 @@ namespace Conesoft
 
         public string SharedUserDatabase => SharedDatabase("users");
 
-        public string LocalConfiguration => $@"{IO.Directory.GetCurrentDirectory()}\..\{rootType.Namespace}";
+        string LocalConfiguration => $@"{IO.Directory.GetCurrentDirectory()}\..\{rootType.Namespace}.json";
 
-        static public string Configuration => new DataSources().LocalConfiguration;
+        internal static string Configuration => new DataSources().LocalConfiguration;
     }
 }

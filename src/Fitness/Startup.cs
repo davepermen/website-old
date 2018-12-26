@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Conesoft;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -9,6 +10,8 @@ namespace Fitness
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDataSources();
+
             services.AddMvc();
 
             services.AddHsts(options =>

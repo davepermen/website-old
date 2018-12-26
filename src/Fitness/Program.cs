@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore;
+﻿using Conesoft;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.IO;
 
 namespace Fitness
 {
@@ -15,15 +13,7 @@ namespace Fitness
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration(builder =>
-                {
-                    builder.AddJsonFile($@"{Directory.GetCurrentDirectory()}\..\{typeof(Program).Namespace}.json", optional: true, reloadOnChange: true);
-                })
+                .AddDataSourceConfiguration()
                 .UseStartup<Startup>();
-
-        public static string DataRoot = Directory.Exists($@"{Directory.GetCurrentDirectory()}\..\data\{typeof(Program).Namespace}")
-            ? $@"{Directory.GetCurrentDirectory()}\..\data\{typeof(Program).Namespace}"
-            : $@"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\Webseiten\data\{typeof(Program).Namespace}"
-            ;
     }
 }

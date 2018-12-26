@@ -6,18 +6,21 @@ namespace Fitness
 {
     public class HomeControllerModel
     {
-        List<int> dailyPushups = new List<int>();
-        List<int> summedPushups = new List<int>();
+        readonly List<int> dailyPushups = new List<int>();
+        readonly List<int> summedPushups = new List<int>();
 
-        public HomeControllerModel(string training, string user)
+        public HomeControllerModel(string training, string user, Conesoft.IDataSources dataSources)
         {
-            var path = $@"{Program.DataRoot}\{training}\{user}";
-            foreach (var file in Directory.GetFiles(path, "*.txt"))
+            var path = $@"{dataSources.LocalDirectory}\{training}\{user}";
+            if(Directory.Exists(path))
             {
-                var pushup = int.Parse(File.ReadAllText(file));
-                dailyPushups.Add(pushup);
-                Pushups += pushup;
-                summedPushups.Add(Pushups);
+                foreach (var file in Directory.GetFiles(path, "*.txt"))
+                {
+                    var pushup = int.Parse(File.ReadAllText(file));
+                    dailyPushups.Add(pushup);
+                    Pushups += pushup;
+                    summedPushups.Add(Pushups);
+                }
             }
         }
 

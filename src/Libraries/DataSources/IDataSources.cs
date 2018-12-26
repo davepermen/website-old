@@ -2,7 +2,6 @@
 {
     public interface IDataSources
     {
-        string LocalConfiguration { get; }
         string LocalDirectory { get; }
         string SharedDirectory { get; }
         string SharedUserDatabase { get; }
