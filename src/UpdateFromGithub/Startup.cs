@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Conesoft;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
@@ -25,7 +26,7 @@ namespace UpdateFromGithub
             });
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDataSources dataSources)
         {
             if (env.IsDevelopment())
             {
@@ -44,7 +45,7 @@ namespace UpdateFromGithub
             fileExtensionContentTypeProvider.Mappings[".deploy"] = "application/octet-stream";
             fileExtensionContentTypeProvider.Mappings[".exe"] = "image/png";
 
-            var physicalFileProvider = new PhysicalFileProvider($@"{Directory.GetCurrentDirectory()}\..\data\{typeof(Program).Namespace}\ContinuousDeployment");
+            var physicalFileProvider = new PhysicalFileProvider($@"{dataSources.LocalDirectory}\ContinuousDeployment");
 
             app.UseStaticFiles(new StaticFileOptions
             {
