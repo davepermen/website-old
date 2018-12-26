@@ -111,6 +111,22 @@ body {
             margin: 0;
         }
 
+        #foreground form, #foreground input, #foreground button {
+            font-size: 0.4rem;
+            line-height: 0.4rem;
+            width: 10rem;
+        }
+
+        #foreground input[type=text], #foreground input[type=password], #foreground button {
+            background: hsla(30, 100%, 60%, 0.25);
+            border: 0;
+            color: inherit;
+        }
+
+        #foreground * {
+            display: block;
+        }
+
 
 #footnotes {
     display: flex;
@@ -123,14 +139,18 @@ body {
 }
 
     #footnotes footer {
-        font-size: 0.6rem;
-        line-height: 0.7rem;
+        font-size: 0.2rem;
+        line-height: 0.3rem;
         margin: 1rem;
         opacity: 0;
         text-align: right;
         animation: 4s ease-out forwards footnotes-fadein;
         animation-delay: 2s;
         pointer-events: all;
+    }
+
+    #footnotes ul {
+        list-style-type: none;
     }
 
     #footnotes a {
@@ -421,4 +441,23 @@ code {
     
 section[blog] img {
     max-width: 100%;
+}
+
+
+
+
+input {
+    font-size: 0.5rem;
+    color: hsl(30, 100%, 60%);
+    border: 0;
+    text-shadow: inherit;
+    overflow: visible;
+    cursor: pointer;
+    background: inherit;
+    font-weight: 900;
+    pointer-events: all;
+}
+
+form {
+    margin: 0.5rem 0;
 }

@@ -1,0 +1,45 @@
+﻿<!doctype html>
+<html>
+<head>
+    <title>Fitness</title>
+    <meta name="viewport" content="width=device-width" />
+    <link rel='stylesheet' href='/style.css' type='text/css' />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="manifest" href="/icons/site.webmanifest">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#000000">
+    <link rel="shortcut icon" href="/icons/favicon.ico">
+    <meta name="apple-mobile-web-app-title" content="Fitness">
+    <meta name="application-name" content="Fitness">
+    <meta name="msapplication-TileColor" content="#000000">
+    <meta name="msapplication-config" content="/icons/browserconfig.xml">
+    <meta name="theme-color" content="#000000">
+    <meta name="msapplication-notification" content="frequency=30;polling-uri=http://fitness.davepermen.net/livetile.xml" />
+</head>
+<body>
+    <div id='background'></div>
+    <div id='foreground'>
+        <main>
+            @RenderBody()
+        </main>
+    </div>
+    <div id='footnotes'>
+        <footer>
+            <nav>
+                <partial name="_LoginPartial" />
+                <ul>
+                    <li>
+                        <a asp-page="/Index">Home</a>
+                    </li>
+                    <li>
+                        <a asp-page="/Add">Add</a>
+                    </li>
+                </ul>
+            </nav>
+        </footer>
+    </div>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

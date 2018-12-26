@@ -1,0 +1,26 @@
+﻿@page
+@model Fitness.Pages.AddModel
+
+<header id='pushups'><br><br>PUSHUPS</header>
+<section>
+    <article id='pushups'>
+        @Model.Pushups ✔
+    </article>
+</section>
+<section>
+    <form asp-page="add" method="POST">
+        <input type="hidden" name="pushups" value="10">
+        <input type="submit" value="add 10 pushups">
+    </form>
+    <form asp-page="add" method="POST">
+    <input type="hidden" name="pushups" value="20">
+    <input type="submit" value="add 20 pushups">
+    </form>
+    <form asp-page="add" method="POST">
+        <input type="hidden" name="pushups" value="30">
+        <input type="submit" value="add 30 pushups">
+    </form>
+</section>
+<section style="font-size: 0.5rem">
+    <a href="/">home</a>
+</section>
