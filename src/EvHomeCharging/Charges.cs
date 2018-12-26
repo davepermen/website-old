@@ -1,5 +1,6 @@
 namespace EvHomeCharging
 {
+    using Conesoft;
     using Newtonsoft.Json;
     using System;
     using System.IO;
@@ -7,7 +8,15 @@ namespace EvHomeCharging
 
     public class Charges
     {
-        private static readonly string log = $@"{Program.DataRoot}\log";
+        private readonly IDataSources dataSources;
+
+        private string LogDirectory => $@"{dataSources.LocalDirectory}\log";
+        private string ChargesDirectory => $@"{dataSources.LocalDirectory}\charges";
+
+        public Charges(IDataSources dataSources)
+        {
+            this.dataSources = dataSources;
+        }
 
         public struct ChargeAt
         {
@@ -15,15 +24,15 @@ namespace EvHomeCharging
             public DateTime At { get; set; }
         }
 
-        public static float GetRecentCharges(int recentHours = 18)
+        public float GetRecentCharges(int recentHours = 18)
         {
-            if (Directory.Exists(log))
+            if (Directory.Exists(LogDirectory))
             {
                 var today = DateTime.UtcNow.ToString("s").Replace(":", "-").Substring(0, 4 + 1 + 2 + 1 + 2);
                 var yesterday = DateTime.UtcNow.AddDays(-1).ToString("s").Replace(":", "-").Substring(0, 4 + 1 + 2 + 1 + 2);
 
-                var filesOfToday = Directory.GetFiles(log, $"{today}*.json").Select(f => new FileInfo(f));
-                var filesOfYesterday = Directory.GetFiles(log, $"{yesterday}*.json").Select(f => new FileInfo(f));
+                var filesOfToday = Directory.GetFiles(LogDirectory, $"{today}*.json").Select(f => new FileInfo(f));
+                var filesOfYesterday = Directory.GetFiles(LogDirectory, $"{yesterday}*.json").Select(f => new FileInfo(f));
 
                 var files = filesOfToday.Concat(filesOfYesterday);
 
@@ -54,11 +63,11 @@ namespace EvHomeCharging
             }
         }
 
-        public static ChargingState GetLastCharge()
+        public ChargingState GetLastCharge()
         {
-            if (Directory.Exists(log))
+            if (Directory.Exists(LogDirectory))
             {
-                var files = Directory.GetFiles(log, "*.json").Select(f => new FileInfo(f));
+                var files = Directory.GetFiles(LogDirectory, "*.json").Select(f => new FileInfo(f));
 
                 var mostRecentFile = files.OrderByDescending(f => f.LastWriteTimeUtc).FirstOrDefault();
 
@@ -68,6 +77,27 @@ namespace EvHomeCharging
             {
                 return new ChargingState();
             }
+        }
+
+        public void Add(ChargingState chargingState)
+        {
+            Directory.CreateDirectory(ChargesDirectory);
+            var files = Directory.GetFiles(ChargesDirectory, "*.txt");
+            var counter = files.Max(f => (int?)int.Parse(Path.GetFileNameWithoutExtension(f))) ?? 0;
+
+            var currentCharge = File.Exists($"{ChargesDirectory}\\{counter}.txt") ? float.Parse(File.ReadAllText($"{ChargesDirectory}\\{counter}.txt")) : float.NegativeInfinity;
+
+            if (chargingState.EnergyUsed > currentCharge)
+            {
+                File.WriteAllText($"{ChargesDirectory}\\{counter}.txt", chargingState.EnergyUsed.ToString());
+            }
+            else if (chargingState.EnergyUsed < currentCharge)
+            {
+                File.WriteAllText($"{ChargesDirectory}\\{counter + 1}.txt", chargingState.EnergyUsed.ToString());
+            }
+
+            Directory.CreateDirectory(LogDirectory);
+            File.WriteAllText($"{LogDirectory}\\{DateTime.UtcNow.ToString("s").Replace(":", "-")}.json", JsonConvert.SerializeObject(chargingState, Formatting.Indented));
         }
     }
 }

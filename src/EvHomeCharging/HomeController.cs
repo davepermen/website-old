@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Conesoft;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Net.Http;
@@ -11,21 +12,26 @@ namespace EvHomeCharging
     public class HomeController : Controller
     {
         private readonly IHttpClientFactory httpClientFactory;
-        private readonly string activePath = $@"{Program.DataRoot}\active";
+        private readonly IDataSources dataSources;
+        private readonly Charges charges;
 
-        public HomeController(IHttpClientFactory httpClientFactory)
+        public HomeController(IHttpClientFactory httpClientFactory, IDataSources dataSources, Charges charges)
         {
             this.httpClientFactory = httpClientFactory;
+            this.dataSources = dataSources;
+            this.charges = charges;
         }
+
+        private string ActivePath => $@"{dataSources.LocalDirectory}\active";
 
         public async Task<JsonResult> Toggle()
         {
-            if (IO.File.Exists(activePath) == false)
+            if (IO.File.Exists(ActivePath) == false)
             {
-                IO.File.WriteAllText(activePath, "no");
+                IO.File.WriteAllText(ActivePath, "no");
             }
 
-            if (IO.File.ReadAllText(activePath) == "no")
+            if (IO.File.ReadAllText(ActivePath) == "no")
             {
                 await Start();
             }
@@ -36,16 +42,16 @@ namespace EvHomeCharging
 
             return Json(new
             {
-                Active = IO.File.ReadAllText(activePath)
+                Active = IO.File.ReadAllText(ActivePath)
             });
         }
 
         public JsonResult State()
         {
-            var recent = Charges.GetRecentCharges();
-            if (IO.File.Exists(activePath) == true && IO.File.ReadAllText(activePath) == "yes")
+            var recent = charges.GetRecentCharges();
+            if (IO.File.Exists(ActivePath) == true && IO.File.ReadAllText(ActivePath) == "yes")
             {
-                var charge = Charges.GetLastCharge();
+                var charge = charges.GetLastCharge();
                 return Json(new
                 {
                     Current = charge,
@@ -83,7 +89,7 @@ namespace EvHomeCharging
             var client = httpClientFactory.CreateClient("ECarUp");
             await client.PostAsync("api/ActivateStation/" + id + "?seconds=" + seconds, null);
 
-            IO.File.WriteAllText(activePath, "yes");
+            IO.File.WriteAllText(ActivePath, "yes");
         }
 
         private async Task StopCharging()
@@ -91,7 +97,7 @@ namespace EvHomeCharging
             var id = "e6d1a1fb-c667-42d6-836b-a5704cd87fe8";
 
             var client = httpClientFactory.CreateClient("ECarUp");
-            IO.File.WriteAllText(activePath, "no");
+            IO.File.WriteAllText(ActivePath, "no");
             await client.PostAsync("api/DeactivateStation/" + id, null);
         }
 
@@ -106,11 +112,11 @@ namespace EvHomeCharging
                 var stations = await response.Content.ReadAsAsync<ChargingState[]>();
 
                 var hasStations = stations.Any();
-                var shouldBeStopped = hasStations == false || IO.File.ReadAllText(activePath) == "no";
+                var shouldBeStopped = hasStations == false || IO.File.ReadAllText(ActivePath) == "no";
 
                 if (hasStations)
                 {
-                    new Charge(stations.First());
+                    charges.Add(stations.First());
                     UpdateLiveTile();
                     await Task.Delay(every);
                 }
@@ -121,16 +127,16 @@ namespace EvHomeCharging
                 }
             }
 
-            IO.File.WriteAllText(activePath, "no");
+            IO.File.WriteAllText(ActivePath, "no");
         }
 
-        public JsonResult Recent() => Json(Charges.GetRecentCharges());
+        public JsonResult Recent() => Json(charges.GetRecentCharges());
 
         public JsonResult RefreshLiveTile() { UpdateLiveTile(); return Json("ok"); }
 
         private void UpdateLiveTile()
         {
-            var recent = Charges.GetRecentCharges();
+            var recent = charges.GetRecentCharges();
             var template = IO.File.ReadAllText("wwwroot\\livetile.xml.template");
             var content = template.Replace("{{recent}}", Math.Round(recent, 1).ToString());
             IO.File.WriteAllText("wwwroot\\livetile.xml", content);

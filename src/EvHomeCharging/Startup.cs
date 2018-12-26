@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Conesoft;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +20,10 @@ namespace EvHomeCharging
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDataSources();
+
+            services.AddTransient<Charges>();
+
             var username = configuration["ecarup-username"];
             var password = configuration["ecarup-password"];
             services.AddHttpClient("ECarUp", client =>
