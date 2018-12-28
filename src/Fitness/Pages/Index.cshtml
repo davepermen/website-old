@@ -10,7 +10,7 @@
         &nbsp;<br />
         @(Model.Pushups / 50)% of year goal<br />
         &nbsp;<br />
-        @(5000 - Model.Pushups) or @((5000 - Model.Pushups) / (new DateTime(2018, 12, 31) - DateTime.Now).Days) per day to do<br />
+        @(5000 - Model.Pushups) or @((5000 - Model.Pushups) / (new DateTime(2019, 1, 1) - (DateTime.Now - TimeSpan.FromDays(1))).Days) per day to do<br />
         @(Model.Pushups / (DateTime.Now - new DateTime(2018, 1, 1)).Days) done per day<br />
         &nbsp;
     </article>
