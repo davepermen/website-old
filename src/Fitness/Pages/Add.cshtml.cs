@@ -56,7 +56,7 @@ namespace Fitness.Pages
                 var path = $@"{dataSources.LocalDirectory}\{year}\{user}\{training}";
                 if (Directory.Exists(path))
                 {
-                    foreach (var file in Directory.GetFiles(path, "*.txt"))
+                    foreach (var file in Directory.GetFiles(path, $"{year}-*.txt"))
                     {
                         var pushup = int.Parse(IO.File.ReadAllText(file));
                         dailyPushups.Add(pushup);
@@ -80,17 +80,17 @@ namespace Fitness.Pages
             var current = IO.File.Exists(filename) ? int.Parse(IO.File.ReadAllText(filename)) : 0;
             IO.File.WriteAllText(filename, $"{current + pushups}");
 
-            UpdateLiveTile(new HomeControllerModel(training, user, dataSources));
+            //UpdateLiveTile(new HomeControllerModel(training, user, dataSources));
         }
 
-        private void UpdateLiveTile(HomeControllerModel model)
-        {
-            if (User.Identity.IsAuthenticated && User.Identity.Name == "davepermen")
-            {
-                var template = IO.File.ReadAllText("wwwroot\\livetile.xml.template");
-                var content = template.Replace("{{amount}}", model.Pushups.ToString());
-                IO.File.WriteAllText("wwwroot\\livetile.xml", content);
-            }
-        }
+        //private void UpdateLiveTile(HomeControllerModel model)
+        //{
+        //    if (User.Identity.IsAuthenticated && User.Identity.Name == "davepermen")
+        //    {
+        //        var template = IO.File.ReadAllText("wwwroot\\livetile.xml.template");
+        //        var content = template.Replace("{{amount}}", model.Pushups.ToString());
+        //        IO.File.WriteAllText("wwwroot\\livetile.xml", content);
+        //    }
+        //}
     }
 }

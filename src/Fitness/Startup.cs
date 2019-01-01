@@ -1,9 +1,7 @@
 ﻿using Conesoft;
-using Fitness.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
@@ -15,18 +13,15 @@ namespace Fitness
         {
             services.AddDataSources();
 
-            // I hopefully find a way to use DI for IDataSources here, instead.. 
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite($@"Filename={new DataSources().SharedUserDatabase}"));
-            services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>();
-            services.Configure<IdentityOptions>(options =>
+            services.AddAuthentication(options =>
             {
-                // Default Password settings.
-                options.Password.RequireDigit = true;
-                options.Password.RequireLowercase = true;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequiredLength = 8;
-                options.Password.RequiredUniqueChars = 0;
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            })
+            .AddCookie(options =>
+            {
+                options.Cookie.Expiration = TimeSpan.FromDays(365);
             });
 
             services.AddMvc();
