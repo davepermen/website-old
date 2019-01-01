@@ -33,8 +33,14 @@
                         <a asp-page="/Index">Home</a>
                     </li>
                     <li>
-                        <a asp-page="/Add">Add</a>
+                        <a href="/?year=2018">2018</a>
                     </li>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li>
+                            <a asp-page="/Add">Add</a>
+                        </li>
+                    }
                 </ul>
             </nav>
         </footer>

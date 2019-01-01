@@ -1,6 +1,7 @@
 ﻿using Conesoft;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,12 +18,14 @@ namespace Fitness.Pages
 
         public int Pushups { get; set; } = 0;
 
-        public void OnGet([FromServices] IDataSources dataSources)
+        public void OnGet([FromQuery] int? year, [FromServices] IDataSources dataSources)
         {
-            string training = "pushups";
-            string user = "davepermen";
+            var training = "pushups";
+            var user = User.Identity.IsAuthenticated ? User.Identity.Name : "davepermen";
 
-            var path = $@"{dataSources.LocalDirectory}\{training}\{user}";
+            year = year ?? DateTime.Now.Year;
+
+            var path = $@"{dataSources.LocalDirectory}\{year}\{user}\{training}";
             if (Directory.Exists(path))
             {
                 foreach (var file in Directory.GetFiles(path, "*.txt"))

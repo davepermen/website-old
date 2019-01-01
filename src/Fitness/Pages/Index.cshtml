@@ -1,6 +1,13 @@
 ﻿@page
 @model Fitness.Pages.IndexModel
 
+@{
+    var firstDayNextYear = new DateTime(DateTime.Now.Year + 1, 1, 1);
+    var lastDayLastYear = new DateTime(DateTime.Now.Year, 1, 1) - TimeSpan.FromDays(1);
+    var today = DateTime.Now;
+    var yesterday = today - TimeSpan.FromDays(1);
+}
+
 <header id='pushups'><br><br>PUSHUPS</header>
 <section>
     <article id='pushups'>
@@ -10,8 +17,8 @@
         &nbsp;<br />
         @(Model.Pushups / 50)% of year goal<br />
         &nbsp;<br />
-        @(5000 - Model.Pushups) or @((5000 - Model.Pushups) / (new DateTime(2019, 1, 1) - (DateTime.Now - TimeSpan.FromDays(1))).Days) per day to do<br />
-        @(Model.Pushups / (DateTime.Now - new DateTime(2018, 1, 1)).Days) done per day<br />
+        @(5000 - Model.Pushups) or @((5000 - Model.Pushups) / (firstDayNextYear - yesterday).Days) per day to do<br />
+        @(Model.Pushups / (today - lastDayLastYear).Days) done per day<br />
         &nbsp;
     </article>
     <article>
