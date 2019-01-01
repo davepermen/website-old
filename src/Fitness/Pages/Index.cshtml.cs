@@ -37,9 +37,12 @@ namespace Fitness.Pages
                     Pushups += pushup;
                     summedPushups.Add(Pushups);
                 }
-            }
 
-            YearGoal = int.Parse(IO.File.ReadAllText($@"{path}\goal.txt"));
+                if (IO.File.Exists($@"{path}\goal.txt"))
+                {
+                    YearGoal = int.Parse(IO.File.ReadAllText($@"{path}\goal.txt"));
+                }
+            }
         }
         public string DailyPushupsGraph => string.Join(" ", dailyPushups.Select((value, index) => $"{index}, {value * .5f}")); // format for svg polyline
         public string DailyPushupsGraphBackground => DailyPushupsGraph + " 364, 0";
