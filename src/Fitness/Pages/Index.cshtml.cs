@@ -18,6 +18,8 @@ namespace Fitness.Pages
 
         public int Pushups { get; set; } = 0;
 
+        public int YearGoal { get; set; } = 0;
+
         public void OnGet([FromQuery] int? year, [FromServices] IDataSources dataSources)
         {
             var training = "pushups";
@@ -28,7 +30,7 @@ namespace Fitness.Pages
             var path = $@"{dataSources.LocalDirectory}\{year}\{user}\{training}";
             if (Directory.Exists(path))
             {
-                foreach (var file in Directory.GetFiles(path, "*.txt"))
+                foreach (var file in Directory.GetFiles(path, $"{year}-*.txt"))
                 {
                     var pushup = int.Parse(IO.File.ReadAllText(file));
                     dailyPushups.Add(pushup);
@@ -36,6 +38,8 @@ namespace Fitness.Pages
                     summedPushups.Add(Pushups);
                 }
             }
+
+            YearGoal = int.Parse(IO.File.ReadAllText($@"{path}\goal.txt"));
         }
         public string DailyPushupsGraph => string.Join(" ", dailyPushups.Select((value, index) => $"{index}, {value * .5f}")); // format for svg polyline
         public string DailyPushupsGraphBackground => DailyPushupsGraph + " 364, 0";
