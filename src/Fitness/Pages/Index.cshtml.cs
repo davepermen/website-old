@@ -43,7 +43,7 @@ namespace Fitness.Pages
         }
         public string DailyPushupsGraph => string.Join(" ", dailyPushups.Select((value, index) => $"{index}, {value * .5f}")); // format for svg polyline
         public string DailyPushupsGraphBackground => DailyPushupsGraph + " 364, 0";
-        public string SummedPushupsGraph => string.Join(" ", summedPushups.Select((value, index) => $"{index}, {value * .02f}")); // format for svg polyline
+        public string SummedPushupsGraph => string.Join(" ", summedPushups.Select((value, index) => $"{index}, {value / (YearGoal / 100f)}")); // format for svg polyline
         public string SummedPushupsGraphBackground => SummedPushupsGraph + " 364, 0";
     }
 }
