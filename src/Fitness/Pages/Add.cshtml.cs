@@ -34,7 +34,7 @@ namespace Fitness.Pages
             var path = $@"{dataSources.LocalDirectory}\{year}\{user}\{training}";
             if (Directory.Exists(path))
             {
-                foreach (var file in Directory.GetFiles(path, "*.txt"))
+                foreach (var file in Directory.GetFiles(path, $"{year}-*.txt"))
                 {
                     var pushup = int.Parse(IO.File.ReadAllText(file));
                     dailyPushups.Add(pushup);
