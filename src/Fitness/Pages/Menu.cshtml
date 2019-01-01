@@ -1,0 +1,24 @@
+﻿@page
+@model Fitness.Pages.MenuModel
+
+<header id='pushups'><br><br>MENU</header>
+<section>
+    <article id='pushups'>
+        @if (User.Identity.IsAuthenticated == false)
+        {
+            <form asp-page="user/login" method="post">
+                <input type="text" name="username" />
+                <input type="password" name="password" />
+                <button type="submit">login</button>
+            </form>
+        }
+        else
+        {
+            <h1>hi @User.Identity.Name</h1>
+            <form asp-page="user/logout" method="post">
+                <button type="submit">logout</button>
+            </form>
+        }
+        <a asp-page="/">home</a>
+    </article>
+</section>

@@ -111,11 +111,11 @@ body {
             margin: 0;
         }
 
-        #foreground form, #foreground input, #foreground button {
-            font-size: 0.4rem;
-            line-height: 0.4rem;
-            width: 5rem;
-        }
+    #foreground form, #foreground input, #foreground button {
+        font-size: 0.4rem;
+        line-height: 0.4rem;
+        width: 5rem;
+    }
 
         #foreground input[type=text], #foreground input[type=password], #foreground button {
             background: hsla(30, 100%, 60%, 0.25);
@@ -123,9 +123,9 @@ body {
             color: inherit;
         }
 
-        #foreground * {
-            display: block;
-        }
+    #foreground * {
+        display: block;
+    }
 
 
 #footnotes {
@@ -139,24 +139,14 @@ body {
 }
 
     #footnotes footer {
-        font-size: 0.2rem;
-        line-height: 0.3rem;
+        font-size: 0.3rem;
+        line-height: 0.4rem;
         opacity: 0;
         text-align: right;
         animation: 4s ease-out forwards footnotes-fadein;
         animation-delay: 2s;
         pointer-events: all;
         text-align: right;
-    }
-
-    #footnotes form {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-    }
-
-    #footnotes ul {
-        list-style-type: none;
     }
 
     #footnotes a {
@@ -169,14 +159,20 @@ body {
             text-shadow: 0px 0.25rem 1rem #555, 0px 0.25rem 1rem #555;
         }
 
+    #footnotes nav {
+        position: absolute;
+        bottom: 0.1rem;
+        right: 0.1rem;
+    }
 
-nav {
-    background: rgba(0, 0, 0, 0.75);
-    padding: 0.2rem;
-    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.75);
+        #footnotes nav * {
+            margin: 0 !important;
+            width: auto !important;
+        }
+
+ul {
+    list-style-type: none;
 }
-
-
 
 
 
@@ -266,18 +262,10 @@ nav {
 }
 
 
-@media screen and (min-aspect-ratio: 4/3) {
+@media screen and (min-aspect-ratio: 1/1) {
     html {
         font-size: 7.5vh;
         line-height: 7.5vh;
-    }
-    nav {
-        background: none;
-        box-shadow: none;
-        padding: none;
-    }
-    #footnotes footer {
-        margin: 1rem;
     }
 }
 
@@ -386,15 +374,15 @@ section[blog] {
             margin: 0.72em 0;
         }
 
-        section[blog] article p:first-of-type:not(:only-of-type)::first-letter {
-            font-size: 3.5em;
-            font-weight: 900;
-            float: left;
-            line-height: 1em;
-            margin-right: 0.06em;
-            margin-top: -0.06em;
-            text-shadow: 0.07rem 0.125rem 0.25rem 0.25rem lightgray;
-        }
+            section[blog] article p:first-of-type:not(:only-of-type)::first-letter {
+                font-size: 3.5em;
+                font-weight: 900;
+                float: left;
+                line-height: 1em;
+                margin-right: 0.06em;
+                margin-top: -0.06em;
+                text-shadow: 0.07rem 0.125rem 0.25rem 0.25rem lightgray;
+            }
 
 @keyframes article-fadein3d {
     from {
@@ -449,9 +437,10 @@ section[blog] pre {
     background-color: #484848;
     box-shadow: #242424 0 0 8em inset;
 }
-section[blog] pre code {
-    padding: 0.5rem 3rem;
-}
+
+    section[blog] pre code {
+        padding: 0.5rem 3rem;
+    }
 
 code {
     -webkit-user-select: text;
@@ -459,7 +448,7 @@ code {
     -ms-user-select: text;
     user-select: text;
 }
-    
+
 section[blog] img {
     max-width: 100%;
 }

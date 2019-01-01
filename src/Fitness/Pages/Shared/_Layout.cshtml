@@ -27,34 +27,20 @@
     <div id='footnotes'>
         <footer>
             <nav>
-                @if (User.Identity.IsAuthenticated == false)
-                {
-                    <form asp-page="user/login" method="post">
-                        <input type="text" name="username" />
-                        <input type="password" name="password" />
-                        <button type="submit">login</button>
-                    </form>
-                }
-                else
-                {
-                    <h1>hi @User.Identity.Name</h1>
-                    <form asp-page="user/logout" method="post">
-                        <button type="submit">logout</button>
-                    </form>
-                }
                 <ul>
-                    <li>
-                        <a href="/">2019</a>
-                        <a href="/?year=2018">2018</a>
-                        <a href="/?year=2017">2017</a>
-                    </li>
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                        <li>
-                            <a asp-page="/Add">Add</a>
-                        </li>
-                    }
+                    <li><a href="/">2019</a></li>
+                    <li><a href="/?year=2018">2018</a></li>
+                    <li><a href="/?year=2017">2017</a></li>
                 </ul>
+
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a asp-page="/Add">add</a>
+                }
+
+                <form action="/menu">
+                    <button type="submit">&#9776;</button>
+                </form>
             </nav>
         </footer>
     </div>
