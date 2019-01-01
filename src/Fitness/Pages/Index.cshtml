@@ -15,8 +15,10 @@
     </article>
     <article style='font-size: 0.5rem; line-height: 0.5rem'>
         &nbsp;<br />
-        @(100 * Model.Pushups / Model.YearGoal)% of year goal of @Model.YearGoal<br />
-        &nbsp;<br />
+        @if (Model.YearGoal > 0)
+        {
+            <p>@(100 * Model.Pushups / Model.YearGoal)% of year goal of @Model.YearGoal</p>
+        }
         @(Model.YearGoal - Model.Pushups) or @((Model.YearGoal - Model.Pushups) / (firstDayNextYear - yesterday).Days) per day to do<br />
         @(Model.Pushups / (today - lastDayLastYear).Days) done per day<br />
         &nbsp;
