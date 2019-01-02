@@ -41,6 +41,10 @@ namespace Fitness.Pages.User
                     }
                 }
             }
+            if(Request.Form.ContainsKey("redirectto"))
+            {
+                return Redirect(Request.Form["redirectto"]);
+            }
             return Redirect("/");
         }
 

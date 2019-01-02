@@ -25,24 +25,9 @@
         </main>
     </div>
     <div id='footnotes'>
-        <footer>
-            <nav>
-                <ul>
-                    <li><a href="/">2019</a></li>
-                    <li><a href="/?year=2018">2018</a></li>
-                    <li><a href="/?year=2017">2017</a></li>
-                </ul>
-
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <a asp-page="/Add">add</a>
-                }
-
-                <form action="/menu">
-                    <button type="submit">&#9776;</button>
-                </form>
-            </nav>
-        </footer>
+        <form action="/menu">
+            <input type="submit" value="&#9776;">
+        </form>
     </div>
 
     @RenderSection("Scripts", required: false)

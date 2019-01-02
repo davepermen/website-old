@@ -1,24 +1,63 @@
 ﻿@page
 @model Fitness.Pages.MenuModel
 
-<header id='pushups'><br><br>MENU</header>
 <section>
     <article id='pushups'>
         @if (User.Identity.IsAuthenticated == false)
         {
             <form asp-page="user/login" method="post">
-                <input type="text" name="username" />
-                <input type="password" name="password" />
-                <button type="submit">login</button>
+                <input type="text" name="username" placeholder="username">
+                <input type="password" name="password" placeholder="password">
+                <input type="hidden" name="redirectto" value="/menu">
+                <input type="submit" value="login">
+            </form>
+
+            <form action="/">
+                <input type="submit" value="2019">
+            </form>
+            <form action="/">
+                <input type="hidden" name="year" value="2018">
+                <input type="submit" value="2018">
+            </form>
+            <form action="/">
+                <input type="hidden" name="year" value="2017">
+                <input type="submit" value="2017">
             </form>
         }
         else
         {
-            <h1>hi @User.Identity.Name</h1>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <p>@User.Identity.Name</p>
+            }
+            <form asp-page="add" method="POST">
+                <input type="hidden" name="pushups" value="10">
+                <input type="submit" value="add 10 pushups">
+            </form>
+            <form asp-page="add" method="POST">
+                <input type="hidden" name="pushups" value="20">
+                <input type="submit" value="add 20 pushups">
+            </form>
+            <form asp-page="add" method="POST">
+                <input type="hidden" name="pushups" value="30">
+                <input type="submit" value="add 30 pushups">
+            </form>
+
+            <form action="/">
+                <input type="submit" value="2019">
+            </form>
+            <form action="/">
+                <input type="hidden" name="year" value="2018">
+                <input type="submit" value="2018">
+            </form>
+            <form action="/">
+                <input type="hidden" name="year" value="2017">
+                <input type="submit" value="2017">
+            </form>
+
             <form asp-page="user/logout" method="post">
-                <button type="submit">logout</button>
+                <input type="submit" value="logout">
             </form>
         }
-        <a href="/">home</a>
     </article>
 </section>
