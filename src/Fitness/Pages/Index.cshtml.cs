@@ -1,24 +1,19 @@
 ﻿using Conesoft;
+using Fitness.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using IO = System.IO;
 
 namespace Fitness.Pages
 {
     public class IndexModel : PageModel
     {
-        readonly List<int> dailyPushups = new List<int>();
-        readonly List<int> summedPushups = new List<int>();
+        TrainingData trainingData;
 
-        public string Me { get; set; }
+        public int Pushups => trainingData.Sum;
 
-        public int Pushups { get; set; } = 0;
-
-        public int YearGoal { get; set; } = 0;
+        public int YearGoal => trainingData.Goal;
 
         public void OnGet([FromQuery] int? year, [FromServices] IDataSources dataSources)
         {
@@ -27,26 +22,12 @@ namespace Fitness.Pages
 
             year = year ?? DateTime.Now.Year;
 
-            var path = $@"{dataSources.LocalDirectory}\{year}\{user}\{training}";
-            if (Directory.Exists(path))
-            {
-                foreach (var file in Directory.GetFiles(path, $"{year}-*.txt"))
-                {
-                    var pushup = int.Parse(IO.File.ReadAllText(file));
-                    dailyPushups.Add(pushup);
-                    Pushups += pushup;
-                    summedPushups.Add(Pushups);
-                }
-
-                if (IO.File.Exists($@"{path}\goal.txt"))
-                {
-                    YearGoal = int.Parse(IO.File.ReadAllText($@"{path}\goal.txt"));
-                }
-            }
+            trainingData = new TrainingData(dataSources, user, training, year.Value);
         }
-        public string DailyPushupsGraph => string.Join(" ", dailyPushups.Select((value, index) => $"{index}, {value * .5f}")); // format for svg polyline
-        public string DailyPushupsGraphBackground => DailyPushupsGraph + " 364, 0";
-        public string SummedPushupsGraph => string.Join(" ", summedPushups.Select((value, index) => $"{index}, {value / (YearGoal / 100f)}")); // format for svg polyline
-        public string SummedPushupsGraphBackground => SummedPushupsGraph + " 364, 0";
+
+        public string DailyPushupsGraph => string.Join(" ", trainingData.AmountPerDay.Select((value, index) => $"{index}, {value * .5f}")); // format for svg polyline
+        public string DailyPushupsGraphBackground => "0, 0 " + DailyPushupsGraph + " 364, 0";
+        public string SummedPushupsGraph => string.Join(" ", trainingData.AccumulatedEveryDay.Select((value, index) => $"{index}, {value / (Math.Max(YearGoal, trainingData.Sum) / 100f)}")); // format for svg polyline
+        public string SummedPushupsGraphBackground => "0, 0 " + SummedPushupsGraph + " 364, 0";
     }
 }
