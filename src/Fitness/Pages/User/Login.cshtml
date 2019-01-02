@@ -1,10 +1,10 @@
 ﻿@page
 @model Fitness.Pages.User.LoginModel
 
-<h1>Login</h1>
-
 @if (User.Identity.IsAuthenticated == false)
 {
+    <h1>Login</h1>
+
     <form method="post">
         <input asp-for="Username" />
         <input asp-for="Password" />

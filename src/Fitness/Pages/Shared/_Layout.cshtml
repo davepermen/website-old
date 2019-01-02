@@ -25,9 +25,18 @@
         </main>
     </div>
     <div id='footnotes'>
-        <form action="/menu">
-            <input type="submit" value="&#9776;">
-        </form>
+        @if (Context.Request.Path == "/menu")
+        {
+            <form action="/">
+                <input type="submit" value="&#9776;">
+            </form>
+        }
+        else
+        {
+            <form action="/menu">
+                <input type="submit" value="&#9776;">
+            </form>
+        }
     </div>
 
     @RenderSection("Scripts", required: false)
