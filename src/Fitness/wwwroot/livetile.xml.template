@@ -23,7 +23,7 @@
   
     <binding template="TileLarge">
       <image placement="background" hint-overlay="60" src="https://fitness.davepermen.net/icons/mstile-310x310.png"/>
-      <text id="1">ZOE Charging</text>
+      <text id="1">Pushups</text>
       <text id="2"></text>
       <text id="3">{{amount}} ✔ done</text>
     </binding>

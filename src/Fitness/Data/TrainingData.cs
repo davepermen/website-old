@@ -1,20 +1,52 @@
 ﻿using Conesoft;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using IO = System.IO;
 
 namespace Fitness.Data
 {
     public class TrainingData
     {
-        private readonly Dictionary<DateTime, int> entries = new Dictionary<DateTime, int>();
-        private readonly int[] amountPerDay;
-        private readonly int[] accumulatedEveryDay;
-        private readonly int sum;
-        private readonly int goal;
+        private Dictionary<DateTime, int> entries = new Dictionary<DateTime, int>();
+        private int[] amountPerDay;
+        private int[] accumulatedEveryDay;
+        private int sum;
+        private int goal;
+
+        private readonly IDataSources dataSources;
+        private readonly string user;
+        private readonly string training;
+        private readonly int year;
 
         public TrainingData(IDataSources dataSources, string user, string training, int year)
+        {
+            this.dataSources = dataSources;
+            this.user = user;
+            this.training = training;
+            this.year = year;
+
+            LoadData(dataSources, user, training, year);
+        }
+
+        public void Add(int amount)
+        {
+            var path = $@"{dataSources.LocalDirectory}\{year}\{user}\{training}";
+            IO.Directory.CreateDirectory(path);
+
+            var filename = $@"{path}\{DateTime.UtcNow:yyyy-MM-dd}.txt";
+            var current = IO.File.Exists(filename) ? int.Parse(IO.File.ReadAllText(filename)) : 0;
+            IO.File.WriteAllText(filename, $"{current + amount}");
+
+            LoadData(dataSources, user, training, year);
+        }
+
+        public Dictionary<DateTime, int> Counter => entries;
+        public int Sum => sum;
+        public int Goal => goal;
+        public int[] AmountPerDay => amountPerDay;
+        public int[] AccumulatedEveryDay => accumulatedEveryDay;
+
+        private void LoadData(IDataSources dataSources, string user, string training, int year)
         {
             var path = $@"{dataSources.LocalDirectory}\{year}\{user}\{training}";
             if (IO.Directory.Exists(path))
@@ -64,18 +96,11 @@ namespace Fitness.Data
                 goal = 0;
             }
         }
-
         private int DaysInYear(int year)
         {
             var firstDay = new DateTime(year, 1, 1);
             var firstDayOfNextYear = new DateTime(year + 1, 1, 1);
             return (firstDayOfNextYear - firstDay).Days;
         }
-
-        public Dictionary<DateTime, int> Counter => entries;
-        public int Sum => sum;
-        public int Goal => goal;
-        public int[] AmountPerDay => amountPerDay;
-        public int[] AccumulatedEveryDay => accumulatedEveryDay;
     }
 }
