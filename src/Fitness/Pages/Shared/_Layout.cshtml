@@ -18,13 +18,8 @@
     <meta name="msapplication-notification" content="frequency=30;polling-uri=http://fitness.davepermen.net/livetile.xml" />
 </head>
 <body>
-    <div id='background'></div>
-    <div id='foreground'>
-        <main>
-            @RenderBody()
-        </main>
-    </div>
-    <div id='footnotes'>
+    @RenderBody()
+    <footer>
         @if (Context.Request.Path == "/menu")
         {
             <form action="/">
@@ -37,7 +32,7 @@
                 <input type="submit" value="&#9776;">
             </form>
         }
-    </div>
+    </footer>
 
     @RenderSection("Scripts", required: false)
 </body>

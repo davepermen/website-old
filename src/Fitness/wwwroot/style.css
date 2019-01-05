@@ -17,6 +17,10 @@ html {
 * {
     cursor: default;
     font-family: inherit;
+    font-size: inherit;
+    text-shadow: inherit;
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
     -ms-touch-action: manipulation;
     touch-action: manipulation;
@@ -25,160 +29,111 @@ html {
 body {
     width: 100%;
     height: 100%;
-    margin: 0;
-}
-
-    body > div { /* layers */
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        perspective: 50rem;
-    }
-
-#background {
     background: url('background.jpg');
     background-size: cover;
     background-attachment: fixed;
-    background-position: center right;
-    pointer-events: none;
-    z-index: 0;
-    animation: 1s ease-out forwards background-fadein;
-}
-
-#pushups {
-    font-family: 'segoe ui bold';
-    font-weight: 600;
-}
-
-#foreground {
+    background-position: center center;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    bottom: 2rem;
-    z-index: 2;
+    perspective: 50rem;
+    overflow: hidden;
 }
 
-    #foreground main {
-        display: block;
-        text-shadow: 0px 0.25rem 0.5rem #000, 0px 0.25rem 0.5rem #000, 0px 0.25rem 0.5rem #000, 0px 0.25rem 0.5rem #000;
-        padding: 1rem;
-        margin: 0;
-        animation: 1s ease-out forwards main-fadein;
+section {
+    text-shadow: 0px 0.25rem 0.5rem #000, 0px 0.25rem 0.5rem #000, 0px 0.25rem 0.5rem #000, 0px 0.25rem 0.5rem #000;
+    animation: 1s ease-out forwards section-fadein;
+    font-size: 0.5rem;
+    line-height: 0.5rem;
+}
+
+    /* basic ui */
+    section h1 {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+        line-height: 1rem;
     }
 
-    #foreground h1 {
-        font-size: 2rem;
-        font-weight: normal;
-        margin: 0 0 2rem 0;
+    section h2 {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+        line-height: 1rem;
     }
 
-    #foreground ul {
-        margin: 0;
-        padding: 0;
-        list-style-type: none;
+    section h3 {
+        line-height: 1rem;
     }
 
-        #foreground ul * {
-            -webkit-user-select: text;
-            -moz-user-select: text;
-            -ms-user-select: text;
-            user-select: text;
+    section svg {
+        margin-top: 0.5rem;
+        height: 1.5rem;
+        border-left: 2px solid white;
+        border-bottom: 2px solid white;
+        filter: drop-shadow(0 5px 10px #000);
+    }
+
+    /* form ui */
+    section form {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: center;
+    }
+    section input {
+        background: hsla(30, 100%, 60%, 0.25);
+        color: white;
+        border: solid 1px hsla(30, 100%, 60%, 0.5);
+        overflow: visible;
+        background: hsla(30, 100%, 60%, 0.25);
+        font-weight: 100;
+        pointer-events: all;
+    }
+
+        section input[type=text], section input[type=password] {
             cursor: text;
         }
 
-    #foreground a {
-        color: inherit;
-        transition: text-shadow 0.25s ease-in-out;
-        cursor: pointer;
-    }
-
-        #foreground a:hover {
-            text-shadow: 0px 0.25rem 1rem #555, 0px 0.25rem 1rem #555;
-        }
-
-    #foreground section {
-        margin: 1rem 0 0 0;
-    }
-
-    #foreground article {
-        margin: 0;
-    }
-
-        #foreground article > h1 {
-            font-size: inherit;
-            margin: 0;
-        }
-
-    #foreground form, #foreground input, #foreground button {
-        font-size: 0.4rem;
-        line-height: 0.4rem;
-        width: 5rem;
-        font-family: "segoe ui", sans-serif;
-        font-weight: 100 !important;
-    }
-
-        #foreground input[type=text], #foreground input[type=password], #foreground button {
-            background: hsla(30, 100%, 60%, 0.25);
-            border: 0;
-            color: inherit;
-            cursor: text;
-        }
-
-        #foreground input::placeholder {
+        section input::placeholder {
             color: white;
             opacity: 0.25;
             text-align: center;
-            font-weight: 100 !important;
         }
 
-        #foreground input::-ms-input-placeholder {
+        section input::-ms-input-placeholder {
             color: white;
             opacity: 0.25;
             text-align: center;
-            font-weight: 100 !important;
         }
 
-        #foreground input::-webkit-input-placeholder {
+        section input::-webkit-input-placeholder {
             color: white;
             opacity: 0.25;
             text-align: center;
-            font-weight: 100 !important;
         }
 
-    #foreground * {
-        display: block;
-    }
+        section input:hover, section input:active, section input:focus {
+            border: solid 1px hsl(30, 100%, 60%);
+        }
 
 
-#footnotes {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    justify-content: flex-end;
-    top: auto;
-    height: 2rem;
-    z-index: 2;
+footer {
+    position: fixed;
+    right: 0;
+    bottom: 0;
 }
 
-    #footnotes form {
-        margin: 0;
-        padding: 0;
-    }
-
-    #footnotes input {
-        width: auto;
+    footer input {
         font-size: 1rem;
         background: none;
+        color: white;
         border: none;
         margin: 0;
         padding: 0 0.125rem 0 0;
         text-shadow: 0 0.25rem 0.25rem black;
     }
 
-@keyframes main-fadein {
+@keyframes section-fadein {
     from {
         transform: translateZ(10rem);
         opacity: 0;
@@ -190,7 +145,7 @@ body {
     }
 }
 
-@keyframes main-fadein3d {
+@keyframes section-fadein3d {
     from {
         transform: translateZ(20rem) rotateY(40deg);
         opacity: 0;
@@ -202,68 +157,29 @@ body {
     }
 }
 
-@keyframes background-fadein {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes background-fadein3d {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-
-@keyframes footnotes-fadein {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 0.7;
-    }
-}
-
-
-
+/* wide screen */
 @media screen and (min-aspect-ratio: 1/1) {
     html {
         font-size: 2vh;
         line-height: 2vh;
     }
 
-    #background {
-        background-position: center center;
-        animation: 1s ease-out forwards background-fadein3d;
-    }
-
-    #foreground {
-        right: 10rem;
-    }
-
-    #footnotes {
-        left: auto;
-        width: 10rem;
-    }
-
-    #foreground main {
+    section[left] {
         transform: rotateY(20deg);
         padding: 0;
-        /*margin-right: 15%;*/
-        animation: 1s ease-out forwards main-fadein3d;
+        margin-right: 30%;
+        animation: 1s ease-out forwards section-fadein3d;
+    }
+
+    section[right] {
+        transform: rotateY(-20deg);
+        padding: 0;
+        margin-left: 30%;
+        animation: 1s ease-out forwards section-fadein3d;
     }
 }
 
-
+/* vertical screen */
 @media screen and (min-aspect-ratio: 1/1) {
     html {
         font-size: 7.5vh;
@@ -271,210 +187,10 @@ body {
     }
 }
 
-
+/* square ish screen */
 @media screen and (min-aspect-ratio: 3/4) and (max-aspect-ratio: 1/1) {
     html {
         font-size: 9vh;
         line-height: 9vh;
     }
-}
-
-
-
-
-/* ie11 hacks */
-@media all and (-ms-high-contrast:none) {
-    * {
-        max-width: 100%;
-        box-sizing: border-box;
-    }
-
-    main {
-        margin: 0;
-    }
-}
-
-
-
-html {
-    background: url('/background.jpg');
-    background-size: cover;
-    background-position: center center;
-    background-attachment: fixed;
-}
-
-section[blog] {
-    min-height: 100%;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    font-size: 0.7rem;
-    justify-content: center;
-    perspective: 100rem;
-    perspective-origin: 50% 50%;
-}
-
-    section[blog] article {
-        font-family: sans-serif;
-        background: white;
-        color: black;
-        margin: 4em 0 10em;
-        padding: 0 0 12em;
-        max-width: 60em;
-        min-height: 100%;
-        box-shadow: 0 0 10em black;
-        animation: 0.7s linear forwards article-fadein3d;
-        overflow: hidden;
-    }
-
-        section[blog] article h1 {
-            font-weight: 600;
-            font-size: 2em;
-            margin: 1em 0;
-        }
-
-        section[blog] article header {
-            background: url('hero.jpg');
-            background-size: cover;
-            background-position: center center;
-            margin: 0;
-            padding: 0;
-            height: 20em;
-            overflow: hidden;
-            position: relative;
-            color: white;
-            text-shadow: 0 0 0.5em black;
-        }
-
-            section[blog] article header h1 {
-                margin: 0;
-                padding: 1em;
-                line-height: 1em;
-                font-size: 4em;
-                position: absolute;
-                bottom: 0;
-            }
-
-            section[blog] article header h2 {
-                margin: 0;
-                padding: 0.6em 2em;
-                opacity: 0.8;
-                font-size: 2em;
-                font-weight: 100;
-                position: absolute;
-                bottom: 0;
-            }
-
-        section[blog] article section {
-            margin: 4em;
-        }
-
-        section[blog] article p {
-            line-height: 1.6em;
-            font-size: 1.4em;
-            font-family: 'georgia', 'times new roman', serif;
-            margin: 0.72em 0;
-        }
-
-            section[blog] article p:first-of-type:not(:only-of-type)::first-letter {
-                font-size: 3.5em;
-                font-weight: 900;
-                float: left;
-                line-height: 1em;
-                margin-right: 0.06em;
-                margin-top: -0.06em;
-                text-shadow: 0.07rem 0.125rem 0.25rem 0.25rem lightgray;
-            }
-
-@keyframes article-fadein3d {
-    from {
-        transform: translateZ(30rem) rotateX(-40deg);
-        opacity: 0;
-    }
-
-    to {
-        transform: translateZ(0rem) rotateX(0deg);
-        opacity: 1;
-    }
-}
-
-@media screen and (max-aspect-ratio: 1/1) {
-    * {
-        box-sizing: border-box;
-    }
-
-    section[blog] {
-        margin: 0;
-    }
-
-        section[blog] article {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-        }
-
-            section[blog] article h1,
-            section[blog] article p {
-                margin: 1em 0;
-                padding: 0.25em 1em;
-            }
-
-            section[blog] article h1 {
-                line-height: 2em;
-            }
-}
-
-@media screen and (min-aspect-ratio: 4/3) {
-    section[blog] {
-        font-size: 0.5rem;
-    }
-}
-
-section[blog] pre {
-    /*font-size: 1.1em;
-    line-height: 1.5em;*/
-    margin: 0;
-    padding: 1.5rem 0;
-    font-size: 1.5em;
-    background-color: #484848;
-    box-shadow: #242424 0 0 8em inset;
-}
-
-    section[blog] pre code {
-        padding: 0.5rem 3rem;
-    }
-
-code {
-    -webkit-user-select: text;
-    -moz-user-select: text;
-    -ms-user-select: text;
-    user-select: text;
-}
-
-section[blog] img {
-    max-width: 100%;
-}
-
-
-
-
-input, button {
-    color: white;
-    font-weight: 100;
-    border: solid 1px hsla(30, 100%, 60%, 0.5);
-    text-shadow: inherit;
-    overflow: visible;
-    cursor: pointer;
-    background: hsla(30, 100%, 60%, 0.25);
-    font-weight: 100;
-    pointer-events: all;
-    width: 1.5rem;
-}
-
-    input:hover, input:active, input:focus, button:hover, button:active, button:focus {
-        border: solid 1px hsl(30, 100%, 60%);
-    }
-
-form {
-    margin: 0.5rem 0;
 }
