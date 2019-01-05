@@ -7,6 +7,10 @@ html {
     line-height: 15vw;
     height: 100%;
     width: 100%;
+    background: url('background.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center center;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -29,16 +33,16 @@ html {
 body {
     width: 100%;
     height: 100%;
-    background: url('background.jpg');
-    background-size: cover;
-    background-attachment: fixed;
-    background-position: center center;
+}
+
+main {
+    width: 100%;
+    min-height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     perspective: 50rem;
-    overflow: hidden;
 }
 
 section {
@@ -49,20 +53,15 @@ section {
 }
 
     /* basic ui */
-    section h1 {
+    section header {
         font-size: 1rem;
-        margin-bottom: 1rem;
-        line-height: 1rem;
-    }
-
-    section h2 {
-        font-size: 1rem;
+        line-height: 1.5rem;
+        font-weight: bold;
         margin-bottom: 0.5rem;
-        line-height: 1rem;
     }
 
-    section h3 {
-        line-height: 1rem;
+    section > h1 {
+        margin: 0.375rem 0 0.125rem;
     }
 
     section svg {
@@ -80,6 +79,7 @@ section {
         align-items: stretch;
         justify-content: center;
     }
+
     section input {
         background: hsla(30, 100%, 60%, 0.25);
         color: white;
@@ -119,8 +119,8 @@ section {
 
 footer {
     position: fixed;
-    right: 0;
     bottom: 0;
+    right: 0;
 }
 
     footer input {
@@ -145,7 +145,7 @@ footer {
     }
 }
 
-@keyframes section-fadein3d {
+@keyframes section-fadein3d-left {
     from {
         transform: translateZ(20rem) rotateY(40deg);
         opacity: 0;
@@ -157,26 +157,46 @@ footer {
     }
 }
 
+@keyframes section-fadein3d-right {
+    from {
+        transform: translateZ(20rem) rotateY(-40deg);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateZ(10rem) rotateY(-20deg);
+        opacity: 1;
+    }
+}
+
 /* wide screen */
 @media screen and (min-aspect-ratio: 1/1) {
     html {
         font-size: 2vh;
         line-height: 2vh;
+        overflow: hidden;
     }
 
-    section[left] {
-        transform: rotateY(20deg);
-        padding: 0;
-        margin-right: 30%;
-        animation: 1s ease-out forwards section-fadein3d;
+    body {
+        flex-direction: row;
     }
 
-    section[right] {
-        transform: rotateY(-20deg);
-        padding: 0;
-        margin-left: 30%;
-        animation: 1s ease-out forwards section-fadein3d;
+    section {
+        position: absolute;
+        width: 5rem;
     }
+
+        section[left] {
+            transform: rotateY(20deg);
+            margin-right: 7.5rem;
+            animation: 1s ease-out forwards section-fadein3d-left;
+        }
+
+        section[right] {
+            transform: rotateY(-20deg);
+            margin-left: 7.5rem;
+            animation: 1s ease-out forwards section-fadein3d-right;
+        }
 }
 
 /* vertical screen */

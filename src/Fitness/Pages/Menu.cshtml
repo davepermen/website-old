@@ -4,7 +4,7 @@
 <section left>
     @if (User.Identity.IsAuthenticated == false)
     {
-        <h3>login</h3>
+        <h1>login</h1>
         <form asp-page="user/login" method="post">
             <input type="text" name="username" placeholder="username">
             <input type="password" name="password" placeholder="password">
@@ -14,11 +14,7 @@
     }
     else
     {
-        <h3>add pushups</h3>
-        @if (User.Identity.IsAuthenticated)
-        {
-            <p>@User.Identity.Name</p>
-        }
+        <h1>@User.Identity.Name</h1>
         <form asp-page="add" method="post">
             <input type="hidden" name="amount" value="10">
             <input type="hidden" name="training" value="pushups">
@@ -37,14 +33,15 @@
             <input type="hidden" name="redirectto" value="/">
             <input type="submit" value="add 30 pushups">
         </form>
-
-        <h3>logout</h3>
+        <br>
         <form asp-page="user/logout" method="post">
             <input type="submit" value="logout">
         </form>
     }
+</section>
 
-    <h3>show data of year</h3>
+<section right>
+    <h1>show data of year</h1>
     <form action="/">
         <input type="submit" value="2019">
     </form>

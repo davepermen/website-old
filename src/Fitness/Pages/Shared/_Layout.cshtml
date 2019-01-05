@@ -18,7 +18,9 @@
     <meta name="msapplication-notification" content="frequency=30;polling-uri=http://fitness.davepermen.net/livetile.xml" />
 </head>
 <body>
-    @RenderBody()
+    <main>
+        @RenderBody()
+    </main>
     <footer>
         @if (Context.Request.Path == "/menu")
         {

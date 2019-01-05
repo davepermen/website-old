@@ -7,11 +7,11 @@ namespace Fitness.Data
 {
     public class TrainingData
     {
-        private Dictionary<DateTime, int> entries = new Dictionary<DateTime, int>();
-        private int[] amountPerDay;
-        private int[] accumulatedEveryDay;
-        private int sum;
-        private int goal;
+        private readonly Dictionary<DateTime, int> entries = new Dictionary<DateTime, int>();
+        private int[] amountPerDay = new int[0];
+        private int[] accumulatedEveryDay = new int[0];
+        private int sum = 0;
+        private int goal = 0;
 
         private readonly IDataSources dataSources;
         private readonly string user;
@@ -31,16 +31,15 @@ namespace Fitness.Data
         public void Add(int amount)
         {
             var path = $@"{dataSources.LocalDirectory}\{year}\{user}\{training}";
-            IO.Directory.CreateDirectory(path);
-
             var filename = $@"{path}\{DateTime.UtcNow:yyyy-MM-dd}.txt";
             var current = IO.File.Exists(filename) ? int.Parse(IO.File.ReadAllText(filename)) : 0;
+
+            IO.Directory.CreateDirectory(path);
             IO.File.WriteAllText(filename, $"{current + amount}");
 
             LoadData(dataSources, user, training, year);
         }
-
-        public Dictionary<DateTime, int> Counter => entries;
+        
         public int Sum => sum;
         public int Goal => goal;
         public int[] AmountPerDay => amountPerDay;
@@ -51,22 +50,7 @@ namespace Fitness.Data
             var path = $@"{dataSources.LocalDirectory}\{year}\{user}\{training}";
             if (IO.Directory.Exists(path))
             {
-                foreach (var file in IO.Directory.GetFiles(path, $"{year}-*.txt"))
-                {
-                    var date = DateTime.Parse(IO.Path.GetFileNameWithoutExtension(file));
-                    var amount = int.Parse(IO.File.ReadAllText(file));
-
-                    if (entries.ContainsKey(date))
-                    {
-                        entries[date] += amount;
-                    }
-                    else
-                    {
-                        entries[date] = amount;
-                    }
-
-                    sum += amount;
-                }
+                LoadEntries(path);
 
                 amountPerDay = new int[DaysInYear(year)];
                 accumulatedEveryDay = new int[DaysInYear(year)];
@@ -82,20 +66,27 @@ namespace Fitness.Data
                     accumulated += amountPerDay[i];
                     accumulatedEveryDay[i] = accumulated;
                 }
-
-                if (IO.File.Exists($@"{path}\goal.txt"))
-                {
-                    goal = int.Parse(IO.File.ReadAllText($@"{path}\goal.txt"));
-                }
-            }
-            else
-            {
-                amountPerDay = new int[0];
-                accumulatedEveryDay = new int[0];
-                sum = 0;
-                goal = 0;
             }
         }
+
+        private void LoadEntries(string path)
+        {
+            foreach (var file in IO.Directory.GetFiles(path, $"{year}-*.txt"))
+            {
+                var date = DateTime.Parse(IO.Path.GetFileNameWithoutExtension(file));
+                var amount = int.Parse(IO.File.ReadAllText(file));
+
+                entries[date] = entries.TryGetValue(date, out int value) ? value + amount : amount;
+
+                sum += amount;
+            }
+
+            if (IO.File.Exists($@"{path}\goal.txt"))
+            {
+                goal = int.Parse(IO.File.ReadAllText($@"{path}\goal.txt"));
+            }
+        }
+
         private int DaysInYear(int year)
         {
             var firstDay = new DateTime(year, 1, 1);
