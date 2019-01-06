@@ -17,6 +17,8 @@ namespace Fitness.Pages.User
         {
             if (ModelState.IsValid)
             {
+                Username = Username.ToLower();
+
                 var userDirectory = $"{dataSources.SharedDirectory}/users";
                 var userFile = $"{userDirectory}/{Username}.txt";
 

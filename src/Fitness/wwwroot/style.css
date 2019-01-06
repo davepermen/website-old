@@ -81,7 +81,7 @@ section {
         justify-content: center;
     }
 
-    section input {
+    section input, section select, section option {
         background: hsla(30, 100%, 60%, 0.25);
         color: white;
         border: solid 1px hsla(30, 100%, 60%, 0.5);

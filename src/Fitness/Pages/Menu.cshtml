@@ -41,16 +41,11 @@
 </section>
 
 <section right>
-    <h1>show data of year</h1>
+    <h1>show specific stats</h1>
     <form action="/">
-        <input type="submit" value="2019">
-    </form>
-    <form action="/">
-        <input type="hidden" name="year" value="2018">
-        <input type="submit" value="2018">
-    </form>
-    <form action="/">
-        <input type="hidden" name="year" value="2017">
-        <input type="submit" value="2017">
+        <select name="user" asp-items="Model.Users.Select(user => new SelectListItem(user, user))"></select>
+        <select name="year" asp-items="Model.Years.Select(year => new SelectListItem(year.ToString(), year.ToString()))"></select>
+        <select name="training" asp-items="Model.Trainings.Select(training => new SelectListItem(training, training))"></select>
+        <input type="submit" value="show">
     </form>
 </section>
