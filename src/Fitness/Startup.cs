@@ -1,9 +1,11 @@
 ﻿using Conesoft;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.IO;
 
 namespace Fitness
 {
@@ -24,6 +26,7 @@ namespace Fitness
                 options.Cookie.Expiration = TimeSpan.FromDays(365);
                 options.ExpireTimeSpan = TimeSpan.FromDays(365);
                 options.SlidingExpiration = true;
+                options.DataProtectionProvider = DataProtectionProvider.Create(new DirectoryInfo($"{new DataSources().SharedDirectory}/keys"));
             });
 
             services.AddMvc();

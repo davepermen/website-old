@@ -7,16 +7,24 @@ namespace Fitness.Data
 {
     public class TrainingData
     {
+        private readonly IDataSources dataSources;
+
         private readonly Dictionary<DateTime, int> entries = new Dictionary<DateTime, int>();
         private int[] amountPerDay = new int[0];
         private int[] accumulatedEveryDay = new int[0];
         private int sum = 0;
         private int goal = 0;
-
-        private readonly IDataSources dataSources;
         private readonly string user;
         private readonly string training;
         private readonly int year;
+
+        public int Sum => sum;
+        public int Goal => goal;
+        public int[] AmountPerDay => amountPerDay;
+        public int[] AccumulatedEveryDay => accumulatedEveryDay;
+        public string User => user;
+        public string Training => training;
+        public int Year => year;
 
         public TrainingData(IDataSources dataSources, string user, string training, int year)
         {
@@ -39,11 +47,6 @@ namespace Fitness.Data
 
             LoadData(dataSources, user, training, year);
         }
-        
-        public int Sum => sum;
-        public int Goal => goal;
-        public int[] AmountPerDay => amountPerDay;
-        public int[] AccumulatedEveryDay => accumulatedEveryDay;
 
         private void LoadData(IDataSources dataSources, string user, string training, int year)
         {

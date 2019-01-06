@@ -15,10 +15,12 @@ namespace Fitness.Pages
 
         public int YearGoal => trainingData.Goal;
 
-        public void OnGet([FromQuery] int? year, [FromServices] IDataSources dataSources)
+        public int Year => trainingData.Year;
+
+        public void OnGet([FromQuery] int? year, [FromQuery] string user, [FromQuery] string training, [FromServices] IDataSources dataSources)
         {
-            var training = "pushups";
-            var user = User.Identity.IsAuthenticated ? User.Identity.Name : "davepermen";
+            training = training ?? "pushups";
+            user = user ?? (User.Identity.IsAuthenticated ? User.Identity.Name : "davepermen");
 
             year = year ?? DateTime.Now.Year;
 
