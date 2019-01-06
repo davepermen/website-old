@@ -22,18 +22,9 @@
         @RenderBody()
     </main>
     <footer>
-        @if (Context.Request.Path == "/menu")
-        {
-            <form action="/">
-                <input type="submit" value="&#9776;">
-            </form>
-        }
-        else
-        {
-            <form action="/menu">
-                <input type="submit" value="&#9776;">
-            </form>
-        }
+        <form action="@(Context.Request.Path == "/menu" ? "/" : "/menu")">
+            <input type="submit" value="&#9776;">
+        </form>
     </footer>
 
     @RenderSection("Scripts", required: false)
