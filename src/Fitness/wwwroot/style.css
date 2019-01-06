@@ -50,6 +50,7 @@ section {
     animation: 1s ease-out forwards section-fadein;
     font-size: 0.5rem;
     line-height: 0.5rem;
+    width: 100%;
 }
 
     /* basic ui */
