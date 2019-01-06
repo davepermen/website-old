@@ -26,7 +26,6 @@ namespace Fitness.Pages
 
                 var trainingData = new TrainingData(dataSources, user, training, year);
                 trainingData.Add(amount);
-                UpdateLiveTile(trainingData);
 
                 if (Request.Form.ContainsKey("redirectto"))
                 {
@@ -37,16 +36,6 @@ namespace Fitness.Pages
             else
             {
                 return Unauthorized();
-            }
-        }
-
-        private void UpdateLiveTile(TrainingData trainingData)
-        {
-            if (User.Identity.IsAuthenticated && User.Identity.Name == "davepermen")
-            {
-                var template = IO.File.ReadAllText("wwwroot\\livetile.xml.template");
-                var content = template.Replace("{{amount}}", trainingData.Sum.ToString());
-                IO.File.WriteAllText("wwwroot\\livetile.xml", content);
             }
         }
     }

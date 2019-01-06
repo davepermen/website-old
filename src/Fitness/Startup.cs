@@ -29,7 +29,11 @@ namespace Fitness
                 options.DataProtectionProvider = DataProtectionProvider.Create(new DirectoryInfo($"{new DataSources().SharedDirectory}/keys"));
             });
 
-            services.AddMvc();
+            services.AddMvc()
+            .AddRazorPagesOptions(options =>
+            {
+                options.Conventions.AddPageRoute("/Livetile", "/livetile.xml");
+            });
 
             services.AddHsts(options =>
             {
