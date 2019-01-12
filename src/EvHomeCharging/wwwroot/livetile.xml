@@ -3,29 +3,29 @@
     <binding template="TileSmall">
       <image placement="background" hint-overlay="60" src="https://charging.davepermen.net/icons/mstile-70x70.png"/>
       <text id="1">ZOE Charging</text>
-      <text id="2"></text>
-      <text id="3">0kWh🔋</text>
+      <text id="2">79%🔋</text>
+      <text id="3">0.6kWh🔋</text>
     </binding>
     
     <binding template="TileMedium">
       <image placement="background" hint-overlay="60" src="https://charging.davepermen.net/icons/mstile-150x150.png"/>
       <text id="1">ZOE Charging</text>
-      <text id="2"></text>
-      <text id="3">🔋⚡ 0 kWh recently</text>
+      <text id="2">79% State of Charge</text>
+      <text id="3">🔋⚡ 0.6 kWh charged recently</text>
     </binding>
   
     <binding template="TileWide">
       <image placement="background" hint-overlay="60" src="https://charging.davepermen.net/icons/mstile-310x150.png"/>
       <text id="1">ZOE Charging</text>
-      <text id="2"></text>
-      <text id="3">🔋⚡ 0 kWh recently</text>
+      <text id="2">79% State of Charge</text>
+      <text id="3">🔋⚡ 0.6 kWh charged recently</text>
     </binding>
   
     <binding template="TileLarge">
       <image placement="background" hint-overlay="60" src="https://charging.davepermen.net/icons/mstile-310x310.png"/>
       <text id="1">ZOE Charging</text>
-      <text id="2"></text>
-      <text id="3">🔋⚡ 0 kWh recently</text>
+      <text id="2">79% State of Charge</text>
+      <text id="3">🔋⚡ 0.6 kWh charged recently</text>
     </binding>
   
   </visual>
