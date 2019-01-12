@@ -2,7 +2,7 @@
   <visual>
     <binding template="TileSmall">
       <image placement="background" hint-overlay="60" src="https://charging.davepermen.net/icons/mstile-70x70.png"/>
-      <text id="1">ZOE Charging</text>
+      <text id="1">ZOE</text>
       <text id="2">{{soc}}%🔋</text>
       <text id="3">{{recent}}kWh🔋</text>
     </binding>
