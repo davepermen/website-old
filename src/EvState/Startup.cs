@@ -1,8 +1,11 @@
 using Conesoft;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.IO;
 
 namespace EvState
 {
@@ -11,6 +14,20 @@ namespace EvState
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDataSources();
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            })
+            .AddCookie(options =>
+            {
+                options.Cookie.Expiration = TimeSpan.FromDays(365);
+                options.ExpireTimeSpan = TimeSpan.FromDays(365);
+                options.SlidingExpiration = true;
+                options.DataProtectionProvider = DataProtectionProvider.Create(new DirectoryInfo($"{new DataSources().SharedDirectory}/keys"));
+            });
 
             services.AddMvc()
             .AddRazorPagesOptions(options =>
