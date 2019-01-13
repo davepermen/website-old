@@ -1,0 +1,17 @@
+﻿@page
+@model Fitness.Pages.User.LoginModel
+
+@if (User.Identity.IsAuthenticated == false)
+{
+    <h1>Login</h1>
+
+    <form method="post">
+        <input asp-for="Username" />
+        <input asp-for="Password" />
+        <button type="submit">login</button>
+    </form>
+}
+else
+{
+    <meta http-equiv="refresh" content="0; url=/" />
+}
