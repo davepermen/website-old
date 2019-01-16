@@ -54,6 +54,9 @@ namespace EvState
                 app.UseHsts();
             }
             app.UseStaticFiles();
+
+            app.UseAuthentication();
+
             app.UseMvc();
         }
     }
