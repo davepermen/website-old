@@ -1,4 +1,5 @@
 using Conesoft;
+using EvState.HttpClients;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
@@ -14,6 +15,9 @@ namespace EvState
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDataSources();
+
+            services.AddHttpClient<ECarUpHttpClient>();
+            services.AddHttpClient<EVNotifyHttpClient>();
 
             services.AddAuthentication(options =>
             {

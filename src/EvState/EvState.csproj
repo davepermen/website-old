@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <UserSecretsId>c1c25e45-165e-46bc-926e-db4106f1a2bb</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,8 +13,10 @@
 
 
   <ItemGroup>
+    <PackageReference Include="Humanizer.Core" Version="2.5.16" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.1" />
   </ItemGroup>
 
 
