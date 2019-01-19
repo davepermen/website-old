@@ -18,8 +18,8 @@ namespace Conesoft
 
         public string SharedDirectory => Directory("shared");
 
-        public string Directory(string name) => IO.Directory.Exists($@"{IO.Directory.GetCurrentDirectory()}\..\data\{name}")
-            ? $@"{IO.Directory.GetCurrentDirectory()}\..\data\{name}"
+        public string Directory(string name) => IO.Directory.Exists($@"{AppContext.BaseDirectory}\..\data\{name}")
+            ? $@"{AppContext.BaseDirectory}\..\data\{name}"
             : $@"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\Webseiten\data\{name}"
             ;
 
@@ -29,7 +29,7 @@ namespace Conesoft
 
         public string SharedUserDatabase => SharedDatabase("users");
 
-        string LocalConfiguration => $@"{IO.Directory.GetCurrentDirectory()}\..\{rootType.Namespace}.json";
+        string LocalConfiguration => $@"{AppContext.BaseDirectory}\..\{rootType.Namespace}.json";
 
         internal static string Configuration => new DataSources().LocalConfiguration;
     }
