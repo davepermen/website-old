@@ -7,31 +7,31 @@
 <tile>
     <visual>
         <binding template="TileSmall">
-            <image placement="background" hint-overlay="60" src="https://fitness.davepermen.net/icons/mstile-70x70.png" />
-            <text id="1">Pushups</text>
-            <text id="2"></text>
-            <text id="3">@Model✔</text>
+            <image placement="background" hint-overlay="60" src="https://ev.davepermen.net/icons/mstile-70x70.png" />
+            <text id="1">@Model.StateOfCharge% 🚗🔋</text>
+            <text id="2">@Model.Charged kWh⚡</text>
+            <text id="3"></text>
         </binding>
 
         <binding template="TileMedium">
-            <image placement="background" hint-overlay="60" src="https://fitness.davepermen.net/icons/mstile-150x150.png" />
-            <text id="1">Pushups</text>
-            <text id="2"></text>
-            <text id="3">@Model ✔ done</text>
+            <image placement="background" hint-overlay="60" src="https://ev.davepermen.net/icons/mstile-150x150.png" />
+            <text id="1">@Model.StateOfCharge% 🚗🔋</text>
+            <text id="2">@Model.Charged kWh⚡ charged</text>
+            <text id="3"></text>
         </binding>
 
         <binding template="TileWide">
-            <image placement="background" hint-overlay="60" src="https://fitness.davepermen.net/icons/mstile-310x150.png" />
-            <text id="1">Pushups</text>
-            <text id="2"></text>
-            <text id="3">@Model ✔ done</text>
+            <image placement="background" hint-overlay="60" src="https://ev.davepermen.net/icons/mstile-310x150.png" />
+            <text id="1">@Model.StateOfCharge% 🚗🔋 current state</text>
+            <text id="2">@Model.Charged kWh⚡ charged recently</text>
+            <text id="3"></text>
         </binding>
 
         <binding template="TileLarge">
-            <image placement="background" hint-overlay="60" src="https://fitness.davepermen.net/icons/mstile-310x310.png" />
-            <text id="1">Pushups</text>
-            <text id="2"></text>
-            <text id="3">@Model ✔ done</text>
+            <image placement="background" hint-overlay="60" src="https://ev.davepermen.net/icons/mstile-310x310.png" />
+            <text id="1">@Model.StateOfCharge% 🚗🔋 current state</text>
+            <text id="2">@Model.Charged kWh⚡ charged recently</text>
+            <text id="3"></text>
         </binding>
     </visual>
 </tile>
