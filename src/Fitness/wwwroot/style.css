@@ -43,6 +43,7 @@ main {
     align-items: center;
     justify-content: center;
     perspective: 50rem;
+    overflow: hidden;
 }
 
 section {
