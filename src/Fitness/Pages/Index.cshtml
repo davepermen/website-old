@@ -3,9 +3,18 @@
 
 @{
     var firstDayNextYear = new DateTime(DateTime.Now.Year + 1, 1, 1);
-    var lastDayLastYear = new DateTime(DateTime.Now.Year, 1, 1) - TimeSpan.FromDays(1);
+    var firstDayThisYear = new DateTime(DateTime.Now.Year, 1, 1);
     var today = DateTime.Now;
+    var daysInYear = (firstDayNextYear - firstDayThisYear).Days;
+    var daysSoFar = (today - firstDayThisYear).Days;
+    var lastDayLastYear = new DateTime(DateTime.Now.Year, 1, 1) - TimeSpan.FromDays(1);
     var yesterday = today - TimeSpan.FromDays(1);
+
+    var percentageOfYear = 1f * daysSoFar / daysInYear;
+
+    var pushupsPerDay = 1f * (Model.YearGoal - Model.Pushups) / (firstDayNextYear - yesterday).Days;
+
+    var difference = Math.Round(Model.Pushups - daysSoFar * pushupsPerDay, 0);
 }
 
 <section left>
@@ -18,9 +27,17 @@
     @if (Model.YearGoal > 0)
     {
         <p>@(100 * Model.Pushups / Model.YearGoal)% of year goal of @Model.YearGoal</p>
-        <p>@(Model.YearGoal - Model.Pushups) or @((Model.YearGoal - Model.Pushups) / (firstDayNextYear - yesterday).Days) per day to do</p>
+        <p>@(Model.YearGoal - Model.Pushups) or @Math.Round(pushupsPerDay, 0) per day to do</p>
     }
     <p>@(Model.Pushups / (today - lastDayLastYear).Days) done per day</p>
+    @if (difference > 0)
+    {
+        <p>You're @difference in ahead. Good Job!</p>
+    }
+    else
+    {
+        <p>You're @(-difference) behind. Don't give up!</p>
+    }
 
     <svg viewBox="0 0 365 100" class="chart">
         <polyline fill="hsla(32, 100%, 22%, 0.25)" stroke="none" stroke-width="0" points="@Model.SummedPushupsGraphBackground" transform="translate(0, 100) scale(1,-1)" />
