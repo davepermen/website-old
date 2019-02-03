@@ -30,15 +30,6 @@
         <p>@(Model.YearGoal - Model.Pushups) or @Math.Round(pushupsPerDay, 0) per day to do</p>
     }
     <p>@(Model.Pushups / (today - lastDayLastYear).Days) done per day</p>
-    @if (difference > 0)
-    {
-        <p>You're @difference in ahead. Good Job!</p>
-    }
-    else
-    {
-        <p>You're @(-difference) behind. Don't give up!</p>
-    }
-
     <svg viewBox="0 0 365 100" class="chart">
         <polyline fill="hsla(32, 100%, 22%, 0.25)" stroke="none" stroke-width="0" points="@Model.SummedPushupsGraphBackground" transform="translate(0, 100) scale(1,-1)" />
         <polyline fill="hsla(208, 100%, 22%, 0.25)" stroke="none" stroke-width="0" points="@Model.DailyPushupsGraphBackground" transform="translate(0, 100) scale(1,-1)" />
@@ -46,4 +37,28 @@
         <polyline fill="none" stroke="hsla(32, 100%, 44%, 1)" stroke-width="2" points="@Model.SummedPushupsGraph" transform="translate(0, 100) scale(1,-1)" />
     </svg>
 
+</section>
+
+<section right>
+    @if (pushupsPerDay > Model.PushupsToday)
+    {
+        <p>@Model.PushupsToday done today</p>
+        <p>@Math.Round(pushupsPerDay - Model.PushupsToday, 0) still to do</p>
+    }
+    else
+    {
+        <p>@Model.PushupsToday done today</p>
+        <p>@Math.Round(Model.PushupsToday - pushupsPerDay, 0) more than needed</p>
+    }
+    <p>&nbsp;</p>
+    @if (difference > 0)
+    {
+        <p>You're @difference in ahead this year</p>
+        <p>Good Job!</p>
+    }
+    else
+    {
+        <p>You're @(-difference) behind this year</p>
+        <p>Don't give up! You can do this!</p>
+    }
 </section>

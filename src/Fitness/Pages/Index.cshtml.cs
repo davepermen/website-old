@@ -13,6 +13,8 @@ namespace Fitness.Pages
 
         public int Pushups => trainingData.Sum;
 
+        public int PushupsToday => trainingData.AmountPerDay[DateTime.Today.DayOfYear - 1]; // DayOfYear is not starting at 0
+
         public int YearGoal => trainingData.Goal;
 
         public int Year => trainingData.Year;
