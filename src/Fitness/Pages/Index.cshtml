@@ -30,7 +30,7 @@
     <p>@(Model.Pushups / (today - lastDayLastYear).Days) done per day</p>
     @if (Model.YearGoal > 0)
     {
-        <p>@Model.PushupsToday of @pushupsPerDay done today</p>
+        <p>@Model.PushupsToday of @Math.Round(pushupsPerDay) done today</p>
         <p>@Math.Abs(Math.Round(difference)) @(difference > 0 ? "ahead" : "behind")</p>
     }
 
