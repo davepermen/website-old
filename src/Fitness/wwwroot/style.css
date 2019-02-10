@@ -92,6 +92,8 @@ section {
         font-weight: 100;
         pointer-events: all;
         appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
     }
 
         section input[type=text], section input[type=password] {
