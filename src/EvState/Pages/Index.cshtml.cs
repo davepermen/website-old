@@ -1,4 +1,5 @@
 ﻿using Conesoft;
+using EvState.Data;
 using EvState.HttpClients;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
@@ -15,10 +16,15 @@ namespace EvState.Pages
         public float StateOfCharge { get; private set; }
 
         private IDataSources dataSources;
+        private State state;
 
-        public async Task OnGet([FromServices] ECarUpHttpClient eCarUpHttpClient, [FromServices] EVNotifyHttpClient evNotifyHttpClient, [FromServices] IDataSources dataSources)
+        public async Task OnGet([FromServices] ECarUpHttpClient eCarUpHttpClient,
+                                [FromServices] EVNotifyHttpClient evNotifyHttpClient,
+                                [FromServices] IDataSources dataSources,
+                                [FromServices] Data.State state)
         {
             this.dataSources = dataSources;
+            this.state = state;
 
             var chargingState = await eCarUpHttpClient.State();
 

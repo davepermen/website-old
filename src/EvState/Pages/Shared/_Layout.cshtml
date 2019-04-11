@@ -16,15 +16,16 @@
     <meta name="msapplication-config" content="/icons/browserconfig.xml">
     <meta name="theme-color" content="#000000">
     <meta name="msapplication-notification" content="frequency=30;polling-uri=https://ev.davepermen.net/livetile.xml" />
+
+    <script src="~/page.js"></script>
+    <script src="~/index.js"></script>
 </head>
 <body>
     <main>
         @RenderBody()
     </main>
     <footer>
-        <form action="@(Context.Request.Path == "/menu" ? "/" : "/menu")">
-            <input type="submit" value="&#9776;">
-        </form>
+        <a href="@(Context.Request.Path == "/menu" ? "/" : "/menu")">&#9776;</a>
     </footer>
 
 </body>

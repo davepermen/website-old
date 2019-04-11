@@ -43,6 +43,7 @@ main {
     align-items: center;
     justify-content: center;
     perspective: 50rem;
+    overflow: hidden;
 }
 
 section {
@@ -51,6 +52,7 @@ section {
     font-size: 0.5rem;
     line-height: 0.5rem;
     width: 100%;
+    margin-bottom: 2rem;
 }
 
     /* basic ui */
@@ -70,7 +72,7 @@ section {
         height: 1.5rem;
         border-left: 2px solid white;
         border-bottom: 2px solid white;
-        filter: drop-shadow(0 5px 10px #000);
+        filter: drop-shadow(0 5px 20px #000);
     }
 
     /* form ui */
@@ -89,6 +91,9 @@ section {
         background: hsla(30, 100%, 60%, 0.25);
         font-weight: 100;
         pointer-events: all;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
     }
 
         section input[type=text], section input[type=password] {
@@ -124,7 +129,7 @@ footer {
     right: 0;
 }
 
-    footer input {
+    footer a {
         font-size: 1rem;
         background: none;
         color: white;
@@ -184,7 +189,8 @@ footer {
 
     section {
         position: absolute;
-        width: 5rem;
+        width: 5.5rem;
+        margin-bottom: 0rem;
     }
 
         section[left] {

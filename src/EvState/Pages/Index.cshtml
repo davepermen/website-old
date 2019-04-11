@@ -1,21 +1,23 @@
 ﻿@page
 @model IndexModel
 @using Humanizer
-<h1>EV State</h1>
+    <section left>
+        <h1>EV State</h1>
 
-<a href="/start">start</a>
-<a href="/stop">stop</a>
+        <a href="/start">start</a>
+        <a href="/stop">stop</a>
 
-@if (Model.ChargingState.Any())
-{
-    var current = Model.ChargingState.First();
-    <p>charging @@ @(((double)current.ActivePower).ToMetric(hasSpace: true, decimals: 1) + "W")</p>
-    <p>@(((double)current.EnergyUsed).ToMetric(hasSpace: true, decimals: 1) + "Wh") used</p>
-}
-else
-{
-    <p>not charging</p>
-}
-<h1>current State of Charge</h1>
-<h2>according to EVNotify</h2>
-<p>@Model.StateOfCharge%</p>
+        @if (Model.ChargingState.Any())
+        {
+            var current = Model.ChargingState.First();
+            <p>charging @@ @(((double)current.ActivePower).ToMetric(hasSpace: true, decimals: 1) + "W")</p>
+            <p>@(((double)current.EnergyUsed).ToMetric(hasSpace: true, decimals: 1) + "Wh") used</p>
+        }
+        else
+        {
+            <p>not charging</p>
+        }
+        <h1>current State of Charge</h1>
+        <h2>according to EVNotify</h2>
+        <p>@Model.StateOfCharge%</p>
+    </section>

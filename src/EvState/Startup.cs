@@ -19,6 +19,8 @@ namespace EvState
             services.AddHttpClient<ECarUpHttpClient>();
             services.AddHttpClient<EVNotifyHttpClient>();
 
+            services.AddSingleton<Data.State>();
+
             services.AddAuthentication(options =>
             {
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
