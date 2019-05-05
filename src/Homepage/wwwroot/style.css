@@ -119,6 +119,7 @@ body {
     top: auto;
     height: 2rem;
     z-index: 2;
+    margin-bottom: 1rem;
 }
 
     #footnotes footer {
@@ -143,7 +144,25 @@ body {
         }
 
 
-
+body > footer {
+    z-index: 3;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    height: 1rem;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    box-shadow: 0 0 1rem black;
+    opacity: 0.7;
+}
+    body > footer * {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 5rem;
+        cursor: pointer;
+    }
 
 
 @keyframes main-fadein {
@@ -202,7 +221,7 @@ body {
 }
 
 
-
+/* widescreen wider than square */
 @media screen and (min-aspect-ratio: 1/1) {
     html {
         font-size: 2vh;
@@ -220,6 +239,7 @@ body {
 
     #footnotes {
         left: auto;
+        margin-bottom: 2rem;
     }
 
     #foreground main {
@@ -228,9 +248,13 @@ body {
         /*margin-right: 15%;*/
         animation: 1s ease-out forwards main-fadein3d;
     }
+
+    body > footer {
+        height: 2rem;
+    }
 }
 
-
+/* widescreen wider than 4/3 */
 @media screen and (min-aspect-ratio: 4/3) {
     html {
         font-size: 2.5vh;
@@ -238,7 +262,7 @@ body {
     }
 }
 
-
+/* portrait mode wider than 3/4 */
 @media screen and (min-aspect-ratio: 3/4) and (max-aspect-ratio: 1/1) {
     html {
         font-size: 3vh;
