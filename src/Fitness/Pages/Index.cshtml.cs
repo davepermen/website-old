@@ -29,7 +29,7 @@ namespace Fitness.Pages
             trainingData = new TrainingData(dataSources, user, training, year.Value);
         }
 
-        public string DailyPushupsGraph => string.Join(" ", trainingData.AmountPerDay.Select((value, index) => $"{index}, {value * .5f}")); // format for svg polyline
+        public string DailyPushupsGraph => string.Join(" ", trainingData.AmountPerDay.Select((value, index) => $"{index}, {value * .25f}")); // format for svg polyline
         public string DailyPushupsGraphBackground => "0, 0 " + DailyPushupsGraph + " 364, 0";
         public string SummedPushupsGraph => string.Join(" ", trainingData.AccumulatedEveryDay.Select((value, index) => $"{index}, {value / (Math.Max(YearGoal, trainingData.Sum) / 100f)}")); // format for svg polyline
         public string SummedPushupsGraphBackground => "0, 0 " + SummedPushupsGraph + " 364, 0";
