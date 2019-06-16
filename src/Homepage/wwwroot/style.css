@@ -3,8 +3,6 @@ html {
     color: #fff;
     font-family: 'segoe ui', sans-serif;
     font-weight: lighter;
-    font-size: 5vw;
-    line-height: 5vw;
     width: 100%;
     min-height: 100%;
     -webkit-user-select: none;
@@ -105,16 +103,13 @@ a, a * {
         line-height: 2.5vh;
     }
 }
-
-/* widescreen wider than 4/3 */
-@media screen and (min-aspect-ratio: 4/3) {
+/* portrait taller than square */
+@media screen and (max-aspect-ratio: 1/1) {
+    html {
+        font-size: 2.5vw;
+        line-height: 2.5vw;
+    }
 }
-
-/* portrait mode wider than 3/4 */
-@media screen and (min-aspect-ratio: 3/4) and (max-aspect-ratio: 1/1) {
-}
-
-
 
 
 /* ie11 hacks */
@@ -233,53 +228,6 @@ section[blog] {
             line-height: 0.625em;
             text-shadow: 0.07rem 0.125rem 0.25rem 0.25rem lightgray;
         }
-
-@keyframes article-fadein3d {
-    from {
-        /*transform: translateZ(30) rotate(-40deg);*/
-        zoom: 1.5;
-        opacity: 0;
-    }
-
-    to {
-        /*transform: none;*/
-        transform: none;
-        zoom: 1;
-        opacity: 1;
-    }
-}
-
-@media screen and (max-aspect-ratio: 1/1) {
-    * {
-        box-sizing: border-box;
-    }
-
-    section[blog] {
-        margin: 0;
-    }
-
-        section[blog] article {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-        }
-
-            section[blog] article h1,
-            section[blog] article p {
-                margin: 1em 0;
-                padding: 0.25em 1em;
-            }
-
-            section[blog] article h1 {
-                line-height: 2em;
-            }
-}
-
-@media screen and (min-aspect-ratio: 4/3) {
-    section[blog] {
-        font-size: 0.5rem;
-    }
-}
 
 section[blog] pre {
     margin: 0;
