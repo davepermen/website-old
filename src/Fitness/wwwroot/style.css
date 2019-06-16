@@ -53,6 +53,7 @@ section {
     line-height: 0.5rem;
     width: 100%;
     margin-bottom: 2rem;
+    min-height: 6rem;
 }
 
     /* basic ui */

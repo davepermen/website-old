@@ -3,61 +3,39 @@
 @{
     Layout = "_Layout";
 }
-<div id='background'></div>
-<div id='foreground'>
-    <main>
-        <h1>davepermen.net</h1>
-        <section>
-            <article>
-                <h1>me</h1>
-                <ul>
-                    <li>my name is David Spörri</li>
-                    <li>I'm living in Switzerland</li>
-                    <li>you can find me on <a href='https://twitter.com/davepermen'>twitter</a></li>
-                    <li>or drop me a mail at <a href='mailto:davepermen@hotmail.com'>davepermen@hotmail.com</a></li>
-                    <li>you can even call/sms/whatsapp me on <a href='tel:0041797732101'>+41 (0)79 773 21 01</a></li>
-                </ul>
-            </article>
-        </section>
-        <section>
-            <article>
-                <h1>blog</h1>
-                <ul>
-                    @foreach (var post in Model.BlogPosts)
-                    {
-                        <li><a href='/blog/@post.Path' onlyonhover>@post.Title</a></li>
-                    }
-                </ul>
-            </article>
-        </section>
-        <section>
-            <article>
-                <h1>music</h1>
-                <ul>
-                    <li>I'm on <a href='https://soundcloud.com/davepermen'>soundcloud</a></li>
-                    <li>and on <a href='https://www.mixcloud.com/davepermen'>mixcloud</a></li>
-                    <li>you can even find me on <a href='https://davepermen.bandcamp.com'>bandcamp</a></li>
-                </ul>
-            </article>
-        </section>
-        <section>
-            <article>
-                <h1>code</h1>
-                <ul>
-                    <li>I'm on <a href='http://github.com/davepermen'>github</a></li>
-                </ul>
-            </article>
-        </section>
-    </main>
-</div>
-<div id='footnotes'>
-    <footer>
-        want to donate? <a href='https://www.paypal.me/davepermen'>click here</a><br>
-        want 1600km of free Supercharging on a new Tesla? <a href='https://www.tesla.com/referral/david83185'>click here (referral link)</a><br>
-        &copy; David Spörri 2019
-    </footer>
-</div>
+<main>
+    <h1>davepermen.net</h1>
+    <section>
+        <h1>me</h1>
+        <span>my name is David Spörri</span>
+        <span>I'm living in Switzerland</span>
+        <span>you can find me on <a href='https://twitter.com/davepermen' target="_blank">twitter</a></span>
+        <span>or drop me a mail at <a href='mailto:davepermen@hotmail.com'>davepermen@hotmail.com</a></span>
+        <span>you can even call/sms/whatsapp me on <a href='tel:0041797732101'>+41 (0)79 773 21 01</a></span>
+    </section>
+    <section>
+        <h1>blog</h1>
+        @foreach (var post in Model.BlogPosts)
+        {
+            <span><a href='/blog/@post.Path' onlyonhover>@post.Title</a></span>
+        }
+    </section>
+    <section>
+        <h1>music</h1>
+        <span>I'm on <a href='https://soundcloud.com/davepermen' target="_blank">soundcloud</a></span>
+        <span>and on <a href='https://www.mixcloud.com/davepermen' target="_blank">mixcloud</a></span>
+        <span>you can even find me on <a href='https://davepermen.bandcamp.com' target="_blank">bandcamp</a></span>
+    </section>
+    <section>
+        <h1>code</h1>
+        <span>I'm on <a href='http://github.com/davepermen' target="_blank">github</a></span>
+    </section>
+</main>
+
 <footer>
+    <span>want to donate? <a href='https://www.paypal.me/davepermen' target="_blank">click here</a></span>
+    <span>want 1600km of free Supercharging on a new Tesla? <a href='https://www.tesla.com/referral/david83185' target="_blank">click here (referral link)</a></span>
+    <span>&copy; David Spörri 2019</span>
     <a href="https://www.republik.ch/2019/04/08/die-schoenste-klimagrafik-der-welt" target="_blank">
         <img src="~/die-schoenste-klimagrafik-der-welt.svg" alt="Wärmestreifen Schweiz" />
     </a>

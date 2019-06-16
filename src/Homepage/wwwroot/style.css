@@ -5,8 +5,8 @@ html {
     font-weight: lighter;
     font-size: 5vw;
     line-height: 5vw;
-    height: 100%;
     width: 100%;
+    min-height: 100%;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -19,255 +19,108 @@ html {
     box-sizing: border-box;
     -ms-touch-action: manipulation;
     touch-action: manipulation;
+    display: grid;
+    margin: 0;
+}
+
+script, head, style {
+    display: none;
+}
+
+span {
+    /* allowing inline <a> tags */
+    grid-template-columns: auto;
+    grid-auto-columns: 1fr;
+    grid-gap: 0.33rem;
+    grid-auto-flow: column;
+    justify-self: start;
 }
 
 body {
     width: 100%;
-    height: 100%;
-    margin: 0;
+    min-height: 100%;
 }
 
-    body > div { /* layers */
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        perspective: 50rem;
-    }
-
-#background {
-    background: url('background.jpg');
-    background-size: cover;
-    background-attachment: fixed;
-    background-position: center right;
-    pointer-events: none;
-    z-index: 0;
-    animation: 1s ease-out forwards background-fadein;
+main {
+    grid-area: 1 / 1;
+    align-self: center;
+    justify-self: center;
+    text-shadow: 0px 0.25rem 0.5rem #000, 0px 0.25rem 0.5rem #000;
 }
 
-#foreground {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    bottom: 2rem;
-    z-index: 2;
-}
-
-    #foreground main {
-        display: block;
-        text-shadow: 0px 0.25rem 0.5rem #000, 0px 0.25rem 0.5rem #000;
-        padding: 1rem;
-        margin: 0;
-        animation: 1s ease-out forwards main-fadein;
-    }
-
-    #foreground h1 {
+    main h1 {
         font-size: 2rem;
         font-weight: normal;
         margin: 0 0 2rem 0;
     }
 
-    #foreground ul {
+    main ul {
         margin: 0;
         padding: 0;
         list-style-type: none;
     }
 
-        #foreground ul * {
+        main ul * {
             -webkit-user-select: text;
             -moz-user-select: text;
             -ms-user-select: text;
             user-select: text;
             cursor: text;
         }
-
-    #foreground a {
-        color: inherit;
-        transition: text-shadow 0.25s ease-in-out;
-        cursor: pointer;
-    }
-
-        #foreground a:hover {
+        main a:hover {
             text-shadow: 0px 0.25rem 1rem #555, 0px 0.25rem 1rem #555;
         }
 
-        #foreground a[onlyonhover]:not(:hover) {
+        main a[onlyonhover]:not(:hover) {
             text-decoration: none;
         }
 
-    #foreground section {
+    main section {
         margin: 1rem 0 0 0;
     }
 
-    #foreground article {
-        margin: 0;
-    }
-
-        #foreground article > h1 {
+        main section > h1 {
             font-size: inherit;
             margin: 0;
         }
 
-
-#footnotes {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    justify-content: flex-end;
-    top: auto;
-    height: 2rem;
-    z-index: 2;
-    margin-bottom: 1rem;
-}
-
-    #footnotes footer {
-        font-size: 0.6rem;
-        line-height: 0.7rem;
-        margin: 1rem;
-        opacity: 0;
-        text-align: right;
-        animation: 4s ease-out forwards footnotes-fadein;
-        animation-delay: 2s;
-        pointer-events: all;
-    }
-
-    #footnotes a {
-        color: inherit;
-        transition: text-shadow 0.25s ease-in-out;
-        cursor: pointer;
-    }
-
-        #footnotes a:hover {
-            text-shadow: 0px 0.25rem 1rem #555, 0px 0.25rem 1rem #555;
-        }
-
-
-body > footer {
-    z-index: 3;
-    position: absolute;
-    width: 100%;
-    bottom: 0;
-    height: 1rem;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    box-shadow: 0 0 1rem black;
+footer {
+    grid-area: 1 / 1;
+    align-self: flex-end;
+    justify-self: stretch;
+    font-size: 0.7rem;
     opacity: 0.7;
 }
-    body > footer * {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 5rem;
-        cursor: pointer;
+    footer *:not(:last-child) {
+        justify-self: end;
     }
 
-
-@keyframes main-fadein {
-    from {
-        transform: translateZ(10rem);
-        opacity: 0;
+    footer *:last-child {
+        justify-self: stretch;
+        height: 1rem;
     }
 
-    to {
-        transform: translateZ(0);
-        opacity: 1;
-    }
-}
-
-@keyframes main-fadein3d {
-    from {
-        transform: translateZ(20rem) rotateY(40deg);
-        opacity: 0;
-    }
-
-    to {
-        transform: translateZ(10rem) rotateY(20deg);
-        opacity: 1;
-    }
-}
-
-@keyframes background-fadein {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes background-fadein3d {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-
-@keyframes footnotes-fadein {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 0.7;
-    }
+a {
+    color: inherit;
+    transition: text-shadow 0.25s ease-in-out;
+    cursor: pointer;
 }
 
 
 /* widescreen wider than square */
 @media screen and (min-aspect-ratio: 1/1) {
     html {
-        font-size: 2vh;
-        line-height: 2vh;
-    }
-
-    #background {
-        background-position: center center;
-        animation: 1s ease-out forwards background-fadein3d;
-    }
-
-    #foreground {
-        right: 10rem;
-    }
-
-    #footnotes {
-        left: auto;
-        margin-bottom: 2rem;
-    }
-
-    #foreground main {
-        transform: rotateY(20deg);
-        padding: 0;
-        /*margin-right: 15%;*/
-        animation: 1s ease-out forwards main-fadein3d;
-    }
-
-    body > footer {
-        height: 2rem;
-    }
-}
-
-/* widescreen wider than 4/3 */
-@media screen and (min-aspect-ratio: 4/3) {
-    html {
         font-size: 2.5vh;
         line-height: 2.5vh;
     }
 }
 
+/* widescreen wider than 4/3 */
+@media screen and (min-aspect-ratio: 4/3) {
+}
+
 /* portrait mode wider than 3/4 */
 @media screen and (min-aspect-ratio: 3/4) and (max-aspect-ratio: 1/1) {
-    html {
-        font-size: 3vh;
-        line-height: 3vh;
-    }
 }
 
 
@@ -317,6 +170,7 @@ section[blog] {
         animation: 0.7s linear forwards article-fadein3d;
         overflow: hidden;
     }
+
         section[blog] article header {
             padding: 0 1em 0 1em;
             line-height: 1em;
@@ -359,34 +213,35 @@ section[blog] {
             margin: 1em 2em;
         }
 
-        section[blog] article {
-            margin: 4em;
+    section[blog] article {
+        margin: 4em;
+    }
+
+        section[blog] article p {
+            line-height: 1.6em;
+            font-weight: inherit;
+            font-size: 1.4em;
+            font-family: 'georgia', 'times new roman', serif;
+            margin: 0.72em 2.9em;
         }
 
-            section[blog] article p {
-                line-height: 1.6em;
-                font-weight: inherit;
-                font-size: 1.4em;
-                font-family: 'georgia', 'times new roman', serif;
-                margin: 0.72em 2.9em;
+            section[blog] article p:first-of-type {
+                margin-top: 2.8em;
             }
-                section[blog] article p:first-of-type {
-                    margin-top: 2.8em;
-                }
 
         section[blog] article pre {
             margin-top: 2.8em;
             margin-bottom: 2.8em;
         }
 
-            section[blog] article > section > p:first-of-type:not(:only-child)::first-letter {
-                font-size: 3.5em;
-                font-weight: 900;
-                float: left;
-                padding: 0.1em 0.05em 0 0;
-                line-height: 0.625em;
-                text-shadow: 0.07rem 0.125rem 0.25rem 0.25rem lightgray;
-            }
+        section[blog] article > section > p:first-of-type:not(:only-child)::first-letter {
+            font-size: 3.5em;
+            font-weight: 900;
+            float: left;
+            padding: 0.1em 0.05em 0 0;
+            line-height: 0.625em;
+            text-shadow: 0.07rem 0.125rem 0.25rem 0.25rem lightgray;
+        }
 
 @keyframes article-fadein3d {
     from {
@@ -442,10 +297,11 @@ section[blog] pre {
     background-color: #484848;
     box-shadow: #242424 0 0 8em inset;
 }
-section[blog] pre code {
-    padding: 1rem 2rem;
-    cursor: text;
-}
+
+    section[blog] pre code {
+        padding: 1rem 2rem;
+        cursor: text;
+    }
 
 code {
     -webkit-user-select: text;
@@ -453,7 +309,7 @@ code {
     -ms-user-select: text;
     user-select: text;
 }
-    
+
 section[blog] img {
     max-width: 100%;
 }
