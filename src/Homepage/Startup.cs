@@ -1,6 +1,7 @@
 ﻿using Conesoft;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using System;
@@ -34,8 +35,14 @@ namespace Homepage
                 app.UseHsts();
             }
 
+            var fileTypes = new FileExtensionContentTypeProvider();
+            fileTypes.Mappings[".glsl"] = "text/text";
+
             app.UseDefaultFiles();
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                ContentTypeProvider = fileTypes
+            });
 
             app.UseStaticFiles(new StaticFileOptions
             {

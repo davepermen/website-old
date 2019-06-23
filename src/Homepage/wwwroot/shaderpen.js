@@ -1,49 +1,6 @@
-﻿class ShaderPen {
-    constructor(shaderString, noRender) {
-        // shadertoy differences
-        const ioTest = /\(\s*out\s+vec4\s+(\S+)\s*,\s*in\s+vec2\s+(\S+)\s*\)/;
-        const io = shaderString.match(ioTest);
-        shaderString = shaderString.replace('mainImage', 'main');
-        shaderString = shaderString.replace(ioTest, '()');
-
-        // shadertoy built in uniforms
-        const uniforms = this.uniforms = {
-            iResolution: {
-                type: 'vec3',
-                value: [window.innerWidth, window.innerHeight, 0],
-            },
-            iTime: {
-                type: 'float',
-                value: 0,
-            },
-            iTimeDelta: {
-                type: 'float',
-                value: 0,
-            },
-            iFrame: {
-                type: 'int',
-                value: 0,
-            },
-            iMouse: {
-                type: 'vec4',
-                value: [0, 0, 0, 0],
-            },
-        };
-
-        // create default string values
-        shaderString = (io ? `#define ${io[1]} gl_FragColor\n#define ${io[2]} gl_FragCoord.xy\n` : '') + shaderString;
-        shaderString = Object.keys(uniforms)
-            .map((key) => ({
-                name: key,
-                type: uniforms[key].type,
-            }))
-            .reduce((a, uniform) => (
-                a + `uniform ${uniform.type} ${uniform.name};\n`
-            ), '') + shaderString;
-        shaderString = 'precision highp float;\n' + shaderString;
-
-        // create, position, and add canvas
-        const canvas = this.canvas = document.createElement('canvas');
+﻿var ShaderPen = function () {
+    function createCanvas() {
+        const canvas = document.createElement('canvas');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         canvas.style.position = 'fixed';
@@ -52,142 +9,184 @@
         canvas.style.top = 0;
         document.body.append(canvas);
 
-        // get webgl context and set clearColor
-        const gl = this.gl = canvas.getContext('webgl');
-        gl.clearColor(0, 0, 0, 0);
+        return canvas;
+    }
 
-        // compile basic vertex shader to make rect fill screen
-        const vertexShader = this.vertexShader = gl.createShader(gl.VERTEX_SHADER);
+    function createWebGLContext(canvas) {
+        return canvas.getContext('webgl');
+    }
+
+    function createVertexShader(gl) {
+        const vertexShader = gl.createShader(gl.VERTEX_SHADER);
         gl.shaderSource(vertexShader, `
-      attribute vec2 position;
-      void main() {
-      gl_Position = vec4(position, 0.0, 1.0);
-      }
-    `);
+          attribute vec2 position;
+          void main() {
+          gl_Position = vec4(position, 0.0, 1.0);
+          }
+        `);
         gl.compileShader(vertexShader);
 
-        // compile fragment shader from string passed in
-        const fragmentShader = this.fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
-        gl.shaderSource(fragmentShader, shaderString);
-        gl.compileShader(fragmentShader);
+        return vertexShader;
+    }
 
-        // make program from shaders
-        const program = this.program = gl.createProgram();
-        gl.attachShader(program, vertexShader);
-        gl.attachShader(program, fragmentShader);
-        gl.linkProgram(program);
-
-        // vertices for basic rectangle to fill screen
-        const vertices = this.vertices = new Float32Array([
+    function createVertices(gl) {
+        const vertices = new Float32Array([
             -1, 1, 1, 1, 1, -1,
             -1, 1, 1, -1, -1, -1,
         ]);
-
         const buffer = this.buffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
         gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
 
+        return vertices;
+    }
+
+    function createFragmentShader(gl, shader) {
+        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+        gl.shaderSource(fragmentShader, shader);
+        gl.compileShader(fragmentShader);
+
+        return fragmentShader;
+    }
+
+    function bindVertexParameters(gl, program) {
+        var position = gl.getAttribLocation(program, 'position');
+        gl.enableVertexAttribArray(position);
+        gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+    }
+
+    function createProgram(gl, vertexShader, fragmentShader) {
+        const program = gl.createProgram();
+        gl.attachShader(program, vertexShader);
+        gl.attachShader(program, fragmentShader);
+        gl.linkProgram(program);
         gl.useProgram(program);
 
-        program.position = gl.getAttribLocation(program, 'position');
-        gl.enableVertexAttribArray(program.position);
-        gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
+        bindVertexParameters(gl, program);
 
-        // get all uniform locations from shaders
-        Object.keys(uniforms).forEach((key, i) => {
-            uniforms[key].location = gl.getUniformLocation(program, key);
+        return program;
+    }
+
+    var uniforms = [];
+
+    function createUniform(gl, program, name, type, value) {
+        var uniform = {
+            location: gl.getUniformLocation(program, name),
+            type,
+            method: 'uniform' + (Array.isArray(value) ? value.length + 'fv' : '1' + type[0]),
+            value,
+            apply() {
+                gl[this.method](this.location, this.value)
+            }
+        };
+        uniforms.push(uniform);
+        return uniform;
+    }
+
+    function updateUniforms() {
+        uniforms.forEach(uniform => uniform.apply());
+    }
+
+    function createTextureFromArray(gl, width, height, array) {
+        var texture = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, width, height, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, array);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+
+        return texture;
+    }
+
+    function createUniformSampler(gl, program, name, textureNumber, texture) {
+        var uniform = {
+            location: gl.getUniformLocation(program, name),
+            textureNumber,
+            texture,
+            apply() {
+                gl.activeTexture(gl.TEXTURE0 + this.textureNumber);
+                gl.bindTexture(gl.TEXTURE_2D, this.texture);
+                gl.uniform1i(this.location, this.textureNumber);
+            }
+        }
+        uniforms.push(uniform);
+        return uniform;
+    }
+
+    function checkErrors(gl, vertexShader, fragmentShader, program) {
+        if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
+            console.error(gl.getShaderInfoLog(vertexShader));
+        }
+
+        if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
+            console.error(gl.getShaderInfoLog(fragmentShader));
+        }
+
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+            console.error(gl.getProgramInfoLog(program));
+        }
+    }
+
+    return function (shader) {
+
+        const canvas = createCanvas();
+
+        const gl = createWebGLContext(canvas);
+
+        const vertexShader = createVertexShader(gl);
+        const vertices = createVertices(gl);
+        const fragmentShader = createFragmentShader(gl, shader);
+
+        const program = createProgram(gl, vertexShader, fragmentShader);
+
+        const resolution = createUniform(gl, program, 'resolution', 'vec3', [window.innerWidth, window.innerHeight, 0]);
+        const time = createUniform(gl, program, 'time', 'float', 0);
+        const delta = createUniform(gl, program, 'delta', 'float', 0);
+        const frame = createUniform(gl, program, 'frame', 'int', 0);
+        const mouse = createUniform(gl, program, 'mouse', 'vec4', [0, 0, 0, 0]);
+        const ditherTexture = createTextureFromArray(gl, 8, 8, new Uint8Array([0, 32, 8, 40, 2, 34, 10, 42,   /* 8x8 Bayer ordered dithering  */
+            48, 16, 56, 24, 50, 18, 58, 26,  /* pattern.  Each input pixel   */
+            12, 44, 4, 36, 14, 46, 6, 38,  /* is scaled to the 0..63 range */
+            60, 28, 52, 20, 62, 30, 54, 22,  /* before looking in this table */
+            3, 35, 11, 43, 1, 33, 9, 41,   /* to determine the action.     */
+            51, 19, 59, 27, 49, 17, 57, 25,
+            15, 47, 7, 39, 13, 45, 5, 37,
+            63, 31, 55, 23, 61, 29, 53, 21]));
+        const dither = createUniformSampler(gl, program, 'dither', 0, ditherTexture);
+        dither.apply();
+
+        checkErrors(gl, vertexShader, fragmentShader, program);
+
+        const render = timestamp => {
+            let deltaTime = this.lastTime ? ((timestamp - this.lastTime) / 1000) : 0;
+            this.lastTime = timestamp;
+
+            time.value += deltaTime;
+            delta.value = deltaTime;
+            frame.value++;
+
+            gl.clearColor(0, 0, 0, 0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+
+            updateUniforms();
+
+            gl.drawArrays(gl.TRIANGLES, 0, vertices.length / 2);
+            requestAnimationFrame(render);
+        }
+
+        window.addEventListener('mousemove', e => {
+            mouse.value[0] = e.clientX;
+            mouse.value[1] = e.clientY;
         });
 
-        // report webgl errors
-        this.reportErrors();
-
-        // bind contexts
-        this._bind(
-            'mouseDown',
-            'mouseMove',
-            'mouseUp',
-            'render',
-            'resize'
-        );
-
-        // add event listeners
-        window.addEventListener('mousedown', this.mouseDown);
-        window.addEventListener('mousemove', this.mouseMove);
-        window.addEventListener('mouseup', this.mouseUp);
-        window.addEventListener('resize', this.resize);
-
-        // auto render unless otherwise specified
-        if (noRender !== 'NO_RENDER') {
-            this.render();
-        }
-    }
-
-    _bind(...methods) {
-        methods.forEach((method) => this[method] = this[method].bind(this));
-    }
-
-    mouseDown(e) {
-        this.mousedown = true;
-        this.uniforms.iMouse.value[2] = e.clientX;
-        this.uniforms.iMouse.value[3] = e.clientY;
-    }
-
-    mouseMove(e) {
-        /*if (this.mousedown)*/ {
-            this.uniforms.iMouse.value[0] = e.clientX;
-            this.uniforms.iMouse.value[1] = e.clientY;
-        }
-    }
-
-    mouseUp(e) {
-        this.mousedown = false;
-        this.uniforms.iMouse.value[2] = 0;
-        this.uniforms.iMouse.value[3] = 0;
-    }
-
-    render(timestamp) {
-        const gl = this.gl;
-
-        let delta = this.lastTime ? ((timestamp - this.lastTime) / 1000) : 0;
-        this.lastTime = timestamp;
-
-        this.uniforms.iTime.value += delta;
-        this.uniforms.iTimeDelta.value = delta;
-        this.uniforms.iFrame.value++;
-
-        gl.clear(gl.COLOR_BUFFER_BIT);
-
-        Object.keys(this.uniforms).forEach((key) => {
-            const t = this.uniforms[key].type;
-            const method = t.match(/vec/) ? `${t[t.length - 1]}fv` : `1${t[0]}`;
-            gl[`uniform${method}`](this.uniforms[key].location, this.uniforms[key].value);
+        window.addEventListener('resize', e => {
+            canvas.width = resolution.value[0] = window.innerWidth;
+            canvas.height = resolution.value[1] = window.innerHeight;
+            gl.viewport(0, 0, canvas.width, canvas.height);
         });
 
-        gl.drawArrays(gl.TRIANGLES, 0, this.vertices.length / 2);
-
-        requestAnimationFrame(this.render);
+        render();
     }
-
-    reportErrors() {
-        const gl = this.gl;
-
-        if (!gl.getShaderParameter(this.vertexShader, gl.COMPILE_STATUS)) {
-            console.log(gl.getShaderInfoLog(this.vertexShader));
-        }
-
-        if (!gl.getShaderParameter(this.fragmentShader, gl.COMPILE_STATUS)) {
-            console.log(gl.getShaderInfoLog(this.fragmentShader));
-        }
-
-        if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) {
-            console.log(gl.getProgramInfoLog(this.program));
-        }
-    }
-
-    resize() {
-        this.canvas.width = this.uniforms.iResolution.value[0] = window.innerWidth;
-        this.canvas.height = this.uniforms.iResolution.value[1] = window.innerHeight;
-
-        this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
-    }
-}
+}();
