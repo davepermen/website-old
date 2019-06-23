@@ -127,7 +127,7 @@ a, a * {
 
 
 html {
-    background: url('/background.jpg');
+    /*background: url('/background.jpg');*/
     background-size: cover;
     background-position: center center;
     background-attachment: fixed;
