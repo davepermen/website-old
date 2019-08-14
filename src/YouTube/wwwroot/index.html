@@ -1,0 +1,53 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <title>youtube</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            background: black;
+            border: 0;
+        }
+
+        a {
+            display: block;
+            position: relative;
+            padding-top: 56.25%;
+        }
+
+            a:before {
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                z-index: 10;
+                background: transparent url('/play.png') center center no-repeat;
+            }
+
+        iframe, img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <script>function youtube_check(e) { var thumbnail = ['maxresdefault', 'mqdefault', 'sddefault', 'hqdefault', 'default']; var url = e.getAttribute('src'); if (e.naturalWidth === 120 && e.naturalHeight === 90) { for (var i = 0, len = thumbnail.length - 1; i < len; i++) { if (url.indexOf(thumbnail[i]) > 0) { e.setAttribute('src', url.replace(thumbnail[i], thumbnail[i + 1])); break; } } } }</script>
+</head>
+<body>
+    <a href='https://www.youtube-nocookie.com/embed/qnxCcY0WDAk?autoplay=1'><img src='https://i3.ytimg.com/vi/qnxCcY0WDAk/maxresdefault.jpg' onload='youtube_check(this)'></a>
+    <a href='https://www.youtube-nocookie.com/embed/7L6TgJcDVAo?autoplay=1'><img src='https://i3.ytimg.com/vi/7L6TgJcDVAo/maxresdefault.jpg' onload='youtube_check(this)'></a>
+    <a href='https://www.youtube-nocookie.com/embed/IYBz_5H2jdw?autoplay=1'><img src='https://i3.ytimg.com/vi/IYBz_5H2jdw/maxresdefault.jpg' onload='youtube_check(this)'></a>
+    <a href='https://www.youtube-nocookie.com/embed/eAYnJrlMrpc?autoplay=1'><img src='https://i3.ytimg.com/vi/eAYnJrlMrpc/maxresdefault.jpg' onload='youtube_check(this)'></a>
+    <a href='https://www.youtube-nocookie.com/embed/THijpuWl_6M?autoplay=1'><img src='https://i3.ytimg.com/vi/THijpuWl_6M/maxresdefault.jpg' onload='youtube_check(this)'></a>
+    <a href='https://www.youtube-nocookie.com/embed/NJZAaTC59HI?autoplay=1'><img src='https://i3.ytimg.com/vi/NJZAaTC59HI/maxresdefault.jpg' onload='youtube_check(this)'></a>
+    <a href='https://www.youtube-nocookie.com/embed/OMX-w5h4L94?autoplay=1'><img src='https://i3.ytimg.com/vi/OMX-w5h4L94/maxresdefault.jpg' onload='youtube_check(this)'></a>
+    <a href='https://www.youtube-nocookie.com/embed/Mv4SiHnnpkc?autoplay=1'><img src='https://i3.ytimg.com/vi/Mv4SiHnnpkc/maxresdefault.jpg' onload='youtube_check(this)'></a>
+    <a href='https://www.youtube-nocookie.com/embed/IIEwNg5fl4E?autoplay=1'><img src='https://i3.ytimg.com/vi/IIEwNg5fl4E/maxresdefault.jpg' onload='youtube_check(this)'></a>
+    <a href='https://www.youtube-nocookie.com/embed/cd2dnoVmync?autoplay=1'><img src='https://i3.ytimg.com/vi/cd2dnoVmync/maxresdefault.jpg' onload='youtube_check(this)'></a>
+    <a href='/1/'>next page</a>
+</body>
+</html>
