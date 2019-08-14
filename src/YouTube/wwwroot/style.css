@@ -18,7 +18,7 @@ a {
         height: 100%;
         top: 0;
         z-index: 10;
-        background: transparent url('/youtube.png') center center no-repeat;
+        background: transparent url('/play.png') center center no-repeat;
     }
 
 iframe, img {
