@@ -1,0 +1,42 @@
+﻿@page "{index:int?}"
+@model YouTube.Pages.IndexModel
+@{
+    Layout = null;
+}
+<!doctype html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <title>Davepermens YouTube</title>
+    <link rel='manifest' href='/manifest.json'>
+    <link href='/style.css' rel='stylesheet'>
+    <script>
+        function youtube_check(e) {
+            var thumbnail = ['maxresdefault', 'mqdefault', 'sddefault', 'hqdefault', 'default'];
+            var url = e.getAttribute('src');
+            if (e.naturalWidth === 120 && e.naturalHeight === 90) {
+                for (var i = 0, len = thumbnail.length - 1; i < len; i++) {
+                    if (url.indexOf(thumbnail[i]) > 0) {
+                        e.setAttribute('src', url.replace(thumbnail[i], thumbnail[i + 1]));
+                        break;
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    hi @Model.Index
+
+    @foreach (var videoId in Model.VideoIds.Skip(Model.Index * 10).Take(10))
+    {
+        <a href='https://www.youtube-nocookie.com/embed/@videoId?autoplay=1'>
+            <img src='https://i3.ytimg.com/vi/@videoId/maxresdefault.jpg' onload='youtube_check(this)'>
+        </a>
+    }
+    @if (Model.VideoIds.Length > (Model.Index + 1) * 10)
+    {
+        <a href='/@(Model.Index + 1)/'></a>
+    }
+</body>
+</html>

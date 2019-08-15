@@ -1,8 +1,13 @@
 ﻿* {
     margin: 0;
     padding: 0;
-    background: black;
     border: 0;
+}
+
+html {
+    background: black;
+    color: white;
+    font-family: sans-serif;
 }
 
 body {

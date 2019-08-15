@@ -22,7 +22,7 @@ namespace YouTube
             });
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDataSources dataSource)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -35,6 +35,7 @@ namespace YouTube
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
+
             app.UseMvc();
         }
     }
