@@ -18,7 +18,6 @@
   <ItemGroup>
     <None Include="Properties\PublishProfiles\Localhost.pubxml.user" />
     <None Include="Properties\PublishProfiles\Server Deployment.pubxml.user" />
-    <None Include="wwwroot\subscription_manager.xml" />
   </ItemGroup>
 
 </Project>

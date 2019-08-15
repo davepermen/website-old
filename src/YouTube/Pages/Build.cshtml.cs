@@ -16,7 +16,7 @@ namespace YouTube.Pages
         {
             using (var http = new HttpClient())
             {
-                var feeds = SubscriptionManager.LoadFromFile(@"wwwroot\subscription_manager.xml");
+                var feeds = SubscriptionManager.LoadFromFile($@"{dataSource.LocalDirectory}\subscription_manager.xml");
 
                 var allVideos = new List<Xml.feedEntry>();
 

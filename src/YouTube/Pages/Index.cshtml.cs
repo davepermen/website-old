@@ -11,7 +11,14 @@ namespace YouTube.Pages
         {
             Index = index ?? 0;
 
-            VideoIds = IO.File.ReadAllLines($@"{dataSource.LocalDirectory}\videos.csv");
+            try
+            {
+                VideoIds = IO.File.ReadAllLines($@"{dataSource.LocalDirectory}\videos.csv");
+            }
+            catch
+            {
+                VideoIds = new string[] { };
+            }
         }
 
         public int Index { get; set; }
