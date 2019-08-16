@@ -10,19 +10,22 @@ html {
     font-family: sans-serif;
 }
 
-body {
+section[list] {
     margin-right: auto;
     margin-left: auto;
     max-width: 60rem;
 }
 
-a {
+section[video] {
+}
+
+a, div {
     display: block;
     position: relative;
     padding-top: 56.25%;
 }
 
-    a:before {
+    a:not([href^='https://']):before {
         content: '';
         position: absolute;
         width: 100%;

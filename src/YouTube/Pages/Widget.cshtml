@@ -1,5 +1,5 @@
 ﻿@page "{indexorid?}"
-@model YouTube.Pages.IndexModel
+@model YouTube.Pages.WidgetModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     Layout = null;
@@ -27,28 +27,13 @@
     </script>
 </head>
 <body>
-    @if (Model.IsIndex)
-    {
-    <section list>
-        @foreach (var videoId in Model.VideoIds.Skip(Model.Index * 10).Take(10))
-        {
-        <a href='/@videoId'>
-            <img src='https://i3.ytimg.com/vi/@videoId/maxresdefault.jpg' onload='youtube_check(this)'>
-        </a>
-        }
-        @if (Model.VideoIds.Length > (Model.Index + 1) * 10)
-        {
-        <a href='/@(Model.Index + 1)/'></a>
-        }
-    </section>
-    }
-    else
-    {
     <section video>
-        <div>
-            <iframe src="https://www.youtube-nocookie.com/embed/@Model.VideoId?autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></iframe>
-        </div>
+        @foreach (var videoId in Model.VideoIds.Take(2))
+        {
+            <a href='https://yt.davepermen.net'>
+                <img src='https://i3.ytimg.com/vi/@videoId/maxresdefault.jpg' onload='youtube_check(this)'>
+            </a>
+        }
     </section>
-    }
 </body>
 </html>

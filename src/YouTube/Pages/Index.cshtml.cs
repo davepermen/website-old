@@ -7,22 +7,32 @@ namespace YouTube.Pages
 {
     public class IndexModel : PageModel
     {
-        public void OnGet(int? index, [FromServices] IDataSources dataSource)
+        public void OnGet(string indexOrId, [FromServices] IDataSources dataSource)
         {
-            Index = index ?? 0;
-
-            try
+            IsIndex = int.TryParse(indexOrId, out int index) || indexOrId == null;
+            if (IsIndex)
             {
-                VideoIds = IO.File.ReadAllLines($@"{dataSource.LocalDirectory}\videos.csv");
+                Index = index;
+                try
+                {
+                    VideoIds = IO.File.ReadAllLines($@"{dataSource.LocalDirectory}\videos.csv");
+                }
+                catch
+                {
+                }
             }
-            catch
+            else
             {
-                VideoIds = new string[] { };
+                VideoId = indexOrId;
             }
         }
 
-        public int Index { get; set; }
+        public bool IsIndex { get; set; } = false;
 
-        public string[] VideoIds { get; set; }
-    }
+        public int Index { get; set; } = 0;
+
+        public string VideoId { get; set; } = null;
+
+        public string[] VideoIds { get; set; } = new string[] { };
+}
 }
