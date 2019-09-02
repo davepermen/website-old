@@ -28,10 +28,11 @@
 </head>
 <body>
     <section video>
-        @foreach (var videoId in Model.VideoIds.Take(2))
+        @foreach (var video in Model.Videos.Take(2))
         {
             <a href='https://yt.davepermen.net'>
-                <img src='https://i3.ytimg.com/vi/@videoId/maxresdefault.jpg' onload='youtube_check(this)'>
+                @video.Title
+                <img src='https://i3.ytimg.com/vi/@video.Id/maxresdefault.jpg' onload='youtube_check(this)'>
             </a>
         }
     </section>
