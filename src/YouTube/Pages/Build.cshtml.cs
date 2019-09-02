@@ -34,7 +34,7 @@ namespace YouTube.Pages
                     }
                 }
 
-                IO.File.WriteAllLines($@"{dataSource.LocalDirectory}\videos.csv", allVideos.OrderByDescending(v => v.published).Select(v => v.videoId).ToArray());
+                IO.File.WriteAllLines($@"{dataSource.LocalDirectory}\videos.csv", allVideos.OrderByDescending(v => v.published).Select(v => $"{v.videoId};{v.author.name};{v.title}").ToArray());
             }
         }
     }

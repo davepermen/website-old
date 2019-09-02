@@ -1,6 +1,7 @@
 ﻿using Conesoft;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Linq;
 using IO = System.IO;
 
 namespace YouTube.Pages
@@ -15,7 +16,16 @@ namespace YouTube.Pages
                 Index = index;
                 try
                 {
-                    VideoIds = IO.File.ReadAllLines($@"{dataSource.LocalDirectory}\videos.csv");
+                    Videos = IO.File.ReadAllLines($@"{dataSource.LocalDirectory}\videos.csv").Select(line =>
+                    {
+                        var splits = line.Split(";");
+                        return new Video
+                        {
+                            Id = splits[0],
+                            Author = splits[1],
+                            Title = splits[2]
+                        };
+                    }).ToArray();
                 }
                 catch
                 {
@@ -33,6 +43,14 @@ namespace YouTube.Pages
 
         public string VideoId { get; set; } = null;
 
-        public string[] VideoIds { get; set; } = new string[] { };
-}
+        public Video[] Videos { get; set; } = new Video[] { };
+
+
+        public class Video
+        {
+            public string Id { get; set; }
+            public string Author { get; set; }
+            public string Title { get; set; }
+        }
+    }
 }

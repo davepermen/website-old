@@ -29,26 +29,27 @@
 <body>
     @if (Model.IsIndex)
     {
-    <section list>
-        @foreach (var videoId in Model.VideoIds.Skip(Model.Index * 10).Take(10))
-        {
-        <a href='/@videoId'>
-            <img src='https://i3.ytimg.com/vi/@videoId/maxresdefault.jpg' onload='youtube_check(this)'>
-        </a>
-        }
-        @if (Model.VideoIds.Length > (Model.Index + 1) * 10)
-        {
-        <a href='/@(Model.Index + 1)/'></a>
-        }
-    </section>
+        <section list>
+            @foreach (var video in Model.Videos.Skip(Model.Index * 10).Take(10))
+            {
+                <a href='/@video.Id'>
+                    @video.Title
+                    <img src='https://i3.ytimg.com/vi/@video.Id/maxresdefault.jpg' onload='youtube_check(this)'>
+                </a>
+            }
+            @if (Model.Videos.Length > (Model.Index + 1) * 10)
+            {
+                <a href='/@(Model.Index + 1)/'></a>
+            }
+        </section>
     }
     else
     {
-    <section video>
-        <div>
-            <iframe src="https://www.youtube-nocookie.com/embed/@Model.VideoId?autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></iframe>
-        </div>
-    </section>
+        <section video>
+            <div>
+                <iframe src="https://www.youtube-nocookie.com/embed/@Model.VideoId?autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></iframe>
+            </div>
+        </section>
     }
 </body>
 </html>
