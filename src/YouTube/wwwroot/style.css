@@ -26,9 +26,7 @@ a, div {
     position: relative;
     padding: 1rem;
     padding-top: 56.25%;
-    color: white;
-    text-decoration: none;
-    text-shadow: 0 0 0 0.5rem rgba(0, 0, 0, 0.25);
+    overflow: hidden;
 }
 
     a:not([href^='https://']):before {
@@ -52,4 +50,34 @@ iframe, img {
 
 img {
     z-index: -1;
+}
+
+a h1 {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    color: white;
+    text-decoration: none;
+    text-align: center;
+    text-shadow: 0 0 0 0.5rem rgba(0, 0, 0, 0.25), 0 0 0 1rem rgba(0, 0, 0, 0.25), 0 0 0 1.5rem rgba(0, 0, 0, 0.25);
+    padding: 0.5rem;
+    font-size: 1.44rem;
+    overflow: hidden;
+}
+a h2 {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    right: 0;
+    top: 0;
+    color: white;
+    text-decoration: none;
+    text-align: center;
+    text-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.125), 0 0 0 0.5rem rgba(0, 0, 0, 0.125), 0 0 0 0.75rem rgba(0, 0, 0, 0.125);
+    padding: 0.5rem;
+    font-size: 1.2rem;
+    font-weight: 100;
+    overflow: hidden;
 }
