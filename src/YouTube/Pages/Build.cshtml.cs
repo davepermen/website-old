@@ -62,8 +62,8 @@ namespace YouTube.Pages
 
                             var message = new
                             {
-                                title = $"New Video by {video.author}",
-                                message = $"{video.title} by {video.author} is now online",
+                                title = $"New Video by {video.author.name}",
+                                message = $"{video.title} by {video.author.name} is now online",
                                 image_url = $"https://yt.davepermen.net/thumb/{video.videoId}.jpg",
                                 action = $"https://yt.davepermen.net/{video.videoId}",
                                 type = "YouTube"
