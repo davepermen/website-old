@@ -24,8 +24,6 @@ section[video] {
 a, div {
     display: block;
     position: relative;
-    padding-left: 1rem;
-    padding-right: 1rem;
     padding-top: 56.25%;
     overflow: hidden;
 }
@@ -62,10 +60,10 @@ a h1 {
     color: white;
     text-decoration: none;
     text-align: center;
-    text-shadow: 0 0 0 0.5rem rgba(0, 0, 0, 0.25), 0 0 0 1rem rgba(0, 0, 0, 0.25), 0 0 0 1.5rem rgba(0, 0, 0, 0.25);
-    padding: 0.5rem;
+    padding: 1rem;
     font-size: 1.44rem;
     overflow: hidden;
+    background: rgba(0, 0, 0, 0.5);
 }
 a h2 {
     position: absolute;
@@ -76,9 +74,9 @@ a h2 {
     color: white;
     text-decoration: none;
     text-align: center;
-    text-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.125), 0 0 0 0.5rem rgba(0, 0, 0, 0.125), 0 0 0 0.75rem rgba(0, 0, 0, 0.125);
-    padding: 0.5rem;
+    padding: 1rem;
     font-size: 1.2rem;
     font-weight: 100;
     overflow: hidden;
+    background: rgba(0, 0, 0, 0.5);
 }
