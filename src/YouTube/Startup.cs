@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using System;
+using IO = System.IO;
 
 namespace YouTube
 {
@@ -22,7 +24,7 @@ namespace YouTube
             });
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDataSources dataSource)
         {
             if (env.IsDevelopment())
             {
@@ -35,6 +37,13 @@ namespace YouTube
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
+
+            IO.Directory.CreateDirectory($@"{dataSource.LocalDirectory}\thumbnails");
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider($@"{dataSource.LocalDirectory}\thumbnails"),
+                RequestPath = "/thumb"
+            });
 
             app.UseMvc();
         }

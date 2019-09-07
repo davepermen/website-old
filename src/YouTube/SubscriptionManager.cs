@@ -9,8 +9,11 @@ namespace YouTube
     {
         internal static Xml.opmlBodyOutlineOutline[] LoadFromFile(string v)
         {
-            var opml = (Xml.opml)new XmlSerializer(typeof(Xml.opml)).Deserialize(File.OpenRead(v));
-            return opml.body.outline.outline;
+            using (var file = File.OpenRead(v))
+            {
+                var opml = (Xml.opml)new XmlSerializer(typeof(Xml.opml)).Deserialize(file);
+                return opml.body.outline.outline;
+            }
         }
     }
 
