@@ -24,7 +24,8 @@ section[video] {
 a, div {
     display: block;
     position: relative;
-    padding: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
     padding-top: 56.25%;
     overflow: hidden;
 }

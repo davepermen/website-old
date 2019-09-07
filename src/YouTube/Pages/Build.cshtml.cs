@@ -57,13 +57,14 @@ namespace YouTube.Pages
                                 }
                                 catch (Exception)
                                 {
+                                    IO.File.Copy($@"{dataSource.LocalDirectory}\default.jpg", thumb);
                                 }
                             }
 
                             var message = new
                             {
                                 title = $"New Video by {video.author.name}",
-                                message = $"{video.title} by {video.author.name} is now online",
+                                message = $"{video.title} by {video.author.name} is now available",
                                 image_url = $"https://yt.davepermen.net/thumb/{video.videoId}.jpg",
                                 action = $"https://yt.davepermen.net/{video.videoId}",
                                 type = "YouTube"
