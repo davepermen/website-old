@@ -95,9 +95,6 @@ namespace EvHomeCharging
             {
                 File.WriteAllText($"{ChargesDirectory}\\{counter + 1}.txt", chargingState.EnergyUsed.ToString());
             }
-
-            Directory.CreateDirectory(LogDirectory);
-            File.WriteAllText($"{LogDirectory}\\{DateTime.UtcNow.ToString("s").Replace(":", "-")}.json", JsonConvert.SerializeObject(chargingState, Formatting.Indented));
         }
     }
 }
