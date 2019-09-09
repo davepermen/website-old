@@ -1,4 +1,4 @@
-﻿namespace EvState.HttpClients
+﻿namespace EvState.HttpClients.ECarUp
 {
     public class ChargingState
     {

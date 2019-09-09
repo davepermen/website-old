@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
@@ -11,19 +11,16 @@
     <None Include="Properties\PublishProfiles\Server Deployment.pubxml.user" />
   </ItemGroup>
 
-
   <ItemGroup>
-    <PackageReference Include="Humanizer.Core" Version="2.5.16" />
+    <PackageReference Include="Humanizer.Core" Version="2.7.2" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
   </ItemGroup>
-
 
   <ItemGroup>
     <ProjectReference Include="..\libraries\DataSources\Conesoft.DataSources.csproj" />
   </ItemGroup>
-
 
   <ItemGroup>
     <Content Update="wwwroot\style.css">
