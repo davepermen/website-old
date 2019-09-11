@@ -19,12 +19,6 @@
     }
 
     <h1>History</h1>
-    @*@foreach (var h in Model.History.Where(h => h.DateTime.Date > DateTime.Today.AddDays(-2)))
-        {
-            <p>duration: @h.Durration.Seconds().Humanize()</p>
-            <p>time: @h.DateTime.Humanize()</p>
-            <p>cost: @h.PriceConsumption</p>
-        }*@
     <style>
         table {
             width: 10rem;
