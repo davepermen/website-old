@@ -71,7 +71,7 @@ namespace EvHomeCharging
 
         public async Task<JsonResult> Start()
         {
-            var chargeTime = TimeSpan.FromHours(1);
+            var chargeTime = TimeSpan.FromHours(5);
             await StartCharging(chargeTime);
             var _ = PollSate(
                 during: chargeTime,
