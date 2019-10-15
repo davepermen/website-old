@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -93,7 +94,52 @@ namespace EvHomeCharging
             var client = httpClientFactory.CreateClient("ECarUp");
             await client.PostAsync("api/ActivateStation/" + id + "?seconds=" + seconds, null);
 
+            await WakeUpTesla();
+
             IO.File.WriteAllText(ActivePath, "yes");
+        }
+
+        private async Task WakeUpTesla()
+        {
+            var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Add("X-Tesla-User-Agent", configuration["tesla-x-user-agent"]);
+            httpClient.DefaultRequestHeaders.Add("User-Agent", configuration["tesla-user-agent"]);
+
+            var content = new FormUrlEncodedContent(new[]
+            {
+                    new KeyValuePair<string, string>("grant_type", "password"),
+                    new KeyValuePair<string, string>("client_id", configuration["tesla-client-id"]),
+                    new KeyValuePair<string, string>("client_secret", configuration["tesla-client-secret"]),
+                    new KeyValuePair<string, string>("email", configuration["tesla-username"]),
+                    new KeyValuePair<string, string>("password", configuration["tesla-password"])
+            });
+            var authenticationToken = await httpClient.PostAsync<TeslaAuthenticationToken>(configuration["tesla-base-uri"] + "/oauth/token", content);
+
+            Console.WriteLine(authenticationToken.access_token);
+
+            httpClient.DefaultRequestHeaders.Add("authorization", $"Bearer {authenticationToken.access_token}");
+
+            var vehicles = await httpClient.GetAsync<TeslaVehicles>(configuration["tesla-base-uri"] + "/api/1/vehicles");
+
+            foreach (var vehicle in vehicles.response)
+            {
+                await httpClient.PostAsync(configuration["tesla-base-uri"] + $"/api/1/vehicles/{vehicle.id}/wake_up", null);
+            }
+        }
+
+        private class TeslaAuthenticationToken
+        {
+            public string access_token { get; set; }
+        }
+
+        private class TeslaVehicles
+        {
+            public TeslaVehicle[] response { get; set; }
+        }
+
+        private class TeslaVehicle
+        {
+            public long id { get; set; }
         }
 
         private async Task StopCharging()
@@ -141,44 +187,24 @@ namespace EvHomeCharging
         private async Task UpdateLiveTile()
         {
             var recent = charges.GetRecentCharges();
-            var soc = await GetSoC();
             var template = IO.File.ReadAllText("wwwroot\\livetile.xml.template");
-            var content = template.Replace("{{recent}}", Math.Round(recent, 1).ToString()).Replace("{{soc}}", Math.Round(soc, 1).ToString());
+            var content = template.Replace("{{recent}}", Math.Round(recent, 1).ToString());
             IO.File.WriteAllText("wwwroot\\livetile.xml", content);
+
+            await Task.CompletedTask;
         }
-
-        private async Task<float> GetSoC()
+    }
+    public static class PostHelper
+    {
+        public static async Task<T> PostAsync<T>(this HttpClient httpClient, string requestUri, HttpContent content)
         {
-            var lastSocFilePath = $"{dataSources.LocalDirectory}/last_soc.txt";
-            var socFilePath = $"{dataSources.LocalDirectory}/soc.txt";
-            var lastRequest = IO.File.Exists(lastSocFilePath) ? DateTime.Parse(IO.File.ReadAllText(lastSocFilePath)) : DateTime.MinValue;
-
-            var now = DateTime.Now;
-            if ((now - lastRequest).TotalMinutes > 1)
-            {
-                IO.File.WriteAllText(lastSocFilePath, now.ToString());
-
-                var akey = configuration["evnotify-akey"];
-                var token = configuration["evnotify-token"];
-                var client = new HttpClient();
-
-                var response = await client.GetAsync($"https://app.evnotify.de/soc?akey={akey}&token={token}");
-                var result = await response.Content.ReadAsStringAsync();
-                var soc = Newtonsoft.Json.JsonConvert.DeserializeObject<SoC>(result).soc_display;
-
-                IO.File.WriteAllText(socFilePath, soc.ToString());
-
-                return soc;
-            }
-            else
-            {
-                return IO.File.Exists(socFilePath) ? float.Parse(IO.File.ReadAllText(socFilePath)) : 0;
-            }
+            var result = await httpClient.PostAsync(requestUri, content);
+            return JsonConvert.DeserializeObject<T>(await result.Content.ReadAsStringAsync());
         }
-
-        class SoC
+        public static async Task<T> GetAsync<T>(this HttpClient httpClient, string requestUri)
         {
-            public float soc_display { get; set; }
+            var result = await httpClient.GetAsync(requestUri);
+            return JsonConvert.DeserializeObject<T>(await result.Content.ReadAsStringAsync());
         }
     }
 }
