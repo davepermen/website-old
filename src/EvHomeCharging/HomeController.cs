@@ -1,6 +1,7 @@
 ﻿using Conesoft;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -114,8 +115,6 @@ namespace EvHomeCharging
                     new KeyValuePair<string, string>("password", configuration["tesla-password"])
             });
             var authenticationToken = await httpClient.PostAsync<TeslaAuthenticationToken>(configuration["tesla-base-uri"] + "/oauth/token", content);
-
-            Console.WriteLine(authenticationToken.access_token);
 
             httpClient.DefaultRequestHeaders.Add("authorization", $"Bearer {authenticationToken.access_token}");
 
