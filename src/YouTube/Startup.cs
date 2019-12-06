@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using System;
+using YouTube.Services;
 using IO = System.IO;
 
 namespace YouTube
@@ -15,6 +16,7 @@ namespace YouTube
             services.AddDirectoryBrowser();
             services.AddMvc();
             services.AddDataSources();
+            services.AddTransient<ThumbnailCache>();
 
             services.AddHsts(options =>
             {

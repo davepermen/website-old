@@ -6,13 +6,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using YouTube.Services;
 using IO = System.IO;
 
 namespace YouTube.Pages
 {
     public class BuildModel : PageModel
     {
-        public async Task OnGet([FromServices] IDataSources dataSource)
+        public async Task OnGet([FromServices] IDataSources dataSource, [FromServices] ThumbnailCache thumbnailCache)
         {
             using (var http = new HttpClient())
             {
@@ -40,27 +41,8 @@ namespace YouTube.Pages
                 {
                     foreach (var video in allVideos)
                     {
-                        IO.Directory.CreateDirectory($@"{dataSource.LocalDirectory}\thumbnails");
-
-                        var thumb = $@"{dataSource.LocalDirectory}\thumbnails\{video.videoId}.jpg";
-
-                        if (IO.File.Exists(thumb) == false)
+                        if (await thumbnailCache.CacheThumbnail(video.videoId))
                         {
-                            var defaults = new[] { "maxresdefault", "mqdefault", "sddefault", "hqdefault", "default" };
-                            foreach (var current in defaults)
-                            {
-                                var url = $@"https://i3.ytimg.com/vi/{video.videoId}/{current}.jpg";
-                                try
-                                {
-                                    IO.File.WriteAllBytes(thumb, await http.GetByteArrayAsync(url));
-                                    break;
-                                }
-                                catch (Exception)
-                                {
-                                    IO.File.Copy($@"{dataSource.LocalDirectory}\default.jpg", thumb);
-                                }
-                            }
-
                             var message = new
                             {
                                 title = $"New Video by {video.author.name}",
@@ -72,14 +54,6 @@ namespace YouTube.Pages
 
                             await client.GetAsync($@"https://wirepusher.com/send?id=mpgpt&title={message.title}&message={message.message}&type={message.type}&image_url={message.image_url}&action={message.action}");
                         }
-                    }
-                }
-
-                foreach (var file in IO.Directory.GetFiles($@"{dataSource.LocalDirectory}\thumbnails", "*.jpg"))
-                {
-                    if (allVideos.Any(v => v.videoId == IO.Path.GetFileNameWithoutExtension(file)) == false)
-                    {
-                        IO.File.Delete(file);
                     }
                 }
             }
