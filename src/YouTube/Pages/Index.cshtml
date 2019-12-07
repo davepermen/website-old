@@ -12,10 +12,32 @@
     <link rel='manifest' href='/manifest.json'>
     <link href='~/style.css' rel='stylesheet' asp-append-version='true'>
     <meta name="viewport" content='width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0' />
+    <script>
+        function onsearch() {
+            var input = document.querySelector('section[search] input')
+            if (input.style.display === 'inline') {
+                if (input.value) {
+                    window.location = '/search/' + input.value
+                } else {
+                    input.style.display = ''
+                }
+            } else {
+                input.style.display = 'inline'
+                input.focus()
+            }
+            return false
+        }
+    </script>
 </head>
 <body>
     @if (Model.IsIndex)
     {
+        <section search>
+            <form onsubmit="return onsearch()">
+                <input type="search">
+                <input type="submit" value="&#8981;">
+            </form>
+        </section>
         <section list>
             @foreach (var video in Model.Videos.Skip(Model.Index * 10).Take(10))
             {

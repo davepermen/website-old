@@ -5,6 +5,10 @@
     box-sizing: border-box;
 }
 
+html, body {
+    width: 100%;
+}
+
 html {
     background: black;
     color: white;
@@ -20,6 +24,40 @@ section[list] {
 
 section[video] {
 }
+
+[search] {
+    position: fixed;
+    height: 3rem;
+    width: 100%;
+    max-width: 60rem;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    z-index: 9999;
+}
+    [search] input {
+        padding: 0.6rem;
+        font-size: 1.44rem;
+    }
+
+    [search] form {
+        display: grid;
+        grid-template-columns: 1fr 3rem;
+    }
+
+    [search] input[type=search] {
+        grid-column: 1;
+    }
+
+    [search] input[type=submit] {
+        grid-column: 2;
+    }
+
+    [search]:not(.search-active) input[type=search] {
+        display: none;
+    }
 
 a, div {
     display: block;
