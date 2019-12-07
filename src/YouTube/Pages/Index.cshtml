@@ -13,7 +13,7 @@
     <link href='~/style.css' rel='stylesheet' asp-append-version='true'>
     <meta name="viewport" content='width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0' />
     <script>
-        function onsearch() {
+        function search() {
             var input = document.querySelector('section[search] input')
             if (input.style.display === 'inline') {
                 if (input.value) {
@@ -33,7 +33,7 @@
     @if (Model.IsIndex)
     {
         <section search>
-            <form onsubmit="return onsearch()">
+            <form onsubmit="return search()">
                 <input type="search">
                 <input type="submit" value="&#8981;">
             </form>
