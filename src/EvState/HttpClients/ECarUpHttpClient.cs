@@ -2,6 +2,7 @@
 using System;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace EvState.HttpClients
@@ -39,13 +40,15 @@ namespace EvState.HttpClients
         public async Task<ECarUp.ChargingState[]> State()
         {
             var response = await httpClient.GetAsync("api/ActiveStations");
-            return await response.Content.ReadAsAsync<ECarUp.ChargingState[]>();
+            var content = await response.Content.ReadAsStreamAsync();
+            return await JsonSerializer.DeserializeAsync<ECarUp.ChargingState[]>(content);
         }
 
         public async Task<ECarUp.History[]> GetHistory()
         {
             var response = await httpClient.GetAsync("api/DriverHistory?startDate=2015-12-28T15%3A12%3A35.023Z");
-            return await response.Content.ReadAsAsync<ECarUp.History[]>();
+            var content = await response.Content.ReadAsStreamAsync();
+            return await JsonSerializer.DeserializeAsync<ECarUp.History[]>(content);
         }
     }
 }

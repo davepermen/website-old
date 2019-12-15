@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.IO;
 
@@ -26,7 +27,6 @@ namespace EvState
             })
             .AddCookie(options =>
             {
-                options.Cookie.Expiration = TimeSpan.FromDays(365);
                 options.ExpireTimeSpan = TimeSpan.FromDays(365);
                 options.SlidingExpiration = true;
                 options.DataProtectionProvider = DataProtectionProvider.Create(new DirectoryInfo($"{new DataSources().SharedDirectory}/keys"));
@@ -46,7 +46,7 @@ namespace EvState
             });
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -60,7 +60,12 @@ namespace EvState
 
             app.UseAuthentication();
 
-            app.UseMvc();
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
+            });
         }
     }
 }
