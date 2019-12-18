@@ -1,0 +1,53 @@
+﻿@page "/new"
+@inject EvState.HttpClients.ECarUpHttpClient eCarUpHttpClient
+
+<h1>Active</h1>
+
+@if (stations != null)
+{
+    <ul>
+        @foreach (var station in stations)
+        {
+            <li>@station.ID - @station.Name</li>
+        }
+    </ul>
+}
+
+<h1>Start / Stop charging</h1>
+
+@if (charging == false)
+{
+    <button @onclick="Start">Start</button>
+}
+else
+{
+    <button @onclick="Stop">Stop</button>
+}
+
+
+@code {
+    bool charging = false;
+
+    HttpClients.ECarUp.ChargingState[] stations = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        stations = await eCarUpHttpClient.State();
+        charging = stations != null && stations.Length > 0;
+        await base.OnInitializedAsync();
+    }
+
+    async Task Start()
+    {
+        await eCarUpHttpClient.StartCharging(TimeSpan.FromHours(1));
+        stations = await eCarUpHttpClient.State();
+        charging = true;
+    }
+
+    async Task Stop()
+    {
+        await eCarUpHttpClient.StopCharging();
+        stations = await eCarUpHttpClient.State();
+        charging = false;
+    }
+}
