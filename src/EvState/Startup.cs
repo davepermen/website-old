@@ -32,8 +32,8 @@ namespace EvState
                 options.DataProtectionProvider = DataProtectionProvider.Create(new DirectoryInfo($"{new DataSources().SharedDirectory}/keys"));
             });
 
-            services.AddMvc()
-            .AddRazorPagesOptions(options =>
+            services.AddServerSideBlazor();
+            services.AddRazorPages(options =>
             {
                 options.Conventions.AddPageRoute("/Livetile", "/livetile.xml");
             });
@@ -64,7 +64,9 @@ namespace EvState
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapBlazorHub();
                 endpoints.MapRazorPages();
+                endpoints.MapFallbackToPage("/_Host");
             });
         }
     }
