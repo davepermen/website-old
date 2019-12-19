@@ -221,3 +221,39 @@ footer {
         line-height: 9vh;
     }
 }
+
+
+
+
+
+
+
+
+app {
+    text-align: center;
+}
+
+button {
+    border: solid 9px hsla(30, 100%, 60%, 0.5);
+    color: white;
+    background: hsla(30, 100%, 60%, 0.25);
+    width: 4rem;
+    height: 4rem;
+    font-size: 1.9rem;
+    line-height: 1rem;
+    border-radius: 2rem;
+    transition: all ease-out 0.33s;
+    overflow: hidden;
+}
+
+    button:hover, button:active, button:disabled {
+        border: solid 9px hsl(30, 100%, 60%);
+    }
+
+    button:active, button:disabled {
+        transform: rotateY(180deg);
+    }
+
+    button:disabled {
+        opacity: 0.3;
+    }

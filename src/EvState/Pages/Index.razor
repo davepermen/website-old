@@ -2,38 +2,7 @@
 @implements IDisposable
 @inject EvState.HttpClients.ECarUpHttpClient eCarUpHttpClient
 
-<style>
-    app {
-        text-align: center;
-    }
-
-    button {
-        border: solid 9px hsla(30, 100%, 60%, 0.5);
-        color: white;
-        background: hsla(30, 100%, 60%, 0.25);
-        width: 4rem;
-        height: 4rem;
-        font-size: 1.9rem;
-        line-height: 1rem;
-        border-radius: 2rem;
-        transition: all ease-out 0.33s;
-        overflow: hidden;
-    }
-
-        button:hover, button:active, button:disabled {
-            border: solid 9px hsl(30, 100%, 60%);
-        }
-
-        button:active, button:disabled {
-            transform: rotateY(180deg);
-        }
-
-        button:disabled {
-            opacity: 0.3;
-        }
-</style>
-
-<button @onclick="Toggle" disabled="@(clicking ? "disabled" : null)">@(charging ? "start" : "stop")</button>
+<button @onclick="Toggle" disabled="@(clicking ? "disabled" : null)">@(charging == false ? "start" : "stop")</button>
 <p>@clients.Count connected @(clients.Count <= 1 ? "client" : "clients")</p>
 
 @functions {
@@ -62,10 +31,7 @@
 
     async Task NotifyClients()
     {
-        foreach (var client in clients)
-        {
-            await client.InvokeAsync(() => client.StateHasChanged());
-        }
+        await Task.WhenAll(clients.Select(async client => await client.InvokeAsync(() => client.StateHasChanged())));
     }
 
     async Task Toggle()
