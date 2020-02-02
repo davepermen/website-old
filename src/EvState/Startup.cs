@@ -19,6 +19,10 @@ namespace EvState
 
             services.AddHttpClient<ECarUpHttpClient>();
 
+            services.AddSingleton<ScheduledTasks.EvState>();
+            services.AddSingleton<Services.IScheduledTask, ScheduledTasks.PollEvState>();
+            services.AddSingleton<Services.TaskScheduler>();
+
             services.AddAuthentication(options =>
             {
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -61,6 +65,8 @@ namespace EvState
             app.UseAuthentication();
 
             app.UseRouting();
+
+            app.ApplicationServices.GetService<Services.TaskScheduler>().Start();
 
             app.UseEndpoints(endpoints =>
             {

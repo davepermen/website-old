@@ -1,9 +1,11 @@
 ﻿@page "/"
 @implements IDisposable
 @inject EvState.HttpClients.ECarUpHttpClient eCarUpHttpClient
+@inject EvState.ScheduledTasks.EvState evState
 
 <button @onclick="Toggle" disabled="@(clicking ? "disabled" : null)">@(charging == false ? "start" : "stop")</button>
 <p>@clients.Count connected @(clients.Count <= 1 ? "client" : "clients")</p>
+<p>@evState.Name is at @evState.BatteryLevel%</p>
 
 @functions {
     public void Dispose()
@@ -20,6 +22,8 @@
 
     protected override async Task OnInitializedAsync()
     {
+        evState.OnChanged += NotifyClients;
+
         if (clients.Contains(this) == false)
         {
             clients.Add(this);
