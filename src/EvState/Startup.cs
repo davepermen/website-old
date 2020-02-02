@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace EvState
 {
@@ -21,6 +22,8 @@ namespace EvState
 
             services.AddSingleton<ScheduledTasks.EvState>();
             services.AddSingleton<Services.IScheduledTask, ScheduledTasks.PollEvState>();
+            // needs to be removed asap
+            services.AddSingleton(s => s.GetServices<Services.IScheduledTask>().OfType<ScheduledTasks.PollEvState>().First());
             services.AddSingleton<Services.TaskScheduler>();
 
             services.AddAuthentication(options =>

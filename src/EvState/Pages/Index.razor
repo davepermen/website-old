@@ -2,19 +2,32 @@
 @implements IDisposable
 @inject EvState.HttpClients.ECarUpHttpClient eCarUpHttpClient
 @inject EvState.ScheduledTasks.EvState evState
+@inject EvState.ScheduledTasks.PollEvState pollEvState
 
-<button @onclick="Toggle" disabled="@(clicking ? "disabled" : null)">@(charging == false ? "start" : "stop")</button>
+<button @onclick="ToggleCharging" disabled="@(clickingCharging ? "disabled" : null)">@(charging == false ? "start" : "stop") charging</button>
+<br />
+<button @onclick="ToggleClimateControl" disabled="@(clickingClimateControl ? "disabled" : null)">@(climateControl == false ? "start" : "stop") climate control</button>
 
 <p>@evState.Name @ChargingState</p>
+<p>It is @evState.TemperatureInCar°C in the car</p>
 
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 250 1000 750" enable-background="new 0 0 1000 1000" xml:space="preserve">
-    <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
-    <g>
-        <path fill="hsla(30, 100%, 60%, 0.5)" d="M933.9,406.9v-98.7H10v383.7h923.9v-95.4H990V406.9H933.9z M948.5,562.6h-61.7V647H56.6V355.3h830.2V437v4.5h61.7V562.6z" />
-        <svg x="@(56 + 30)" y="@(355 + 30)" width="@(831 - 2 * 30)" height="@(293 - 2 * 30)">
-            <rect fill="hsla(30, 100%, 60%, 0.25)" width="100%" height="100%" />
-            <rect fill="@BatteryColor" width="@evState.BatteryLevel%" height="100%" />
-            <text font-family="segoe ui" fill="white" style="font-size: 150px !important" font-weight="400" x="50%" y="@(20 + (293 - 2 * 30)/2)" dominant-baseline="middle" text-anchor="middle">@Math.Round(evState.EstimatedBatteryRange)km</text>
+<metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
+<g>
+<path fill="hsla(30, 100%, 60%, 0.5)" d="M933.9,406.9v-98.7H10v383.7h923.9v-95.4H990V406.9H933.9z M948.5,562.6h-61.7V647H56.6V355.3h830.2V437v4.5h61.7V562.6z" />
+
+
+
+<svg x="@(56 + 30)" y="@(355 + 30)" width="@(831 - 2 * 30)" height="@(293 - 2 * 30)">
+<rect fill="hsla(30, 100%, 60%, 0.25)" width="100%" height="100%" />
+
+
+
+<rect fill="@BatteryColor" width="@evState.BatteryLevel%" height="100%" />
+
+
+
+<text font-family="segoe ui" fill="white" style="font-size: 150px !important" font-weight="400" x="50%" y="@(20 + (293 - 2 * 30)/2)" dominant-baseline="middle" text-anchor="middle">@Math.Round(evState.EstimatedBatteryRange)km</text>
         </svg>
     </g>
 </svg>
@@ -48,8 +61,10 @@
 }
 
 @code {
-    static bool clicking = false;
+    static bool clickingCharging = false;
     static bool charging = false;
+    static bool clickingClimateControl = false;
+    static bool climateControl = false;
     static List<Index> clients = new List<Index>();
 
     protected override async Task OnInitializedAsync()
@@ -70,9 +85,9 @@
         await Task.WhenAll(clients.Select(async client => await client.InvokeAsync(() => client.StateHasChanged())));
     }
 
-    async Task Toggle()
+    async Task ToggleCharging()
     {
-        clicking = true;
+        clickingCharging = true;
         await NotifyClients();
         if (charging == false)
         {
@@ -83,7 +98,18 @@
             await eCarUpHttpClient.StopCharging();
         }
         charging = (await eCarUpHttpClient.State()).Length > 0;
-        clicking = false;
+        clickingCharging = false;
+        await NotifyClients();
+    }
+
+    async Task ToggleClimateControl()
+    {
+        clickingClimateControl = true;
+        await NotifyClients();
+        await pollEvState.ToggleClimateControl(climateControl == false);
+
+        climateControl = !climateControl;
+        clickingClimateControl = false;
         await NotifyClients();
     }
 }

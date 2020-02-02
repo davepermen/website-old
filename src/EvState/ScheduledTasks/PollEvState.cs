@@ -28,28 +28,50 @@ namespace EvState.ScheduledTasks
             httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Linux; Android 9.0.0; VS985 4G Build/LRX21Y; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/58.0.3029.83 Mobile Safari/537.36");
         }
 
-        public async Task InvokeAsync()
+        public async Task ToggleClimateControl(bool enable)
         {
-            var content = new FormUrlEncodedContent(new Dictionary<string, string>
-            {
-                { "grant_type", "password" },
-                { "client_id", configuration["teslaapi-clientid"] },
-                { "client_secret", configuration["teslaapi-secret"] },
-                { "email", configuration["teslaapi-email"] },
-                { "password", configuration["teslaapi-password"] },
-            });
-
-            if(httpClient.DefaultRequestHeaders.Contains("authorization") == false)
-            {
-                var authenticationToken = await httpClient.PostAsync<Tesla.AuthenticationToken>("/oauth/token", content);
-                httpClient.DefaultRequestHeaders.Add("authorization", $"Bearer {authenticationToken.access_token}");
-            }
+            await Login();
 
             var vehicles = await httpClient.GetAsync<Tesla.Vehicles>("/api/1/vehicles");
 
             foreach (var vehicle in vehicles.response)
             {
-                await httpClient.PostAsync($"/api/1/vehicles/{vehicle.id}/wake_up", null);
+                if (enable)
+                {
+                    await httpClient.PostAsync($"/api/1/vehicles/{vehicle.id}/command/auto_conditioning_start", null);
+                }
+                else
+                {
+                    await httpClient.PostAsync($"/api/1/vehicles/{vehicle.id}/command/auto_conditioning_stop", null);
+                }
+            }
+        }
+
+        async Task Login()
+        {
+            if (httpClient.DefaultRequestHeaders.Contains("authorization") == false)
+            {
+                var content = new FormUrlEncodedContent(new Dictionary<string, string>
+                {
+                    { "grant_type", "password" },
+                    { "client_id", configuration["teslaapi-clientid"] },
+                    { "client_secret", configuration["teslaapi-secret"] },
+                    { "email", configuration["teslaapi-email"] },
+                    { "password", configuration["teslaapi-password"] },
+                });
+                var authenticationToken = await httpClient.PostAsync<Tesla.AuthenticationToken>("/oauth/token", content);
+                httpClient.DefaultRequestHeaders.Add("authorization", $"Bearer {authenticationToken.access_token}");
+            }
+        }
+
+        public async Task InvokeAsync()
+        {
+            await Login();
+
+            var vehicles = await httpClient.GetAsync<Tesla.Vehicles>("/api/1/vehicles");
+
+            foreach (var vehicle in vehicles.response)
+            {
                 var state = await httpClient.GetAsync<Tesla.Response<Tesla.State>>($"/api/1/vehicles/{vehicle.id}/vehicle_data");
                 if (state.response != null)
                 {
@@ -58,6 +80,7 @@ namespace EvState.ScheduledTasks
                     evState.IdealBatteryRange = state.response.charge_state.ideal_battery_range * 1.609344f;
                     evState.BatteryLevel = state.response.charge_state.battery_level;
                     evState.ChargingState = state.response.charge_state.charging_state;
+                    evState.TemperatureInCar = state.response.climate_state.inside_temp;
                     await evState.Changed();
                 }
             }
@@ -71,6 +94,7 @@ namespace EvState.ScheduledTasks
         public float BatteryLevel { get; set; }
         public string Name { get; set; }
         public string ChargingState { get; set; }
+        public float TemperatureInCar { get; set; }
 
         public Task Changed() => OnChanged?.Invoke();
 
