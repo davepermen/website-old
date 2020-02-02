@@ -57,6 +57,7 @@ namespace EvState.ScheduledTasks
                     evState.EstimatedBatteryRange = state.response.charge_state.est_battery_range * 1.609344f;
                     evState.IdealBatteryRange = state.response.charge_state.ideal_battery_range * 1.609344f;
                     evState.BatteryLevel = state.response.charge_state.battery_level;
+                    evState.ChargingState = state.response.charge_state.charging_state;
                     await evState.Changed();
                 }
             }
@@ -67,8 +68,9 @@ namespace EvState.ScheduledTasks
     {
         public float EstimatedBatteryRange { get; set; }
         public float IdealBatteryRange { get; set; }
-        public int BatteryLevel { get; set; }
+        public float BatteryLevel { get; set; }
         public string Name { get; set; }
+        public string ChargingState { get; set; }
 
         public Task Changed() => OnChanged?.Invoke();
 
