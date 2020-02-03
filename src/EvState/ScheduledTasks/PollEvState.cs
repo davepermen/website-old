@@ -11,7 +11,7 @@ namespace EvState.ScheduledTasks
 {
     public class PollEvState : IScheduledTask
     {
-        public TimeSpan Every => TimeSpan.FromMinutes(1);
+        public TimeSpan Every => TimeSpan.FromSeconds(10);
 
         HttpClient httpClient;
         EvState evState;
@@ -45,6 +45,23 @@ namespace EvState.ScheduledTasks
                     await httpClient.PostAsync($"/api/1/vehicles/{vehicle.id}/command/auto_conditioning_stop", null);
                 }
             }
+
+            do
+            {
+                foreach (var vehicle in vehicles.response)
+                {
+                    var state = await httpClient.GetAsync<Tesla.Response<Tesla.State>>($"/api/1/vehicles/{vehicle.id}/vehicle_data");
+                    if (state.response != null)
+                    {
+                        evState.ClimateControlActive = state.response.climate_state.is_auto_conditioning_on;
+                    }
+                }
+                if(evState.ClimateControlActive != enable)
+                {
+                    await Task.Delay(500);
+                }
+            } while (evState.ClimateControlActive != enable);
+            await evState.Changed();
         }
 
         async Task Login()
@@ -81,6 +98,7 @@ namespace EvState.ScheduledTasks
                     evState.BatteryLevel = state.response.charge_state.battery_level;
                     evState.ChargingState = state.response.charge_state.charging_state;
                     evState.TemperatureInCar = state.response.climate_state.inside_temp;
+                    evState.ClimateControlActive = state.response.climate_state.is_auto_conditioning_on;
                     await evState.Changed();
                 }
             }
@@ -95,6 +113,8 @@ namespace EvState.ScheduledTasks
         public string Name { get; set; }
         public string ChargingState { get; set; }
         public float TemperatureInCar { get; set; }
+
+        public bool ClimateControlActive { get; set; }
 
         public Task Changed() => OnChanged?.Invoke();
 

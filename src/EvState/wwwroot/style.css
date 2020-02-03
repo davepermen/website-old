@@ -234,21 +234,23 @@ app {
 }
 
 button {
-    border: solid 0.2rem hsla(30, 100%, 60%, 0.5);
+    border: solid 0.6rem hsla(30, 100%, 60%, 0.5);
     color: white;
     background: hsla(30, 100%, 60%, 0.25);
-    width: 100%;
+    width: 4rem;
+    height: 4rem;
     padding: 0.125rem;
+    margin: 0.25rem 0.125rem;
     /*height: 4rem;*/
     /*font-size: 1.9rem;*/
     line-height: 1rem;
-    /*border-radius: 100%;*/
+    border-radius: 100%;
     transition: all ease-out 0.33s;
     overflow: hidden;
 }
 
     button:hover, button:active, button:disabled {
-        border: solid 0.2rem hsl(30, 100%, 60%);
+        border: solid 0.6rem hsl(30, 100%, 60%);
     }
 
     button:active, button:disabled {
