@@ -3,9 +3,9 @@ html {
     color: #fff;
     font-family: "segoe ui", sans-serif;
     font-weight: lighter;
-    font-size: 15vw;
-    line-height: 15vw;
-    height: 100%;
+    font-size: 5vw;
+    line-height: 5vw;
+    min-height: 100%;
     width: 100%;
     background: radial-gradient( circle at 50%,rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3) ), url('background.jpg');
     background-size: cover;
@@ -16,6 +16,10 @@ html {
     -ms-user-select: none;
     user-select: none;
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 * {
@@ -31,232 +35,72 @@ html {
 }
 
 body {
-    width: 100%;
-    height: 100%;
-}
-
-main {
-    width: 100%;
-    min-height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    perspective: 50rem;
-    overflow: hidden;
-}
-
-section {
-    text-shadow: 0px 0.25rem 0.5rem #000, 0px 0.25rem 0.5rem #000, 0px 0.25rem 0.5rem #000, 0px 0.25rem 0.5rem #000;
-    animation: 1s ease-out forwards section-fadein;
-    font-size: 0.5rem;
-    line-height: 0.5rem;
-    width: 100%;
-    margin-bottom: 2rem;
-}
-
-    /* basic ui */
-    section header {
-        font-size: 1rem;
-        line-height: 1.5rem;
-        font-weight: bold;
-        margin-bottom: 0.5rem;
-    }
-
-    section > h1 {
-        margin: 0.375rem 0 0.125rem;
-    }
-
-    section svg {
-        margin-top: 0.5rem;
-        height: 1.5rem;
-        border-left: 2px solid white;
-        border-bottom: 2px solid white;
-        filter: drop-shadow(0 5px 20px #000);
-    }
-
-    /* form ui */
-    section form {
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        justify-content: center;
-    }
-
-    section input, section select, section option {
-        background: hsla(30, 100%, 60%, 0.25);
-        color: white;
-        border: solid 1px hsla(30, 100%, 60%, 0.5);
-        overflow: visible;
-        background: hsla(30, 100%, 60%, 0.25);
-        font-weight: 100;
-        pointer-events: all;
-        appearance: none;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-    }
-
-        section input[type=text], section input[type=password] {
-            cursor: text;
-        }
-
-        section input::placeholder {
-            color: white;
-            opacity: 0.25;
-            text-align: center;
-        }
-
-        section input::-ms-input-placeholder {
-            color: white;
-            opacity: 0.25;
-            text-align: center;
-        }
-
-        section input::-webkit-input-placeholder {
-            color: white;
-            opacity: 0.25;
-            text-align: center;
-        }
-
-        section input:hover, section input:active, section input:focus {
-            border: solid 1px hsl(30, 100%, 60%);
-        }
-
-
-footer {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-}
-
-    footer a {
-        font-size: 1rem;
-        background: none;
-        color: white;
-        border: none;
-        margin: 0;
-        padding: 0 0.125rem 0 0;
-        text-shadow: 0 0.25rem 0.25rem black;
-    }
-
-@keyframes section-fadein {
-    from {
-        transform: translateZ(10rem);
-        opacity: 0;
-    }
-
-    to {
-        transform: translateZ(0);
-        opacity: 1;
-    }
-}
-
-@keyframes section-fadein3d-left {
-    from {
-        transform: translateZ(20rem) rotateY(40deg);
-        opacity: 0;
-    }
-
-    to {
-        transform: translateZ(10rem) rotateY(20deg);
-        opacity: 1;
-    }
-}
-
-@keyframes section-fadein3d-right {
-    from {
-        transform: translateZ(20rem) rotateY(-40deg);
-        opacity: 0;
-    }
-
-    to {
-        transform: translateZ(10rem) rotateY(-20deg);
-        opacity: 1;
-    }
+    max-width: 800px;
 }
 
 /* wide screen */
-@media screen and (min-aspect-ratio: 1/1) {
+@media screen and (max-aspect-ratio: 1/1) {
     html {
         font-size: 2vh;
         line-height: 2vh;
-        overflow: hidden;
     }
-
-    body {
-        flex-direction: row;
-    }
-
-    section {
-        position: absolute;
-        width: 5.5rem;
-        margin-bottom: 0rem;
-    }
-
-        section[left] {
-            transform: rotateY(20deg);
-            margin-right: 7.5rem;
-            animation: 1s ease-out forwards section-fadein3d-left;
-        }
-
-        section[right] {
-            transform: rotateY(-20deg);
-            margin-left: 7.5rem;
-            animation: 1s ease-out forwards section-fadein3d-right;
-        }
 }
 
 /* vertical screen */
 @media screen and (min-aspect-ratio: 1/1) {
     html {
-        font-size: 7.5vh;
-        line-height: 7.5vh;
+        font-size: 2vw;
+        line-height: 2vw;
     }
-}
-
-/* square ish screen */
-@media screen and (min-aspect-ratio: 3/4) and (max-aspect-ratio: 1/1) {
-    html {
-        font-size: 9vh;
-        line-height: 9vh;
-    }
-}
-
-
-
-
-
-
-
-
-app {
-    text-align: center;
 }
 
 button {
-    border: solid 0.6rem hsla(30, 100%, 60%, 0.5);
-    color: white;
-    background: hsla(30, 100%, 60%, 0.25);
-    width: 4rem;
-    height: 4rem;
-    padding: 0.125rem;
-    margin: 0.25rem 0.125rem;
-    /*height: 4rem;*/
-    /*font-size: 1.9rem;*/
-    line-height: 1rem;
-    border-radius: 100%;
-    transition: all ease-out 0.33s;
-    overflow: hidden;
+    outline: none;
+    border: none;
+    background: none;
+    width: 100%;
 }
-
-    button:hover, button:active, button:disabled {
-        border: solid 0.6rem hsl(30, 100%, 60%);
-    }
 
     button:active, button:disabled {
         transform: rotateY(180deg);
-    }
-
-    button:disabled {
         opacity: 0.3;
     }
+
+    button, button * {
+        transition: all ease-out 0.33s;
+    }
+
+#fan .fan {
+    transform-origin: 50%;
+    opacity: 0.5;
+}
+
+#fan[state=active] .fan {
+    opacity: 1;
+    animation-duration: 20s;
+    animation-name: spinning;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+@keyframes spinning {
+    from {
+        transform: rotateZ(0deg);
+    }
+
+    to {
+        transform: rotateZ(360deg);
+    }
+}
+
+[horizontal] {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}

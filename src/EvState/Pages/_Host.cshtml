@@ -1,7 +1,38 @@
-﻿@page
+﻿@page "/"
 @namespace EvState.Pages
-
-<app>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+<!doctype html>
+<html>
+<head>
+    <title>EV State</title>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="manifest" href="/icons/site.webmanifest">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#000000">
+    <link rel="shortcut icon" href="/icons/favicon.ico">
+    <meta property="og:title" content="EV State">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://ev.davepermen.net/preview.jpg">
+    <meta property="og:description" content="Controlling home charging of my EV">
+    <meta property="og:url" content="https://ev.davepermen.net">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="apple-mobile-web-app-title" content="EV State">
+    <meta name="application-name" content="EV State">
+    <meta name="msapplication-TileColor" content="#000000">
+    <meta name="msapplication-config" content="/icons/browserconfig.xml">
+    <meta name="theme-color" content="#000000">
+    <meta name="msapplication-notification" content="frequency=30;polling-uri=https://ev.davepermen.net/livetile.xml" />
+    <base href="~/" />
+</head>
+<body>
     <component type="typeof(App)" render-mode="ServerPrerendered" />
-</app>
-<script src="_framework/blazor.server.js"></script>
+    <script src="_framework/blazor.server.js"></script>
+</body>
+</html>
+

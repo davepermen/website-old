@@ -24,8 +24,9 @@ namespace EvState
             services.AddSingleton(s => s.GetServices<Services.IScheduledTask>().OfType<ScheduledTasks.PollEvState>().First());
             services.AddSingleton<Services.TaskScheduler>();
 
-            services.AddUsers(s => new UsersRootPath($"{s.GetService<IDataSources>().SharedDirectory}/users")); 
+            services.AddUsers(s => $"{s.GetService<IDataSources>().SharedDirectory}/users");
 
+            services.AddControllers();
             services.AddServerSideBlazor();
             services.AddRazorPages(options =>
             {
@@ -60,6 +61,7 @@ namespace EvState
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
                 endpoints.MapBlazorHub();
                 endpoints.MapRazorPages();
                 endpoints.MapFallbackToPage("/_Host");
