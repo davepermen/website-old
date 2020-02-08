@@ -1,13 +1,11 @@
 using Conesoft;
+using Conesoft.Users;
 using EvState.HttpClients;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.IO;
 using System.Linq;
 
 namespace EvState
@@ -26,18 +24,7 @@ namespace EvState
             services.AddSingleton(s => s.GetServices<Services.IScheduledTask>().OfType<ScheduledTasks.PollEvState>().First());
             services.AddSingleton<Services.TaskScheduler>();
 
-            services.AddAuthentication(options =>
-            {
-                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            })
-            .AddCookie(options =>
-            {
-                options.ExpireTimeSpan = TimeSpan.FromDays(365);
-                options.SlidingExpiration = true;
-                options.DataProtectionProvider = DataProtectionProvider.Create(new DirectoryInfo($"{new DataSources().SharedDirectory}/keys"));
-            });
+            services.AddUsers(s => new UsersRootPath($"{s.GetService<IDataSources>().SharedDirectory}/users")); 
 
             services.AddServerSideBlazor();
             services.AddRazorPages(options =>
@@ -65,7 +52,7 @@ namespace EvState
             }
             app.UseStaticFiles();
 
-            app.UseAuthentication();
+            app.UseUsers();
 
             app.UseRouting();
 

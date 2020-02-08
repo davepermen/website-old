@@ -4,22 +4,26 @@
 @inject EvState.ScheduledTasks.EvState evState
 @inject EvState.ScheduledTasks.PollEvState pollEvState
 
-<button @onclick="ToggleCharging" disabled="@(clickingCharging ? "disabled" : null)">
-    <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="150px" height="150px" viewBox="0 0 21.4 21.4">
-        <polygon fill='white'
-                 opacity="@(charging ? 1 : 0.3)"
-                 points="18.375,0 4.834,10.492 9.459,12.05 3.025,21.4 15.983,10.859 11.916,9.19" />
-    </svg>
-</button>
-<button @onclick="ToggleClimateControl" disabled="@(clickingClimateControl ? "disabled" : null)">
-    <svg id="master-artboard" xmlns="http://www.w3.org/2000/svg" width="150px" height="150px" viewBox="0 0 50 50">
-        <title>free-hvac-vector-icons</title>
-        <path fill='white'
-              opacity="@(climateControl ? 1 : 0.3)"
-              d="M451.52,316.08a10.25,10.25,0,0,1-4-4.94c-.29-1.21-1.44-2.92-3.29-2-2.43,1.22-7.88,7-5.22,14.41,2.33,6.52,13.44,8.49,17.64,1.72C459.86,320.13,454.49,318.14,451.52,316.08Zm-7-17.17a10.24,10.24,0,0,1,4,4.94c.29,1.21,1.44,2.92,3.29,2,2.43-1.21,7.88-7,5.22-14.41-2.33-6.52-13.44-8.49-17.64-1.72C436.14,294.87,441.51,296.87,444.48,298.92Zm21.3-.08c-5.15-3.19-7.14,2.17-9.2,5.15a10.24,10.24,0,0,1-4.94,4c-1.21.29-2.92,1.44-2,3.29,1.22,2.43,7,7.88,14.41,5.22C470.58,314.14,472.55,303,465.78,298.84ZM444.36,307c1.21-.29,2.92-1.44,2-3.29-1.22-2.43-7-7.88-14.41-5.21-6.52,2.33-8.49,13.44-1.72,17.64,5.15,3.19,7.14-2.17,9.2-5.15A10.24,10.24,0,0,1,444.36,307Zm5.45.46a1.81,1.81,0,1,1-1.81-1.81A1.81,1.81,0,0,1,449.81,307.5Z"
-              transform="matrix(1, 0, 0, 1, -423, -283)" />
-    </svg>
-</button>
+<AuthorizeView>
+    <Authorized>
+        <button @onclick="ToggleCharging" disabled="@(clickingCharging ? "disabled" : null)">
+            <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="150px" height="150px" viewBox="0 0 21.4 21.4">
+                <polygon fill='white'
+                         opacity="@(charging ? 1 : 0.3)"
+                         points="18.375,0 4.834,10.492 9.459,12.05 3.025,21.4 15.983,10.859 11.916,9.19" />
+            </svg>
+        </button>
+        <button @onclick="ToggleClimateControl" disabled="@(clickingClimateControl ? "disabled" : null)">
+            <svg id="master-artboard" xmlns="http://www.w3.org/2000/svg" width="150px" height="150px" viewBox="0 0 50 50">
+                <title>free-hvac-vector-icons</title>
+                <path fill='white'
+                      opacity="@(climateControl ? 1 : 0.3)"
+                      d="M451.52,316.08a10.25,10.25,0,0,1-4-4.94c-.29-1.21-1.44-2.92-3.29-2-2.43,1.22-7.88,7-5.22,14.41,2.33,6.52,13.44,8.49,17.64,1.72C459.86,320.13,454.49,318.14,451.52,316.08Zm-7-17.17a10.24,10.24,0,0,1,4,4.94c.29,1.21,1.44,2.92,3.29,2,2.43-1.21,7.88-7,5.22-14.41-2.33-6.52-13.44-8.49-17.64-1.72C436.14,294.87,441.51,296.87,444.48,298.92Zm21.3-.08c-5.15-3.19-7.14,2.17-9.2,5.15a10.24,10.24,0,0,1-4.94,4c-1.21.29-2.92,1.44-2,3.29,1.22,2.43,7,7.88,14.41,5.22C470.58,314.14,472.55,303,465.78,298.84ZM444.36,307c1.21-.29,2.92-1.44,2-3.29-1.22-2.43-7-7.88-14.41-5.21-6.52,2.33-8.49,13.44-1.72,17.64,5.15,3.19,7.14-2.17,9.2-5.15A10.24,10.24,0,0,1,444.36,307Zm5.45.46a1.81,1.81,0,1,1-1.81-1.81A1.81,1.81,0,0,1,449.81,307.5Z"
+                      transform="matrix(1, 0, 0, 1, -423, -283)" />
+            </svg>
+        </button>
+    </Authorized>
+</AuthorizeView>
 
 <p>@evState.Name @ChargingState</p>
 <p>It is @evState.TemperatureInCar°C in the car</p>
@@ -35,6 +39,8 @@
         </svg>
     </g>
 </svg>
+
+<Conesoft.Users.UserUIToggle/>
 
 @functions {
     public void Dispose()

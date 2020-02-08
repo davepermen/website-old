@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -16,6 +15,8 @@ namespace EvState.ScheduledTasks
         HttpClient httpClient;
         EvState evState;
         IConfiguration configuration;
+
+        DateTime lastLogin = DateTime.MinValue;
 
         public PollEvState(IHttpClientFactory httpClientFactory, EvState evState, IConfiguration configuration)
         {
@@ -66,7 +67,7 @@ namespace EvState.ScheduledTasks
 
         async Task Login()
         {
-            if (httpClient.DefaultRequestHeaders.Contains("authorization") == false)
+            if (httpClient.DefaultRequestHeaders.Contains("authorization") == false || DateTime.UtcNow - lastLogin > TimeSpan.FromDays(1))
             {
                 var content = new FormUrlEncodedContent(new Dictionary<string, string>
                 {
@@ -77,7 +78,12 @@ namespace EvState.ScheduledTasks
                     { "password", configuration["teslaapi-password"] },
                 });
                 var authenticationToken = await httpClient.PostAsync<Tesla.AuthenticationToken>("/oauth/token", content);
+                if(httpClient.DefaultRequestHeaders.Contains("authorization"))
+                {
+                    httpClient.DefaultRequestHeaders.Remove("authorization");
+                }
                 httpClient.DefaultRequestHeaders.Add("authorization", $"Bearer {authenticationToken.access_token}");
+                lastLogin = DateTime.UtcNow;
             }
         }
 

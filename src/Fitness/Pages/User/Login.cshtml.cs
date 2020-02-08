@@ -19,7 +19,7 @@ namespace Fitness.Pages.User
             {
                 Username = Username.ToLower();
 
-                var userDirectory = $"{dataSources.SharedDirectory}/users";
+                var userDirectory = $"{dataSources.SharedDirectory}/users-legacy";
                 var userFile = $"{userDirectory}/{Username}.txt";
 
                 if (IO.File.Exists(userFile) == true)
