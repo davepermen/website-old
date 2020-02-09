@@ -3,9 +3,12 @@ using Conesoft.Users;
 using EvState.HttpClients;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.IO;
 using System.Linq;
 
 namespace EvState
@@ -51,8 +54,12 @@ namespace EvState
             {
                 app.UseHsts();
             }
+            app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
+                FileProvider = new PhysicalFileProvider(
+            Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "icons")),
+                RequestPath = "/icons",
                 ServeUnknownFileTypes = true
             });
 

@@ -198,10 +198,10 @@ input, select, option {
         transition: background-color 5000s ease-in-out 0s;
     }
 
-form + h1 {
+/*form + h1 {
     display: none;
 }
 
 form[action="/user/register"] {
     display: none;
-}
+}*/
