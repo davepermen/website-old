@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Conesoft.Users" Version="1.0.5" />
+    <PackageReference Include="Conesoft.Users" Version="1.0.6" />
     <PackageReference Include="Humanizer.Core" Version="2.7.9" />
   </ItemGroup>
 
