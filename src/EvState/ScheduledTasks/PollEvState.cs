@@ -12,9 +12,9 @@ namespace EvState.ScheduledTasks
     {
         public TimeSpan Every => TimeSpan.FromSeconds(10);
 
-        HttpClient httpClient;
-        EvState evState;
-        IConfiguration configuration;
+        readonly HttpClient httpClient;
+        readonly EvState evState;
+        readonly IConfiguration configuration;
 
         DateTime lastLogin = DateTime.MinValue;
 

@@ -115,3 +115,93 @@ p {
     justify-content: center;
     width: 100%;
 }
+
+
+
+footer {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+}
+
+    footer a {
+        font-size: 1rem;
+        background: none;
+        color: white;
+        border: none;
+        margin: 0;
+        padding: 0 0.125rem 0 0;
+        text-shadow: 0 0.25rem 0.25rem black;
+    }
+
+
+/* form ui */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+}
+
+input, select, option {
+    background: hsla(30, 100%, 60%, 0.25);
+    color: white;
+    border: solid 1px hsla(30, 100%, 60%, 0.5);
+    overflow: visible;
+    background: hsla(30, 100%, 60%, 0.25);
+    font-weight: 100;
+    pointer-events: all;
+    appearance: none;
+    border-radius: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+    input[type=text], input[type=password] {
+        cursor: text;
+    }
+
+    input::placeholder {
+        color: white;
+        opacity: 0.25;
+        text-align: center;
+    }
+
+    input::-ms-input-placeholder {
+        color: white;
+        opacity: 0.25;
+        text-align: center;
+    }
+
+    input::-webkit-input-placeholder {
+        color: white;
+        opacity: 0.25;
+        text-align: center;
+    }
+
+    input:hover, input:active, input:focus {
+        border: solid 1px hsl(30, 100%, 60%);
+    }
+
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    textarea:-webkit-autofill,
+    textarea:-webkit-autofill:hover,
+    textarea:-webkit-autofill:focus,
+    select:-webkit-autofill,
+    select:-webkit-autofill:hover,
+    select:-webkit-autofill:focus {
+        border: solid 1px hsl(30, 100%, 60%);
+        -webkit-text-fill-color: white;
+        border-radius: 0;
+        transition: background-color 5000s ease-in-out 0s;
+    }
+
+form + h1 {
+    display: none;
+}
+
+form[action="/user/register"] {
+    display: none;
+}
