@@ -11,10 +11,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home</title>
     <base href="~/" />
-    <link href="all.min.css" asp-append-version="true" rel="stylesheet" />
+    <style>html{background: black}body{display:none}</style>
+    <link href="all.min.css" asp-append-version="true" rel="stylesheet" media="print" onload="this.media='all'" />
 </head>
 <body>
     <component type="typeof(App)" render-mode="ServerPrerendered" />
-    <script src="_framework/blazor.server.js"></script>
+    <script async defer src="_framework/blazor.server.js"></script>
 </body>
 </html>
