@@ -5,7 +5,7 @@
     height: 100%;
     min-height: 100%;
     width: 100%;
-    background: radial-gradient( circle at 50%,rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.7) ), url('https://ev.davepermen.net/background.jpg');
+    background: radial-gradient( circle at 50%,rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.7) ), url('/car.webp');
     background-size: cover;
     background-attachment: fixed;
     background-position: center center;
