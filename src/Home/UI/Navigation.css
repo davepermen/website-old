@@ -43,7 +43,7 @@
         font-family: 'Segoe UI Light';
         font-weight: bold;
         text-shadow: 0 0 1rem black;
-        /*opacity: 0.1;*/
+        opacity: 0.3;
         transition: all linear 0.33s;
     }
 
