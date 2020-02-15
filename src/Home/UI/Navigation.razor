@@ -1,7 +1,7 @@
 ﻿<nav @attributes="Attributes">
     @foreach(var entry in Entries)
     {
-        <NavLink href="@("/" + (entry == "home" ? "" : entry))">@entry.ToLowerInvariant()</NavLink>
+        <NavLink href="@("/" + (entry == "home" ? "" : entry))" Match="NavLinkMatch.All">@entry.ToLowerInvariant()</NavLink>
     }
 </nav>
 

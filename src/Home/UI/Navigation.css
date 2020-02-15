@@ -47,7 +47,12 @@
         transition: all linear 0.33s;
     }
 
-    nav a:hover {
-        opacity: 1;
-        text-decoration: none;
-    }
+        nav a:hover {
+            opacity: 1;
+            text-decoration: none;
+        }
+
+        nav a.active {
+            opacity: 1;
+            background: rgba(0, 0, 0, 0.1);
+        }
