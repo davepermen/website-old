@@ -1,0 +1,53 @@
+﻿nav {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    nav.left {
+        left: 0;
+        top: 0;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+    nav.right {
+        right: 0;
+        top: 0;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    nav.top {
+        left: 0;
+        top: 0;
+        right: 0;
+        grid-auto-flow: column;
+    }
+
+    nav.bottom {
+        left: 0;
+        right: 0;
+        bottom: 0;
+        grid-auto-flow: column;
+    }
+
+    nav a {
+        padding: 0.5rem;
+        font-size: 2rem;
+        font-family: 'Segoe UI Light';
+        font-weight: bold;
+        text-shadow: 0 0 1rem black;
+        /*opacity: 0.1;*/
+        transition: all linear 0.33s;
+    }
+
+    nav a:hover {
+        opacity: 1;
+        text-decoration: none;
+    }

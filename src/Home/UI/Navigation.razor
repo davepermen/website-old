@@ -1,0 +1,15 @@
+﻿<nav @attributes="Attributes">
+    @foreach(var entry in Entries)
+    {
+        <NavLink href="@("/" + (entry == "home" ? "" : entry))">@entry.ToLowerInvariant()</NavLink>
+    }
+</nav>
+
+
+@code {
+    [Parameter]
+    public string[] Entries { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object> Attributes { get; set; }
+}
