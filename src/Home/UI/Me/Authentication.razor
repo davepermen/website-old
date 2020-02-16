@@ -1,0 +1,54 @@
+﻿<AuthorizeView>
+    <Authorized>
+        <tile size="normal" title="logout" style="color: black; text-shadow: 0 0 1rem rgba(255,255,255,0.7); background: center / cover url('https://davepermen.net/avatar.jpg')
+">
+            <Conesoft.Users.User />
+        </tile>
+        <tile size="wide" title="">
+            <Conesoft.Users.Logout />
+        </tile>
+    </Authorized>
+    <NotAuthorized>
+        <tile size="normal" title="login"></tile>
+        <tile size="wide" title="">
+            <Conesoft.Users.Login />
+        </tile>
+    </NotAuthorized>
+</AuthorizeView>
+
+<style>
+    tile {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+        tile form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: stretch;
+            align-items: stretch;
+        }
+
+        tile input, tile button {
+            margin: 0.125rem;
+            padding: 0.125rem;
+            border: 0.125rem solid black;
+            border-radius: 0;
+        }
+
+        tile input {
+            background: white;
+            color: black;
+        }
+
+            tile input[type=submit], tile button {
+                background: black;
+                color: white;
+            }
+
+                tile input:focus, tile button:focus {
+                    outline: none;
+                }
+</style>

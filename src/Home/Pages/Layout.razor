@@ -1,11 +1,14 @@
 ﻿@inherits LayoutComponentBase
 
-<Home.UI.Navigation class="top" Entries='new [] { "charger", "car", "lights", "server" }' />
+<AuthorizeView>
+    <Authorized>
+        <Home.UI.Navigation class="top" Entries='new [] { "charger", "car", "lights", "server" }' />
 
-<Home.UI.Navigation class="left" Entries='new [] { "morning", "day", "evening", "night", "tomorrow" }' />
+        <Home.UI.Navigation class="left" Entries='new [] { "morning", "day", "evening", "night", "tomorrow" }' />
 
-<Home.UI.Navigation class="right" Entries='new [] { "finances", "fitness", "todo" }' />
-
+        <Home.UI.Navigation class="right" Entries='new [] { "finances", "fitness", "todo" }' />
+    </Authorized>
+</AuthorizeView>
 <Home.UI.Navigation class="bottom" Entries='new [] { "home", "code", "music", "me" }' />
 
 <main>
