@@ -1,4 +1,4 @@
-using Conesoft;
+using Conesoft.DataSources;
 using Conesoft.Users;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,14 +9,15 @@ using System;
 using System.IO.Compression;
 using System.Linq;
 
+
 namespace Home
 {
     public class Startup
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDataSources();
-            services.AddUsers(s => $"{s.GetService<IDataSources>().SharedDirectory}/users");
+            var usersPath = $"{DataSourcesImplementation.Current.SharedDirectory}/users";
+            services.AddUsers("davepermen.net", usersPath);
 
             services.AddResponseCompression(options =>
             {

@@ -1,4 +1,4 @@
-using Conesoft;
+using Conesoft.DataSources;
 using Conesoft.Users;
 using EvState.HttpClients;
 using Microsoft.AspNetCore.Builder;
@@ -16,7 +16,8 @@ namespace EvState
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDataSources();
+            var usersPath = $"{DataSourcesImplementation.Current.SharedDirectory}/users";
+            services.AddUsers("davepermen.net", usersPath);
 
             services.AddHttpClient<ECarUpHttpClient>();
 
@@ -25,8 +26,6 @@ namespace EvState
             // needs to be removed asap
             services.AddSingleton(s => s.GetServices<Services.IScheduledTask>().OfType<ScheduledTasks.PollEvState>().First());
             services.AddSingleton<Services.TaskScheduler>();
-
-            services.AddUsers(s => $"{s.GetService<IDataSources>().SharedDirectory}/users");
 
             services.AddControllers();
             services.AddServerSideBlazor();

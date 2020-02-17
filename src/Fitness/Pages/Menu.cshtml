@@ -5,7 +5,7 @@
     @if (User.Identity.IsAuthenticated == false)
     {
         <h1>login</h1>
-        <form asp-page="user/login" method="post">
+        <form action="user/login" method="post">
             <input type="text" name="username" placeholder="username">
             <input type="password" name="password" placeholder="password">
             <input type="hidden" name="redirectto" value="/menu">
@@ -34,7 +34,7 @@
             <input type="submit" value="add 30 pushups">
         </form>
         <br>
-        <form asp-page="user/logout" method="post">
+        <form action="user/logout" method="post">
             <input type="submit" value="logout">
         </form>
     }

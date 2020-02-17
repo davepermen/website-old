@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>c1c25e45-165e-46bc-926e-db4106f1a2bb</UserSecretsId>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Conesoft.Users" Version="1.0.8" />
+    <PackageReference Include="Conesoft.Users" Version="1.0.11" />
     <PackageReference Include="Humanizer.Core" Version="2.7.9" />
   </ItemGroup>
 

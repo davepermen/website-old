@@ -1,4 +1,4 @@
-﻿using Conesoft;
+﻿using Conesoft.DataSources;
 using Fitness.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
