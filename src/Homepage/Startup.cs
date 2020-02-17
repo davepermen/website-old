@@ -1,4 +1,4 @@
-﻿using Conesoft;
+﻿using Conesoft.DataSources;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.StaticFiles;
@@ -15,7 +15,6 @@ namespace Homepage
         {
             services.AddDirectoryBrowser();
             services.AddMvc();
-            services.AddDataSources();
 
             services.AddHsts(options =>
             {

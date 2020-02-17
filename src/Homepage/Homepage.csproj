@@ -20,10 +20,4 @@
     <ProjectReference Include="..\libraries\DataSources\Conesoft.DataSources.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Update="Pages\_Layout.cshtml">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
-    </Content>
-  </ItemGroup>
-
 </Project>
