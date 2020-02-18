@@ -1,0 +1,159 @@
+﻿@using Microsoft.Extensions.Configuration
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using System.Net
+@using System.Net.Http
+@inject IConfiguration Configuration
+
+<AuthorizeView>
+    <Authorized>
+        <tile size="wide" title="stock balance">
+            @if (Total != 0)
+            {
+                <i>@($"{Total:0.00}") CHF</i>
+                <b>@($"{Gain:0.00}") CHF</b>
+            }
+        </tile>
+    </Authorized>
+</AuthorizeView>
+
+<style>
+    tile {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+
+@functions {
+    (decimal total, decimal gain) CalculateStockGains(int amount, decimal pricePerStock, decimal currentPrice)
+    {
+        var total = amount * currentPrice;
+        var gain = total - amount * pricePerStock;
+
+        return (total, gain);
+    }
+
+    decimal Convert(decimal value, decimal exchangeRate, decimal exchangeCost)
+    {
+        return value * (exchangeRate / (1 + exchangeCost));
+    }
+}
+
+@code {
+    class StockAPI
+    {
+        public class Rootobject
+        {
+            [JsonPropertyName("Global Quote")]
+            public GlobalQuote GlobalQuote { get; set; }
+        }
+        public class GlobalQuote
+        {
+            [JsonPropertyName("01. symbol")]
+            public string _01symbol { get; set; }
+            [JsonPropertyName("02. open")]
+            public string _02open { get; set; }
+            [JsonPropertyName("03. high")]
+            public string _03high { get; set; }
+            [JsonPropertyName("04. low")]
+            public string _04low { get; set; }
+            [JsonPropertyName("05. price")]
+            public string _05price { get; set; }
+            [JsonPropertyName("06. volume")]
+            public string _06volume { get; set; }
+            [JsonPropertyName("07. latest trading day")]
+            public string _07latesttradingday { get; set; }
+            [JsonPropertyName("08. previous close")]
+            public string _08previousclose { get; set; }
+            [JsonPropertyName("09. change")]
+            public string _09change { get; set; }
+            [JsonPropertyName("10. change percent")]
+            public string _10changepercent { get; set; }
+        }
+
+        public static async Task<decimal> GetCurrentTeslaStock(string apikey)
+        {
+            var handler = new HttpClientHandler();
+            handler.DefaultProxyCredentials = CredentialCache.DefaultCredentials;
+
+            var httpClient = new HttpClient(handler);
+            var response = await httpClient.GetAsync($"https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=TSLA&apikey={apikey}");
+
+            var result = await JsonSerializer.DeserializeAsync<Rootobject>(await response.Content.ReadAsStreamAsync());
+
+            return decimal.Parse(result.GlobalQuote._05price);
+        }
+    }
+
+    class ExchangeAPI
+    {
+
+        public class Rootobject
+        {
+            public Rates rates { get; set; }
+            public string _base { get; set; }
+            public string date { get; set; }
+        }
+
+        public class Rates
+        {
+            public float CHF { get; set; }
+        }
+
+        public static async Task<decimal> GetExchangeRatesUSDtoCHF()
+        {
+            var handler = new HttpClientHandler();
+            handler.DefaultProxyCredentials = CredentialCache.DefaultCredentials;
+
+            var httpClient = new HttpClient(handler);
+            var response = await httpClient.GetAsync("https://api.exchangeratesapi.io/latest?base=USD&symbols=CHF");
+
+            var result = await JsonSerializer.DeserializeAsync<Rootobject>(await response.Content.ReadAsStreamAsync());
+
+            return (decimal)(result.rates.CHF);
+        }
+    }
+
+    [Parameter]
+    public decimal OriginalPrice { get; set; }
+    [Parameter]
+    public int Amount { get; set; }
+    [Parameter]
+    public decimal ExchangeCostInPercent { get; set; }
+
+    decimal Total { get; set; }
+    decimal Gain { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Compute();
+        var _ = Loop();
+    }
+
+    async Task Loop()
+    {
+        while (true)
+        {
+            await Task.Delay(1000);
+            await Compute();
+            StateHasChanged();
+        }
+    }
+
+    async Task Compute()
+    {
+        var originalPrice = OriginalPrice;
+        var currentPrice = await StockAPI.GetCurrentTeslaStock(Configuration["alphavantage_apikey"]);
+        var amount = Amount;
+
+        var exchangeRate = await ExchangeAPI.GetExchangeRatesUSDtoCHF();
+        var exchangeCost = ExchangeCostInPercent / 100;
+
+        var result = CalculateStockGains(amount, originalPrice, currentPrice);
+
+        Total = Convert(result.total, exchangeRate, exchangeCost);
+        Gain = Convert(result.gain, exchangeRate, exchangeCost);
+    }
+}
