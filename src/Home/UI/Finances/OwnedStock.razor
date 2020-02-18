@@ -7,7 +7,7 @@
 
 <AuthorizeView>
     <Authorized>
-        <tile size="wide" title="stock balance">
+        <tile size="wide" title="stock balance" style="font-size: 1.2rem">
             @if (Total != 0)
             {
                 <i>@($"{Total:0.00}") CHF</i>
@@ -104,10 +104,7 @@
 
         public static async Task<decimal> GetExchangeRatesUSDtoCHF()
         {
-            var handler = new HttpClientHandler();
-            handler.DefaultProxyCredentials = CredentialCache.DefaultCredentials;
-
-            var httpClient = new HttpClient(handler);
+            var httpClient = new HttpClient();
             var response = await httpClient.GetAsync("https://api.exchangeratesapi.io/latest?base=USD&symbols=CHF");
 
             var result = await JsonSerializer.DeserializeAsync<Rootobject>(await response.Content.ReadAsStreamAsync());
