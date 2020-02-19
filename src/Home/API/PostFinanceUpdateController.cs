@@ -21,5 +21,8 @@ namespace Home.API
 
             return Ok();
         }
+
+        [HttpGet("ping")]
+        public Task<IActionResult> GetPing() => Task.FromResult<IActionResult>(Ok("ping"));
     }
 }
