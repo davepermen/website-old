@@ -26,21 +26,6 @@
     }
 </style>
 
-@functions {
-    (decimal total, decimal gain) CalculateStockGains(int amount, decimal pricePerStock, decimal currentPrice)
-    {
-        var total = amount * currentPrice;
-        var gain = total - amount * pricePerStock;
-
-        return (total, gain);
-    }
-
-    decimal Convert(decimal value, decimal exchangeRate, decimal exchangeCost)
-    {
-        return value * (exchangeRate / (1 + exchangeCost));
-    }
-}
-
 @code {
     class StockAPI
     {

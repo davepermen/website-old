@@ -126,17 +126,6 @@
     protected override async Task OnInitializedAsync()
     {
         await Compute();
-        var _ = Loop();
-    }
-
-    async Task Loop()
-    {
-        while (true)
-        {
-            await Task.Delay(1000);
-            await Compute();
-            StateHasChanged();
-        }
     }
 
     async Task Compute()
