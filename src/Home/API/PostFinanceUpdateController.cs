@@ -22,6 +22,6 @@ namespace Home.API
         }
 
         [HttpGet("ping")]
-        public Task<IActionResult> GetPing() => Task.FromResult<IActionResult>(Ok("ping"));
+        public Task<IActionResult> GetPing([FromServices] IDataSources dataSources) => Task.FromResult<IActionResult>(Ok(IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "PostFinance")));
     }
 }
