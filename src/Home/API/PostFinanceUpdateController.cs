@@ -10,12 +10,11 @@ namespace Home.API
     public class PostFinanceUpdateController : ControllerBase
     {
         [HttpPost("update")]
-        public async Task<IActionResult> PostPostFinanceUpdateAsync([FromForm] string value, [FromServices] IDataSources dataSources)
+        public async Task<IActionResult> PostPostFinanceUpdateAsync([FromServices] IDataSources dataSources)
         {
             IO.Directory.CreateDirectory(IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "PostFinance"));
-            await IO.File.WriteAllTextAsync(IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "PostFinance", "AccountBalance.txt"), value);
 
-            using var stream = IO.File.OpenWrite(IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "PostFinance", "AccountBalance-Body.txt"));
+            using var stream = IO.File.OpenWrite(IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "PostFinance", "AccountBalance.txt"));
             await Request.Body.CopyToAsync(stream);
             stream.Close();
 
