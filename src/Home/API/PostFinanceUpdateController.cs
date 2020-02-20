@@ -1,5 +1,6 @@
 ﻿using Conesoft.DataSources;
 using Microsoft.AspNetCore.Mvc;
+using System.IO;
 using System.Threading.Tasks;
 using IO = System.IO;
 
@@ -14,14 +15,13 @@ namespace Home.API
         {
             IO.Directory.CreateDirectory(IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "PostFinance"));
 
-            using var stream = IO.File.OpenWrite(IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "PostFinance", "AccountBalance.txt"));
-            await Request.Body.CopyToAsync(stream);
-            stream.Close();
+            using var reader = new StreamReader(Request.Body);
+            await IO.File.WriteAllTextAsync(
+                IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "PostFinance", "AccountBalance.txt"),
+                await reader.ReadToEndAsync()
+                );
 
             return Ok();
         }
-
-        [HttpGet("ping")]
-        public Task<IActionResult> GetPing([FromServices] IDataSources dataSources) => Task.FromResult<IActionResult>(Ok(IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "PostFinance")));
     }
 }
