@@ -10,7 +10,7 @@ namespace Home.API
     public class PostFinanceUpdateController : ControllerBase
     {
         [HttpPost("update")]
-        public async Task<IActionResult> PostPostFinanceUpdateAsync([FromServices] IDataSources dataSources, [FromBody] string data)
+        public async Task<IActionResult> PostPostFinanceUpdateAsync([FromServices] IDataSources dataSources, [FromForm] string data)
         {
             IO.Directory.CreateDirectory(IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "PostFinance"));
 
