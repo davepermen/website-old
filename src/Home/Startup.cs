@@ -1,5 +1,7 @@
 using Conesoft.DataSources;
 using Conesoft.Users;
+using Home.Services;
+using Home.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -32,6 +34,9 @@ namespace Home
             {
                 options.Level = CompressionLevel.Optimal;
             });
+
+            services.AddTransient<IScheduledTask, SimpleTicker>();
+            services.AddSingleton<TickerScheduler>();
 
             services.AddRazorPages();
             services.AddServerSideBlazor();

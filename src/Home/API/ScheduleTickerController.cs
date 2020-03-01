@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Home.Services;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Home.API
 {
@@ -7,8 +9,9 @@ namespace Home.API
     public class ScheduleTickerController : ControllerBase
     {
         [HttpPost("tick")]
-        public IActionResult PostTick()
+        public async Task<IActionResult> PostTickAsync([FromServices] TickerScheduler tickerScheduler)
         {
+            await tickerScheduler.Tick();
             return Ok("tock");
         }
     }
