@@ -26,7 +26,7 @@ namespace Home.Tasks
             this.configuration = configuration.GetSection("postfinance-mail");
         }
 
-        private IEnumerable<(decimal change, decimal value, DateTime at)> CheckMails(string server, string user, string password, string from)
+        private IEnumerable<(decimal change, decimal value, DateTime at)> CheckMails(string server, string user, string password, string from, string sources)
         {
             using var client = new ImapClient
             {
@@ -35,10 +35,10 @@ namespace Home.Tasks
             client.Connect(server, 993, true);
             client.Authenticate(user, password);
 
-            var all = client.Inbox;
+            var all = client.GetFolder(sources);
             all.Open(FolderAccess.ReadOnly);
 
-            return all.Search(SearchQuery.FromContains(from)).Select(id =>
+            return all.Search(SearchQuery.FromContains(from).And(SearchQuery.SentSince(DateTime.Today - TimeSpan.FromDays(30)))).Select(id =>
             {
                 var message = all.GetMessage(id);
                 var body = message.GetTextBody(TextFormat.Html);
@@ -53,7 +53,7 @@ namespace Home.Tasks
 
         public async Task Run()
         {
-            var results = CheckMails(configuration["server"], configuration["account"], configuration["app-password"], configuration["from"]);
+            var results = CheckMails(configuration["server"], configuration["account"], configuration["app-password"], configuration["from"], configuration["sources"]);
             var now = DateTime.Now;
 
             var file = IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "PostFinance", "AccountBalance.txt");
