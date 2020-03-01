@@ -1,0 +1,44 @@
+﻿@using Conesoft.DataSources
+@using IO = System.IO
+
+@inject IDataSources dataSources
+
+<AuthorizeView>
+    <Authorized>
+        <tile size="wide" title="postfinance balance">
+            @if (total.HasValue)
+            {
+                <b style="font-size: 1.2rem">@($"{total:0.00}") CHF</b>
+                <i style="font-size: 0.8rem">@($"{change:0.00}") CHF</i>
+            }
+        </tile>
+    </Authorized>
+</AuthorizeView>
+
+<style>
+    tile {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+
+@code {
+    decimal? total;
+    decimal? change;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var lines = await IO.File.ReadAllLinesAsync(IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "PostFinance", "AccountBalance.txt"));
+
+        if(lines.Length > 0)
+        {
+            var line = lines.First();
+            var segments = line.Split(";");
+
+            total = decimal.Parse(segments[0]);
+            change = decimal.Parse(segments[1]);
+        }
+    }
+}
