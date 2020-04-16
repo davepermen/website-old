@@ -1,11 +1,10 @@
-﻿using Conesoft;
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Conesoft.DataSources;
+using Conesoft.Users;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
-using System.IO;
 
 namespace Fitness
 {
@@ -13,21 +12,8 @@ namespace Fitness
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDataSources();
-
-            services.AddAuthentication(options =>
-            {
-                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            })
-            .AddCookie(options =>
-            {
-                options.Cookie.Expiration = TimeSpan.FromDays(365);
-                options.ExpireTimeSpan = TimeSpan.FromDays(365);
-                options.SlidingExpiration = true;
-                options.DataProtectionProvider = DataProtectionProvider.Create(new DirectoryInfo($"{new DataSources().SharedDirectory}/keys"));
-            });
+            var usersPath = $"{DataSourcesImplementation.Current.SharedDirectory}/users";
+            services.AddUsers("davepermen.net", usersPath);
 
             services.AddMvc()
             .AddRazorPagesOptions(options =>
@@ -43,7 +29,7 @@ namespace Fitness
             });
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -57,9 +43,15 @@ namespace Fitness
             app.UseDefaultFiles();
             app.UseStaticFiles();
 
-            app.UseAuthentication();
+            app.UseUsers();
 
-            app.UseMvc();
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
+                endpoints.MapControllers();
+            });
         }
     }
 }

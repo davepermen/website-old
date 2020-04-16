@@ -3,13 +3,13 @@ using System.Linq;
 using System.Reflection;
 using IO = System.IO;
 
-namespace Conesoft
+namespace Conesoft.DataSources
 {
-    public class DataSources : IDataSources
+    public class DataSourcesImplementation : IDataSources
     {
         readonly Type rootType;
 
-        public DataSources()
+        public DataSourcesImplementation()
         {
             rootType = Assembly.GetEntryAssembly().ExportedTypes.Where(t => t.Name == "Program" && t.GetMethod("Main") != null).FirstOrDefault();
         }
@@ -18,19 +18,15 @@ namespace Conesoft
 
         public string SharedDirectory => Directory("shared");
 
-        public string Directory(string name) => IO.Directory.Exists($@"{AppContext.BaseDirectory}\..\data\{name}")
+        string Directory(string name) => IO.Directory.Exists($@"{AppContext.BaseDirectory}\..\data\{name}")
             ? $@"{AppContext.BaseDirectory}\..\data\{name}"
             : $@"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\Webseiten\data\{name}"
             ;
 
-        public string LocalDatabase(string name) => $@"{LocalDirectory}\{name}.sqlite";
-
-        public string SharedDatabase(string name) => $@"{SharedDirectory}\{name}.sqlite";
-
-        public string SharedUserDatabase => SharedDatabase("users");
-
         string LocalConfiguration => $@"{AppContext.BaseDirectory}\..\{rootType.Namespace}.json";
 
-        internal static string Configuration => new DataSources().LocalConfiguration;
+        internal static string Configuration => (Current as DataSourcesImplementation).LocalConfiguration;
+
+        public static IDataSources Current => new DataSourcesImplementation();
     }
 }

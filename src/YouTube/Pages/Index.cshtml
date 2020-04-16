@@ -1,0 +1,65 @@
+﻿@page "{indexorid?}"
+@model YouTube.Pages.IndexModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+<!doctype html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <title>Davepermens YouTube</title>
+    <link rel='manifest' href='/manifest.json'>
+    <link href='~/style.css' rel='stylesheet' asp-append-version='true'>
+    <meta name="viewport" content='width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0' />
+    <script>
+        function search() {
+            var input = document.querySelector('section[search] input')
+            if (input.style.display === 'inline') {
+                if (input.value) {
+                    window.location = '/search/' + input.value
+                } else {
+                    input.style.display = ''
+                }
+            } else {
+                input.style.display = 'inline'
+                input.focus()
+            }
+            return false
+        }
+    </script>
+</head>
+<body>
+    @if (Model.IsIndex)
+    {
+        <section search>
+            <form onsubmit="return search()">
+                <input type="search">
+                <input type="submit" value="&#8981;">
+            </form>
+        </section>
+        <section list>
+            @foreach (var video in Model.Videos.Skip(Model.Index * 10).Take(10))
+            {
+                <a href='/@video.Id'>
+                    <h1>@video.Title</h1>
+                    <h2>@video.Author</h2>
+                    <img src='/thumb/@(video.Id).jpg'>
+                </a>
+            }
+            @if (Model.Videos.Length > (Model.Index + 1) * 10)
+            {
+                <a href='/@(Model.Index + 1)/'></a>
+            }
+        </section>
+    }
+    else
+    {
+        <section video>
+            <div>
+                <iframe src="https://www.youtube-nocookie.com/embed/@Model.VideoId?autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </section>
+    }
+</body>
+</html>

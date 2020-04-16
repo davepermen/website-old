@@ -1,9 +1,10 @@
-﻿using Conesoft;
+﻿using Conesoft.DataSources;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting;
 using System;
 
 namespace RemoteApplications
@@ -12,8 +13,6 @@ namespace RemoteApplications
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDataSources();
-
             services.AddHsts(options =>
             {
                 options.Preload = true;
@@ -24,7 +23,7 @@ namespace RemoteApplications
             services.AddMvc();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDataSources dataSources)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IDataSources dataSources)
         {
             if (env.IsDevelopment())
             {
@@ -46,7 +45,12 @@ namespace RemoteApplications
                 ContentTypeProvider = contentTypeProvider
             });
 
-            app.UseMvc();
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
+            });
         }
     }
 }

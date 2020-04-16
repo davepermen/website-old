@@ -1,6 +1,6 @@
 {
-    "name": "ZOE Charging",
-    "short_name": "ZOE Charging",
+    "name": "EV Charging",
+    "short_name": "EV Charging",
     "icons": [
         {
             "src": "/icons/android-chrome-192x192.png",
@@ -8,13 +8,13 @@
             "type": "image/png"
         },
         {
-            "src": "/icons/android-chrome-384x384.png",
-            "sizes": "384x384",
+            "src": "/icons/android-chrome-512x512.png",
+            "sizes": "512x512",
             "type": "image/png"
         }
     ],
     "theme_color": "#000000",
     "background_color": "#000000",
-    "start_url": "https://charging.davepermen.net",
+    "start_url": "https://ev.davepermen.net",
     "display": "standalone"
 }

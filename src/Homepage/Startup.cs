@@ -1,8 +1,10 @@
-﻿using Conesoft;
+﻿using Conesoft.DataSources;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting;
 using System;
 
 namespace Homepage
@@ -13,7 +15,6 @@ namespace Homepage
         {
             services.AddDirectoryBrowser();
             services.AddMvc();
-            services.AddDataSources();
 
             services.AddHsts(options =>
             {
@@ -23,7 +24,7 @@ namespace Homepage
             });
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDataSources dataSource)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IDataSources dataSource)
         {
             if (env.IsDevelopment())
             {
@@ -34,8 +35,14 @@ namespace Homepage
                 app.UseHsts();
             }
 
+            var fileTypes = new FileExtensionContentTypeProvider();
+            fileTypes.Mappings[".glsl"] = "text/text";
+
             app.UseDefaultFiles();
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                ContentTypeProvider = fileTypes
+            });
 
             app.UseStaticFiles(new StaticFileOptions
             {
@@ -43,7 +50,12 @@ namespace Homepage
                 RequestPath = "/blog"
             });
 
-            app.UseMvc();
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
+            });
         }
     }
 }

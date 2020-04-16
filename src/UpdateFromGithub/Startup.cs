@@ -1,4 +1,4 @@
-﻿using Conesoft;
+﻿using Conesoft.DataSources;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using System;
 using System.IO;
@@ -18,7 +19,6 @@ namespace UpdateFromGithub
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDataSources();
             services.AddHsts(options =>
             {
                 options.Preload = true;
@@ -27,7 +27,7 @@ namespace UpdateFromGithub
             });
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDataSources dataSources)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IDataSources dataSources)
         {
             if (env.IsDevelopment())
             {

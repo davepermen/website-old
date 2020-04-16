@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Conesoft.DataSources;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
-using IO = System.IO;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Conesoft;
+using IO = System.IO;
 
 namespace Fitness.Pages.User
 {
@@ -19,7 +19,7 @@ namespace Fitness.Pages.User
             {
                 Username = Username.ToLower();
 
-                var userDirectory = $"{dataSources.SharedDirectory}/users";
+                var userDirectory = $"{dataSources.SharedDirectory}/users-legacy";
                 var userFile = $"{userDirectory}/{Username}.txt";
 
                 IO.Directory.CreateDirectory(userDirectory);

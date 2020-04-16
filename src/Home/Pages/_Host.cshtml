@@ -1,0 +1,21 @@
+﻿@page "/"
+@namespace Home.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+    <base href="~/" />
+    <style>html{background: black}body{display:none}</style>
+    <link href="all.min.css" asp-append-version="true" rel="stylesheet" media="print" onload="this.media='all'" />
+</head>
+<body>
+    <component type="typeof(App)" render-mode="ServerPrerendered" />
+    <script async defer src="_framework/blazor.server.js"></script>
+</body>
+</html>

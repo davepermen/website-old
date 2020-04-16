@@ -1,6 +1,6 @@
-﻿using Conesoft;
-using Microsoft.AspNetCore;
+﻿using Conesoft.DataSources;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace EvState
 {
@@ -8,12 +8,15 @@ namespace EvState
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            CreateHostBuilder(args).Build().Run();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .AddDataSourceConfiguration()
-                .UseStartup<Startup>();
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.AddDataSourceConfiguration();
+                    webBuilder.UseStartup<Startup>();
+                });
     }
 }

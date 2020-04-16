@@ -1,4 +1,4 @@
-﻿using Conesoft;
+﻿using Conesoft.DataSources;
 using System;
 using System.Collections.Generic;
 using IO = System.IO;
@@ -10,42 +10,35 @@ namespace Fitness.Data
         private readonly IDataSources dataSources;
 
         private readonly Dictionary<DateTime, int> entries = new Dictionary<DateTime, int>();
-        private int[] amountPerDay = new int[0];
-        private int[] accumulatedEveryDay = new int[0];
-        private int sum = 0;
-        private int goal = 0;
-        private readonly string user;
-        private readonly string training;
-        private readonly int year;
 
-        public int Sum => sum;
-        public int Goal => goal;
-        public int[] AmountPerDay => amountPerDay;
-        public int[] AccumulatedEveryDay => accumulatedEveryDay;
-        public string User => user;
-        public string Training => training;
-        public int Year => year;
+        public int Sum { get; private set; } = 0;
+        public int Goal { get; private set; } = 0;
+        public int[] AmountPerDay { get; private set; } = new int[0];
+        public int[] AccumulatedEveryDay { get; private set; } = new int[0];
+        public string User { get; }
+        public string Training { get; }
+        public int Year { get; }
 
         public TrainingData(IDataSources dataSources, string user, string training, int year)
         {
             this.dataSources = dataSources;
-            this.user = user;
-            this.training = training;
-            this.year = year;
+            this.User = user;
+            this.Training = training;
+            this.Year = year;
 
             LoadData(dataSources, user, training, year);
         }
 
         public void Add(int amount)
         {
-            var path = $@"{dataSources.LocalDirectory}\{year}\{user}\{training}";
+            var path = $@"{dataSources.LocalDirectory}\{Year}\{User}\{Training}";
             var filename = $@"{path}\{DateTime.UtcNow:yyyy-MM-dd}.txt";
             var current = IO.File.Exists(filename) ? int.Parse(IO.File.ReadAllText(filename)) : 0;
 
             IO.Directory.CreateDirectory(path);
             IO.File.WriteAllText(filename, $"{current + amount}");
 
-            LoadData(dataSources, user, training, year);
+            LoadData(dataSources, User, Training, Year);
         }
 
         private void LoadData(IDataSources dataSources, string user, string training, int year)
@@ -55,38 +48,38 @@ namespace Fitness.Data
             {
                 LoadEntries(path);
 
-                amountPerDay = new int[DaysInYear(year)];
-                accumulatedEveryDay = new int[DaysInYear(year)];
+                AmountPerDay = new int[DaysInYear(year)];
+                AccumulatedEveryDay = new int[DaysInYear(year)];
 
                 foreach (var date in entries.Keys)
                 {
-                    amountPerDay[date.DayOfYear - 1] = entries[date];
+                    AmountPerDay[date.DayOfYear - 1] = entries[date];
                 }
 
                 var accumulated = 0;
-                for (var i = 0; i < amountPerDay.Length; i++)
+                for (var i = 0; i < AmountPerDay.Length; i++)
                 {
-                    accumulated += amountPerDay[i];
-                    accumulatedEveryDay[i] = accumulated;
+                    accumulated += AmountPerDay[i];
+                    AccumulatedEveryDay[i] = accumulated;
                 }
             }
         }
 
         private void LoadEntries(string path)
         {
-            foreach (var file in IO.Directory.GetFiles(path, $"{year}-*.txt"))
+            foreach (var file in IO.Directory.GetFiles(path, $"{Year}-*.txt"))
             {
                 var date = DateTime.Parse(IO.Path.GetFileNameWithoutExtension(file));
                 var amount = int.Parse(IO.File.ReadAllText(file));
 
                 entries[date] = entries.TryGetValue(date, out int value) ? value + amount : amount;
 
-                sum += amount;
+                Sum += amount;
             }
 
             if (IO.File.Exists($@"{path}\goal.txt"))
             {
-                goal = int.Parse(IO.File.ReadAllText($@"{path}\goal.txt"));
+                Goal = int.Parse(IO.File.ReadAllText($@"{path}\goal.txt"));
             }
         }
 

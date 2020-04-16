@@ -1,0 +1,26 @@
+﻿@page "/finances"
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
+<tile-group>
+    <h1>bank balance</h1>
+    <Home.UI.Finances.PostFinance />
+    <tile size="normal" title="add 50.- to credit card"></tile>
+    <h1>stock</h1>
+    <Home.UI.Finances.StockTracker />
+    <Home.UI.Finances.OwnedStock OriginalPrice="@originalPrice" Amount="@amount" ExchangeCostInPercent="@exchangeCostInPercent" />
+</tile-group>
+
+@code {
+    decimal originalPrice { get; set; }
+    int amount { get; set; }
+    decimal exchangeCostInPercent { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        originalPrice = decimal.Parse(Configuration["stock-price"]);
+        amount = int.Parse(Configuration["stock-amount"]);
+        exchangeCostInPercent = decimal.Parse(Configuration["exchange-cost-in-percent"]);
+        return base.OnInitializedAsync();
+    }
+}

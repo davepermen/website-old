@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Conesoft
+namespace Conesoft.DataSources
 {
     public static class BuilderConfigurationHelper
     {
@@ -9,7 +10,10 @@ namespace Conesoft
         {
             return webHostBuilder.ConfigureAppConfiguration((context, builder) =>
             {
-                builder.AddJsonFile(DataSources.Configuration, optional: true, reloadOnChange: true);
+                builder.AddJsonFile(DataSourcesImplementation.Configuration, optional: true, reloadOnChange: true);
+            }).ConfigureServices(services =>
+            {
+                services.AddSingleton(DataSourcesImplementation.Current);
             });
         }
     }

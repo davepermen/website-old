@@ -1,0 +1,78 @@
+﻿@using Microsoft.Extensions.Configuration
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using System.Net.Http
+@inject IConfiguration Configuration
+
+<AuthorizeView>
+    <Authorized>
+        <tile size="normal" title="TSLA" style="font-size: 0.8rem; background-color: @(Change > 0 ? "green" : (Change < 0 ? "red" : ""))">
+            @if (Price != 0)
+            {
+                <b>@($"{Price:0.00}") USD</b>
+                <i>@($"{Change:0.00} USD")</i>
+                <i>@($"{ChangeInPercent:0.00}%")</i>
+            }
+        </tile>
+    </Authorized>
+</AuthorizeView>
+
+<style>
+    tile {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+
+@code {
+    class StockAPI
+    {
+        public class Rootobject
+        {
+            [JsonPropertyName("Global Quote")]
+            public GlobalQuote GlobalQuote { get; set; }
+        }
+        public class GlobalQuote
+        {
+            [JsonPropertyName("01. symbol")]
+            public string _01symbol { get; set; }
+            [JsonPropertyName("02. open")]
+            public string _02open { get; set; }
+            [JsonPropertyName("03. high")]
+            public string _03high { get; set; }
+            [JsonPropertyName("04. low")]
+            public string _04low { get; set; }
+            [JsonPropertyName("05. price")]
+            public string _05price { get; set; }
+            [JsonPropertyName("06. volume")]
+            public string _06volume { get; set; }
+            [JsonPropertyName("07. latest trading day")]
+            public string _07latesttradingday { get; set; }
+            [JsonPropertyName("08. previous close")]
+            public string _08previousclose { get; set; }
+            [JsonPropertyName("09. change")]
+            public string _09change { get; set; }
+            [JsonPropertyName("10. change percent")]
+            public string _10changepercent { get; set; }
+        }
+    }
+
+    decimal Price { get; set; }
+    decimal Change { get; set; }
+    decimal ChangeInPercent { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var httpClient = new HttpClient();
+        var apikey = Configuration["alphavantage_apikey"];
+        var response = await httpClient.GetAsync($"https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=TSLA&apikey={apikey}");
+
+        var result = await JsonSerializer.DeserializeAsync<StockAPI.Rootobject>(await response.Content.ReadAsStreamAsync());
+
+        Price = decimal.Parse(result.GlobalQuote._05price);
+        Change = decimal.Parse(result.GlobalQuote._09change);
+        ChangeInPercent = decimal.Parse(result.GlobalQuote._10changepercent.Substring(0, result.GlobalQuote._10changepercent.Length - 1));
+    }
+}

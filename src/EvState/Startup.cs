@@ -1,12 +1,14 @@
-using Conesoft;
+using Conesoft.DataSources;
+using Conesoft.Users;
 using EvState.HttpClients;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace EvState
 {
@@ -14,29 +16,20 @@ namespace EvState
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDataSources();
+            var usersPath = $"{DataSourcesImplementation.Current.SharedDirectory}/users";
+            services.AddUsers("davepermen.net", usersPath);
 
             services.AddHttpClient<ECarUpHttpClient>();
-            services.AddHttpClient<EVNotifyHttpClient>();
 
-            services.AddSingleton<Data.State>();
+            services.AddSingleton<ScheduledTasks.EvState>();
+            services.AddSingleton<Services.IScheduledTask, ScheduledTasks.PollEvState>();
+            // needs to be removed asap
+            services.AddSingleton(s => s.GetServices<Services.IScheduledTask>().OfType<ScheduledTasks.PollEvState>().First());
+            services.AddSingleton<Services.TaskScheduler>();
 
-            services.AddAuthentication(options =>
-            {
-                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            })
-            .AddCookie(options =>
-            {
-                options.Cookie.Expiration = TimeSpan.FromDays(365);
-                options.ExpireTimeSpan = TimeSpan.FromDays(365);
-                options.SlidingExpiration = true;
-                options.DataProtectionProvider = DataProtectionProvider.Create(new DirectoryInfo($"{new DataSources().SharedDirectory}/keys"));
-            });
-
-            services.AddMvc()
-            .AddRazorPagesOptions(options =>
+            services.AddControllers();
+            services.AddServerSideBlazor();
+            services.AddRazorPages(options =>
             {
                 options.Conventions.AddPageRoute("/Livetile", "/livetile.xml");
             });
@@ -49,7 +42,7 @@ namespace EvState
             });
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -60,10 +53,27 @@ namespace EvState
                 app.UseHsts();
             }
             app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+            Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "icons")),
+                RequestPath = "/icons",
+                ServeUnknownFileTypes = true
+            });
 
-            app.UseAuthentication();
+            app.UseUsers();
 
-            app.UseMvc();
+            app.UseRouting();
+
+            app.ApplicationServices.GetService<Services.TaskScheduler>().Start();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapBlazorHub();
+                endpoints.MapRazorPages();
+                endpoints.MapFallbackToPage("/_Host");
+            });
         }
     }
 }

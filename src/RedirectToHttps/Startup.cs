@@ -16,7 +16,7 @@ namespace RedirectToHttps
             });
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseHttpsRedirection();
             app.Run(async (context) => await context.Response.WriteAsync("Redirected!"));

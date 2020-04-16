@@ -1,4 +1,4 @@
-﻿using Conesoft;
+﻿using Conesoft.DataSources;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
@@ -19,7 +19,7 @@ namespace Fitness.Pages.User
             {
                 Username = Username.ToLower();
 
-                var userDirectory = $"{dataSources.SharedDirectory}/users";
+                var userDirectory = $"{dataSources.SharedDirectory}/users-legacy";
                 var userFile = $"{userDirectory}/{Username}.txt";
 
                 if (IO.File.Exists(userFile) == true)
