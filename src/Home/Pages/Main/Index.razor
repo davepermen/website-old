@@ -1,7 +1,7 @@
 ﻿@page "/"
 @using Conesoft.DataSources
 @using IO = System.IO
-@using Humanizer 
+@using Humanizer
 
 @inject IDataSources dataSources
 
@@ -29,18 +29,20 @@
         <p><a target="_blank" href="https://stats.foldingathome.org/team/223518">LinusTechTips</a></p>
         <i>my team</i>
     </tile>
-    <tile size="wide" title="client status">
-        @if (string.IsNullOrWhiteSpace(percentDone) == false)
-        {
-            <b>active WU: @percentDone</b>
+    @if (string.IsNullOrWhiteSpace(percentDone) == false)
+    {
+        <tile size="wide" title="client status">
+            <b>@percentDone</b>
             <i>@eta remaining</i>
-        }
-        else
-        {
-            <b>no active task atm</b>
+        </tile>
+    }
+    else
+    {
+        <tile size="wide" title="client status" style="opacity: 0.7">
+            <b>no active task</b>
             <i>waiting for next WU</i>
-        }
-    </tile>
+        </tile>
+    }
 </tile-group>
 
 @code
