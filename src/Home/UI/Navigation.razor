@@ -1,16 +1,36 @@
 ﻿<nav @attributes="Attributes">
     @foreach (var entry in Entries)
     {
-        <NavLink href="@("/" + (entry == "home" ? "" : entry))" Match="NavLinkMatch.All">
-            @if (Names != null)
-            {
-                @(Names.ContainsKey(entry.ToLowerInvariant()) ? Names[entry.ToLowerInvariant()] : entry.ToLowerInvariant())
-            }
-            else
-            {
-                @entry.ToLowerInvariant()
-            }
-        </NavLink>
+        if (Authorized?.Contains(entry) == true)
+        {
+            <AuthorizeView>
+                <Authorized>
+                    <NavLink href="@("/" + (entry == "home" ? "" : entry))" Match="NavLinkMatch.All">
+                        @if (Names != null)
+                        {
+                            @(Names.ContainsKey(entry.ToLowerInvariant()) ? Names[entry.ToLowerInvariant()] : entry.ToLowerInvariant())
+                        }
+                        else
+                        {
+                            @entry.ToLowerInvariant()
+                        }
+                    </NavLink>
+                </Authorized>
+            </AuthorizeView>
+        }
+        else
+        {
+            <NavLink href="@("/" + (entry == "home" ? "" : entry))" Match="NavLinkMatch.All">
+                @if (Names != null)
+                {
+                    @(Names.ContainsKey(entry.ToLowerInvariant()) ? Names[entry.ToLowerInvariant()] : entry.ToLowerInvariant())
+                }
+                else
+                {
+                    @entry.ToLowerInvariant()
+                }
+            </NavLink>
+        }
     }
 </nav>
 
@@ -21,6 +41,9 @@
 
     [Parameter]
     public Dictionary<string, string> Names { get; set; }
+
+    [Parameter]
+    public string[] Authorized { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object> Attributes { get; set; }
