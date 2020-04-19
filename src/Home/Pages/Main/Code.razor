@@ -1,27 +1,82 @@
 ﻿@page "/code"
+@using System.Text.Json
+@using Humanizer 
 
-<tile-group>
-    <h1>code</h1>
-    <tile size="big" title="github link">
-        <a href="https://github.com/davepermen/website" target="_blank">
-            <img src="/logos/GitHub-Mark-Light-120px-plus.png" />
-        </a>
-    </tile>
-</tile-group>
+    <tile-group>
+        <h1>code</h1>
+        <tile size="big" class="@(repositories != null ? "split wideleft" : "")" style="@(repositories == null ? "opacity: 0.7" : "")" title="personal projects">
+            @if (repositories != null)
+            {
+                foreach (var repository in repositories.Take(12))
+                {
+                    <a href="@repository.html_url" target="_blank">
+                        @repository.name
+                    </a>
+                    <i>@repository.updated_at.Humanize().Replace(" ago", "")</i>
+                }
+            }
+            else
+            {
+                <img src="/loading.gif" width="64" height="64" />
+            }
+        </tile>
+        <tile size="normal" class="fullscreenlink">
+            <a href="https://github.com/davepermen" target="_blank">
+                <img src="/logos/GitHub-Mark-Light-120px-plus.png" />
+            </a>
+        </tile>
+    </tile-group>
 
 <style>
-    tile {
+    tile * {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    tile.wideleft {
+        grid-template-columns: 2fr 1fr;
+        padding: 0 0.25rem;
+    }
+        tile.wideleft a {
+            text-align: left;
+        }
+        tile.wideleft i {
+            font-size: 1rem;
+            text-align: right;
+        }
+
+    tile.fullscreenlink {
         align-content: stretch;
         justify-content: stretch;
         background: black;
     }
-    tile a {
-        display: grid;
-        justify-self: stretch;
-        align-self: stretch;
-    }
-    tile a img {
-        justify-self: center;
-        align-self: center;
-    }
+
+        tile.fullscreenlink a {
+            display: grid;
+            justify-self: stretch;
+            align-self: stretch;
+        }
+
+            tile.fullscreenlink a img {
+                justify-self: center;
+                align-self: center;
+            }
 </style>
+
+@code
+{
+    Data.GitHub.Repository[] repositories;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        var client = new HttpClient();
+        client.DefaultRequestHeaders.UserAgent.ParseAdd("davepermen.net");
+        var result = await client.GetAsync("https://api.github.com/users/davepermen/repos?sort=pushed");
+        var content = await result.Content.ReadAsStringAsync();
+        var repositories = JsonSerializer.Deserialize<Data.GitHub.Repository[]>(content);
+
+        this.repositories = repositories;
+    }
+}
