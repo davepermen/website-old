@@ -37,6 +37,7 @@ namespace Home
 
             services.AddTransient<IScheduledTask, SimpleTicker>();
             services.AddTransient<IScheduledTask, PostFinanceMailReader>();
+            services.AddTransient<IScheduledTask, FoldingAtHomeReader>();
             services.AddSingleton<TickerScheduler>();
 
             services.AddRazorPages();

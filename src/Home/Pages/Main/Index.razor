@@ -1,8 +1,57 @@
 ﻿@page "/"
+@using Conesoft.DataSources
+@using IO = System.IO
+
+@inject IDataSources dataSources
 
 <tile-group>
     <h1>home</h1>
     <tile size="normal" title="welcome home"></tile>
-    <tile size="big" style="background: center / cover url('/me.webp')"></tile>
-    <tile size="normal"></tile>
+    <tile size="big" style="background: right / cover url('/me.webp')"></tile>
+    <tile size="normal" title="current time">
+        <b>@now.ToLongTimeString()</b>
+    </tile>
 </tile-group>
+
+<tile-group>
+    <h1>folding@home</h1>
+    <tile size="wide" class="split" title="folding@home">
+        <b>@workUnits</b>
+        <b>@score</b>
+        <i>work units</i>
+        <i>score</i>
+    </tile>
+    <tile size="normal">
+        <i>check my profile</i>
+        <p><a target="_blank" href="https://stats.foldingathome.org/donor/davepermen">davepermen</a></p>
+        <i>check team</i>
+        <p><a target="_blank" href="https://stats.foldingathome.org/team/223518">LinusTechTips</a></p>
+    </tile>
+</tile-group>
+
+@code
+{
+    DateTime now = DateTime.Now;
+    int workUnits = 0;
+    int score = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var _ = LoopAsync();
+        await base.OnInitializedAsync();
+    }
+
+    async Task LoopAsync()
+    {
+        while (true)
+        {
+            var lines = await IO.File.ReadAllLinesAsync(IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "Folding@Home", "Status.txt"));
+            workUnits = int.Parse(lines.First());
+            score = int.Parse(lines.Last());
+
+            await Task.Delay(1000);
+            now = DateTime.Now;
+            StateHasChanged();
+        }
+    }
+}

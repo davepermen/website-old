@@ -19,7 +19,9 @@ namespace Home.Tasks
         public async Task Run()
         {
             var now = DateTime.Now;
-            await IO.File.WriteAllTextAsync(IO.Path.Combine(dataSources.LocalDirectory, "tick.txt"), now.ToLongDateString() + " " + now.ToLongTimeString());
+            var path = IO.Path.Combine(dataSources.LocalDirectory, "tick.txt");
+            IO.Directory.CreateDirectory(IO.Path.GetDirectoryName(path));
+            await IO.File.WriteAllTextAsync(path, now.ToLongDateString() + " " + now.ToLongTimeString());
         }
     }
 }

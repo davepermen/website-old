@@ -6,7 +6,7 @@
 
 <AuthorizeView>
     <Authorized>
-        <tile size="normal" title="TSLA" style="font-size: 0.8rem; background-color: @(Change > 0 ? "green" : (Change < 0 ? "red" : ""))">
+        <tile size="normal" title="TSLA" style="background-color: @(Change > 0 ? "green" : (Change < 0 ? "red" : ""))">
             @if (Price != 0)
             {
                 <b>@($"{Price:0.00}") USD</b>
@@ -16,15 +16,6 @@
         </tile>
     </Authorized>
 </AuthorizeView>
-
-<style>
-    tile {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-</style>
 
 @code {
     class StockAPI
