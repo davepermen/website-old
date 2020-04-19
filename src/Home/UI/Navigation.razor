@@ -1,7 +1,16 @@
 ﻿<nav @attributes="Attributes">
-    @foreach(var entry in Entries)
+    @foreach (var entry in Entries)
     {
-        <NavLink href="@("/" + (entry == "home" ? "" : entry))" Match="NavLinkMatch.All">@entry.ToLowerInvariant()</NavLink>
+        <NavLink href="@("/" + (entry == "home" ? "" : entry))" Match="NavLinkMatch.All">
+            @if (Names != null)
+            {
+                @(Names.ContainsKey(entry.ToLowerInvariant()) ? Names[entry.ToLowerInvariant()] : entry.ToLowerInvariant())
+            }
+            else
+            {
+                @entry.ToLowerInvariant()
+            }
+        </NavLink>
     }
 </nav>
 
@@ -9,6 +18,9 @@
 @code {
     [Parameter]
     public string[] Entries { get; set; }
+
+    [Parameter]
+    public Dictionary<string, string> Names { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object> Attributes { get; set; }
