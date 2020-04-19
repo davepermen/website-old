@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using IO = System.IO;
 
@@ -15,7 +16,7 @@ namespace Home.Tasks
         private readonly IDataSources dataSources;
         private readonly IConfigurationSection configuration;
 
-        public TimeSpan Every => TimeSpan.FromMinutes(10);
+        public TimeSpan Every => TimeSpan.FromMinutes(1);
 
         public FoldingAtHomeReader(IDataSources dataSources, IConfiguration configuration)
         {
@@ -82,16 +83,28 @@ namespace Home.Tasks
                 sid = await GetSessionId()
             };
 
-            var step1 = client.GetAsync($"http://{foldingAtHome.client}:{foldingAtHome.port}/api/updates/set?sid={foldingAtHome.sid}&update_id=0&update_rate=1&update_path=%2Fapi%2Fbasic&_=1587320338580");
-            await Task.Delay(10);
-            var step2 = client.GetAsync($"http://{foldingAtHome.client}:{foldingAtHome.port}/api/updates/set?sid={foldingAtHome.sid}&update_id=1&update_rate=1&update_path=%2Fapi%2Fslots&_=1587320338581");
-            await Task.Delay(10);
-            var step3 = client.GetAsync($"http://{foldingAtHome.client}:{foldingAtHome.port}/api/configured?sid={foldingAtHome.sid}&_=1587320338582");
-            await Task.Delay(10);
-            var step4 = await client.GetAsync($"http://{foldingAtHome.client}:{foldingAtHome.port}/api/updates?sid={foldingAtHome.sid}&_=1587320338583");
+            var text = "";
+            try
+            {
+                var ctx = new CancellationTokenSource();
 
-            var result = await client.GetAsync($"http://{foldingAtHome.client}:{foldingAtHome.port}/api/updates?sid={foldingAtHome.sid}&_=1587320338584");
-            var text = await result.Content.ReadAsStringAsync();
+                var step1 = client.GetAsync($"http://{foldingAtHome.client}:{foldingAtHome.port}/api/updates/set?sid={foldingAtHome.sid}&update_id=0&update_rate=1&update_path=%2Fapi%2Fbasic&_=1587320338580", ctx.Token);
+                await Task.Delay(10);
+                var step2 = client.GetAsync($"http://{foldingAtHome.client}:{foldingAtHome.port}/api/updates/set?sid={foldingAtHome.sid}&update_id=1&update_rate=1&update_path=%2Fapi%2Fslots&_=1587320338581", ctx.Token);
+                await Task.Delay(10);
+                var step3 = client.GetAsync($"http://{foldingAtHome.client}:{foldingAtHome.port}/api/configured?sid={foldingAtHome.sid}&_=1587320338582", ctx.Token);
+                await Task.Delay(10);
+                var step4 = await client.GetAsync($"http://{foldingAtHome.client}:{foldingAtHome.port}/api/updates?sid={foldingAtHome.sid}&_=1587320338583");
+
+                var result = await client.GetAsync($"http://{foldingAtHome.client}:{foldingAtHome.port}/api/updates?sid={foldingAtHome.sid}&_=1587320338584");
+                text = await result.Content.ReadAsStringAsync();
+
+                ctx.Cancel();
+            }
+            catch (OperationCanceledException)
+            {
+
+            }
 
             var slots = ClientStatusData.Slots.FromJson(text);
 
