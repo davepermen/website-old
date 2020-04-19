@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using Conesoft.DataSources
 @using IO = System.IO
+@using Humanizer 
 
 @inject IDataSources dataSources
 
@@ -15,17 +16,30 @@
 
 <tile-group>
     <h1>folding@home</h1>
-    <tile size="wide" class="split" title="folding@home">
+    <tile size="wide" class="split" title="server stats">
         <b>@workUnits</b>
-        <b>@score</b>
+        <b>@score.ToString("###,###,###,###,##0")</b>
         <i>work units</i>
         <i>score</i>
     </tile>
     <tile size="normal">
-        <i>check my profile</i>
         <p><a target="_blank" href="https://stats.foldingathome.org/donor/davepermen">davepermen</a></p>
-        <i>check team</i>
+        <i>my profile</i>
+        <br />
         <p><a target="_blank" href="https://stats.foldingathome.org/team/223518">LinusTechTips</a></p>
+        <i>my team</i>
+    </tile>
+    <tile size="wide" title="client status">
+        @if (string.IsNullOrWhiteSpace(percentDone) == false)
+        {
+            <b>active WU: @percentDone</b>
+            <i>@eta remaining</i>
+        }
+        else
+        {
+            <b>no active task atm</b>
+            <i>waiting for next WU</i>
+        }
     </tile>
 </tile-group>
 
@@ -35,19 +49,35 @@
     int workUnits = 0;
     int score = 0;
 
+    string percentDone = "";
+    string eta = "";
+
     protected override async Task OnInitializedAsync()
     {
         var _ = LoopAsync();
         await base.OnInitializedAsync();
     }
 
+    async Task ReadServerStats()
+    {
+        var lines = await IO.File.ReadAllLinesAsync(IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "Folding@Home", "ServerStats.txt"));
+        workUnits = int.Parse(lines.First());
+        score = int.Parse(lines.Last());
+    }
+
+    async Task ReadClientStatus()
+    {
+        var lines = await IO.File.ReadAllLinesAsync(IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "Folding@Home", "ClientStatus.txt"));
+        percentDone = lines.First();
+        eta = lines.Last();
+    }
+
     async Task LoopAsync()
     {
         while (true)
         {
-            var lines = await IO.File.ReadAllLinesAsync(IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "Folding@Home", "Status.txt"));
-            workUnits = int.Parse(lines.First());
-            score = int.Parse(lines.Last());
+            await ReadServerStats();
+            await ReadClientStatus();
 
             await Task.Delay(1000);
             now = DateTime.Now;
