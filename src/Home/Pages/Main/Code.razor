@@ -1,31 +1,42 @@
 ﻿@page "/code"
+@using Conesoft.DataSources
+@using Humanizer
 @using System.Text.Json
-@using Humanizer 
+@using IO = System.IO
 
-    <tile-group>
-        <h1>code</h1>
-        <tile size="big" class="@(repositories != null ? "split wideleft" : "")" style="@(repositories == null ? "opacity: 0.7" : "")" title="personal projects">
-            @if (repositories != null)
-            {
-                foreach (var repository in repositories.Take(12))
-                {
-                    <a href="@repository.html_url" target="_blank">
-                        @repository.name
-                    </a>
-                    <i>@repository.updated_at.Humanize().Replace(" ago", "")</i>
-                }
-            }
-            else
-            {
-                <img src="/loading.gif" width="64" height="64" />
-            }
-        </tile>
-        <tile size="normal" class="fullscreenlink">
-            <a href="https://github.com/davepermen" target="_blank">
-                <img src="/logos/GitHub-Mark-Light-120px-plus.png" />
+@inject IDataSources dataSources
+
+<tile-group>
+    <h1>code</h1>
+    <tile size="big" class="split wideleft" title="personal projects">
+        @foreach (var repository in personalRepositories.Take(10))
+        {
+            <a href="@repository.html_url" target="_blank">
+                @repository.name
             </a>
-        </tile>
-    </tile-group>
+            <i>@repository.updated_at.Humanize().Replace(" ago", "")</i>
+        }
+    </tile>
+    <tile size="normal" class="fullscreenlink" title="/davepermen">
+        <a href="https://github.com/davepermen" target="_blank">
+            <img src="/logos/github.webp" />
+        </a>
+    </tile>
+    <tile size="wide" class="split wideleft" title="conesoft projects">
+        @foreach (var repository in conesoftRepositories.Take(4))
+        {
+            <a href="@repository.html_url" target="_blank">
+                @repository.name
+            </a>
+            <i>@repository.updated_at.Humanize().Replace(" ago", "")</i>
+        }
+    </tile>
+    <tile size="normal" class="fullscreenlink" title="/conesoft">
+        <a href="https://github.com/conesoft" target="_blank">
+            <img src="/logos/github.webp" />
+        </a>
+    </tile>
+</tile-group>
 
 <style>
     tile * {
@@ -37,9 +48,11 @@
         grid-template-columns: 2fr 1fr;
         padding: 0 0.25rem;
     }
+
         tile.wideleft a {
             text-align: left;
         }
+
         tile.wideleft i {
             font-size: 1rem;
             text-align: right;
@@ -53,30 +66,43 @@
 
         tile.fullscreenlink a {
             display: grid;
+            grid-template-columns: 1fr 5fr 1fr;
+            grid-template-rows: 1fr 5fr 1fr;
             justify-self: stretch;
             align-self: stretch;
         }
 
             tile.fullscreenlink a img {
-                justify-self: center;
-                align-self: center;
+                grid-row: 2;
+                grid-column: 2;
+                justify-self: stretch;
+                align-self: stretch;
             }
 </style>
 
+@functions
+{
+    async Task<Data.GitHub.Repository[]> GetRepositories(string organisationOrUsername)
+    {
+        var path = IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "Github Repositories", $"{organisationOrUsername}.json");
+        if (IO.File.Exists(path))
+        {
+            return JsonSerializer.Deserialize<Data.GitHub.Repository[]>(await IO.File.ReadAllTextAsync(path));
+        }
+        return Array.Empty<Data.GitHub.Repository>();
+    }
+}
+
 @code
 {
-    Data.GitHub.Repository[] repositories;
+    Data.GitHub.Repository[] personalRepositories = Array.Empty<Data.GitHub.Repository>();
+    Data.GitHub.Repository[] conesoftRepositories = Array.Empty<Data.GitHub.Repository>();
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
-        var client = new HttpClient();
-        client.DefaultRequestHeaders.UserAgent.ParseAdd("davepermen.net");
-        var result = await client.GetAsync("https://api.github.com/users/davepermen/repos?sort=pushed");
-        var content = await result.Content.ReadAsStringAsync();
-        var repositories = JsonSerializer.Deserialize<Data.GitHub.Repository[]>(content);
-
-        this.repositories = repositories;
+        this.personalRepositories = await GetRepositories("davepermen");
+        this.conesoftRepositories = await GetRepositories("conesoft");
     }
 }

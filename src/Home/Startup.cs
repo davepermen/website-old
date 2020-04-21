@@ -42,6 +42,7 @@ namespace Home
             services.AddTransient<IScheduledTask, PostFinanceMailReader>();
             services.AddTransient<IScheduledTask, FoldingAtHomeReader>();
             services.AddTransient<IScheduledTask, ServerHostingDnsUpdater>();
+            services.AddTransient<IScheduledTask, GithubRepositoryReader>();
             services.AddSingleton<TickerScheduler>();
 
             services.AddRazorPages();
