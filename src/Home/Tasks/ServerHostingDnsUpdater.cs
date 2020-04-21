@@ -52,7 +52,7 @@ namespace Home.Tasks
 
                 var currentIp = await ipify.GetPublicIPAddress();
 
-                if (currentIp != lastIp)
+                if (currentIp.ToString() != lastIp.ToString()) // urgh, value comparison, the cheap way
                 {
                     await UpdateDnsRecord(currentIp);
                     await IO.File.WriteAllTextAsync(path, currentIp.ToString());
