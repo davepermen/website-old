@@ -1,7 +1,40 @@
 ﻿@page "/server"
+@using Conesoft.DataSources
+@using Humanizer
+@using IO = System.IO
+
+@inject IDataSources dataSources
 
 <tile-group>
     <h1>home server</h1>
-    <tile size="normal" title="reboot"></tile>
-    <tile size="normal" title="connect..."></tile>
+    <AuthorizeView>
+        <Authorized>
+            <tile size="wide" title="external ip">
+                <b>@ip</b>
+                <i>@lastUpdated.Humanize()</i>
+            </tile>
+            <tile size="normal" title="reboot"></tile>
+            <tile size="normal" title="connect..."></tile>
+        </Authorized>
+        <NotAuthorized>
+            <tile size="normal" title="davepermen.net"></tile>
+        </NotAuthorized>
+    </AuthorizeView>
 </tile-group>
+
+@code
+{
+    string ip = "";
+    DateTime lastUpdated = default;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var path = IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "Ipify", "Ip.txt");
+        ip = await IO.File.ReadAllTextAsync(path);
+
+        var fileinfo = new IO.FileInfo(path);
+        lastUpdated = fileinfo.LastWriteTimeUtc;
+
+        StateHasChanged();
+    }
+}

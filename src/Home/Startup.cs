@@ -35,9 +35,13 @@ namespace Home
                 options.Level = CompressionLevel.Optimal;
             });
 
+            services.AddHttpClient<Conesoft.DNSimple.Client>("dnsimple");
+            services.AddHttpClient<Conesoft.Ipify.Client>("ipify");
+
             services.AddTransient<IScheduledTask, SimpleTicker>();
             services.AddTransient<IScheduledTask, PostFinanceMailReader>();
             services.AddTransient<IScheduledTask, FoldingAtHomeReader>();
+            services.AddTransient<IScheduledTask, ServerHostingDnsUpdater>();
             services.AddSingleton<TickerScheduler>();
 
             services.AddRazorPages();
