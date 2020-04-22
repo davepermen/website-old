@@ -1,9 +1,11 @@
 ﻿TODO
 
-- [x] Charging station
 - [ ] Tesla charging state
-- [x] Schedule charging
-- [ ] Wake car
+- [ ] Wake car to charge
 - [ ] only when car home
 
+DONE
+
+- [x] Charging station
+- [x] Schedule charging
 - [x] automate letsencrypt
