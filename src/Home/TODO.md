@@ -5,4 +5,4 @@
 - [ ] Schedule charging
 - [ ] only when car home
 
-- [ ] automate letsencrypt (https://github.com/fszlin/certes/blob/master/docs/README.md)
+- [ ] automate letsencrypt
