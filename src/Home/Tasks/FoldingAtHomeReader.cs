@@ -16,7 +16,8 @@ namespace Home.Tasks
         private readonly IDataSources dataSources;
         private readonly IConfigurationSection configuration;
 
-        public TimeSpan Every => TimeSpan.FromMinutes(1);
+        public TimeSpan? Every => TimeSpan.FromMinutes(1);
+        public TimeSpan? DailyAt => null;
 
         public FoldingAtHomeReader(IDataSources dataSources, IConfiguration configuration)
         {

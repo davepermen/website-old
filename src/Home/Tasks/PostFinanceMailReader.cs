@@ -15,7 +15,8 @@ namespace Home.Tasks
 {
     public class PostFinanceMailReader : IScheduledTask
     {
-        public TimeSpan Every => TimeSpan.FromMinutes(1);
+        public TimeSpan? Every => TimeSpan.FromMinutes(1);
+        public TimeSpan? DailyAt => null;
 
         private readonly IDataSources dataSources;
         private readonly IConfigurationSection configuration;

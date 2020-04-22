@@ -2,7 +2,8 @@
 
 - [x] Charging station
 - [ ] Tesla charging state
-- [ ] Schedule charging
+- [x] Schedule charging
+- [ ] Wake car
 - [ ] only when car home
 
-- [ ] automate letsencrypt
+- [x] automate letsencrypt

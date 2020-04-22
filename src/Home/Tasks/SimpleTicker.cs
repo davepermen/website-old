@@ -9,7 +9,8 @@ namespace Home.Tasks
     {
         private readonly IDataSources dataSources;
 
-        public TimeSpan Every => TimeSpan.FromMinutes(1);
+        public TimeSpan? Every => TimeSpan.FromMinutes(1);
+        public TimeSpan? DailyAt => null;
 
         public SimpleTicker(IDataSources dataSources)
         {

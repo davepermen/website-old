@@ -14,8 +14,8 @@ namespace Home.Tasks
         private readonly IDataSources dataSources;
         private readonly Conesoft.DNSimple.Client dnsimple;
         private readonly Conesoft.Ipify.Client ipify;
-
-        public TimeSpan Every => TimeSpan.FromMinutes(1);
+        public TimeSpan? Every => TimeSpan.FromMinutes(1);
+        public TimeSpan? DailyAt => null;
 
         public ServerHostingDnsUpdater(IDataSources dataSources, IConfiguration configuration, Conesoft.DNSimple.Client dnsimple, Conesoft.Ipify.Client ipify)
         {

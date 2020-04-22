@@ -5,7 +5,8 @@ namespace Home.Tasks
 {
     public interface IScheduledTask
     {
-        TimeSpan Every { get; }
+        TimeSpan? Every { get; }
+        TimeSpan? DailyAt { get; }
 
         Task Run();
     }

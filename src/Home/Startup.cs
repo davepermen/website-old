@@ -40,6 +40,7 @@ namespace Home
             services.AddHttpClient<Services.HttpClients.EvState.Client>("evstate");
 
             services.AddTransient<IScheduledTask, SimpleTicker>();
+            services.AddTransient<IScheduledTask, EveryDayTicker>();
             services.AddTransient<IScheduledTask, PostFinanceMailReader>();
             services.AddTransient<IScheduledTask, FoldingAtHomeReader>();
             services.AddTransient<IScheduledTask, ServerHostingDnsUpdater>();

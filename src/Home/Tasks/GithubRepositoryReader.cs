@@ -11,7 +11,8 @@ namespace Home.Tasks
         private readonly HttpClient client;
         private readonly IDataSources dataSources;
 
-        public TimeSpan Every => TimeSpan.FromMinutes(5);
+        public TimeSpan? Every => TimeSpan.FromMinutes(5);
+        public TimeSpan? DailyAt => null;
 
         public GithubRepositoryReader(IHttpClientFactory httpClientFactory, IDataSources dataSources)
         {

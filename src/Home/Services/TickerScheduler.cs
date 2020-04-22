@@ -22,21 +22,51 @@ namespace Home.Services
 
         public async Task Tick()
         {
-            var now = DateTime.UtcNow;
+            var now = DateTime.Now;
 
             foreach (var scheduledTask in lastTimeRun.Keys.ToArray())
             {
-                var last = lastTimeRun[scheduledTask];
-                if (now - last >= scheduledTask.Every - TimeSpan.FromSeconds(5)) // a little adjustment for those setting 1 minute tickers, to make sure they run
+                if (scheduledTask.Every.HasValue)
                 {
-                    await scheduledTask.Run();
+                    var last = lastTimeRun[scheduledTask];
+                    if (now - last >= scheduledTask.Every.Value - TimeSpan.FromSeconds(5)) // a little adjustment for those setting 1 minute tickers, to make sure they run
+                    {
+                        await scheduledTask.Run();
+                        if (lastTimeRun[scheduledTask] != DateTime.MinValue)
+                        {
+                            lastTimeRun[scheduledTask] += scheduledTask.Every.Value;
+                        }
+                        else
+                        {
+                            lastTimeRun[scheduledTask] = now;
+                        }
+                    }
+                }
+                else if (scheduledTask.DailyAt.HasValue)
+                {
+                    var today = now.Date;
+                    var last = lastTimeRun[scheduledTask];
+
+                    var time = now - today;
+
                     if (lastTimeRun[scheduledTask] != DateTime.MinValue)
                     {
-                        lastTimeRun[scheduledTask] += scheduledTask.Every;
+                        if (last < today && time >= scheduledTask.DailyAt.Value - TimeSpan.FromSeconds(5)) // a little adjustment for those setting 1 minute tickers, to make sure they run
+                        {
+                            await scheduledTask.Run();
+                            lastTimeRun[scheduledTask] = today;
+                        }
                     }
                     else
                     {
-                        lastTimeRun[scheduledTask] = now;
+                        if (time >= scheduledTask.DailyAt.Value - TimeSpan.FromSeconds(5)) // a little adjustment for those setting 1 minute tickers, to make sure they run
+                        {
+                            lastTimeRun[scheduledTask] = today;
+                        }
+                        else
+                        {
+                            lastTimeRun[scheduledTask] = today - TimeSpan.FromDays(1);
+                        }
                     }
                 }
             }
