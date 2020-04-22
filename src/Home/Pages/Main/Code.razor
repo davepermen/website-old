@@ -17,7 +17,7 @@
             <i>@repository.updated_at.Humanize().Replace(" ago", "")</i>
         }
     </tile>
-    <tile size="normal" class="fullscreenlink" title="/davepermen">
+    <tile size="normal" type="clickable" style="background: black" title="/davepermen">
         <a href="https://github.com/davepermen" target="_blank">
             <img src="/logos/github.webp" />
         </a>
@@ -31,7 +31,7 @@
             <i>@repository.updated_at.Humanize().Replace(" ago", "")</i>
         }
     </tile>
-    <tile size="normal" class="fullscreenlink" title="/conesoft">
+    <tile size="normal" type="clickable" style="background: black" title="/conesoft">
         <a href="https://github.com/conesoft" target="_blank">
             <img src="/logos/github.webp" />
         </a>
@@ -57,27 +57,6 @@
             font-size: 1rem;
             text-align: right;
         }
-
-    tile.fullscreenlink {
-        align-content: stretch;
-        justify-content: stretch;
-        background: black;
-    }
-
-        tile.fullscreenlink a {
-            display: grid;
-            grid-template-columns: 1fr 5fr 1fr;
-            grid-template-rows: 1fr 5fr 1fr;
-            justify-self: stretch;
-            align-self: stretch;
-        }
-
-            tile.fullscreenlink a img {
-                grid-row: 2;
-                grid-column: 2;
-                justify-self: stretch;
-                align-self: stretch;
-            }
 </style>
 
 @functions

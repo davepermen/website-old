@@ -1,0 +1,93 @@
+﻿@inject Services.HttpClients.EvState.Client client
+
+<AuthorizeView>
+    <Authorized>
+        <tile size="big" type="clickable" title="toggle charging">
+            <button @onclick="ToggleCharging">
+                <svg viewBox="0 0 24 24">
+                    <svg x="2" y="2" width="20" height="20" viewBox="0 0 21.4 21.4">
+                        <defs>
+                            <filter id="shadow">
+                                <feDropShadow dx="@(charging ? "0.25" : "0")" dy="@(charging ? "0.5" : "0")" stdDeviation="@(charging ? "1.5" : "0")" />
+                            </filter>
+                        </defs>
+                        <polygon fill="white"
+                                 style="filter:url(#shadow);"
+                                 opacity="@(charging ? 1 : 0.3)"
+                                 points="18.375,0 4.834,10.492 9.459,12.05 3.025,21.4 15.983,10.859 11.916,9.19" />
+                    </svg>
+                </svg>
+            </button>
+        </tile>
+    </Authorized>
+    <NotAuthorized>
+        <tile size="normal" type="clickable" title="charging">
+            <svg viewBox="0 0 24 24">
+                <svg x="2" y="2" width="20" height="20" viewBox="0 0 21.4 21.4">
+                    <defs>
+                        <filter id="shadow">
+                            <feDropShadow dx="@(charging ? "0.25" : "0")" dy="@(charging ? "0.5" : "0")" stdDeviation="@(charging ? "1.5" : "0")" />
+                        </filter>
+                    </defs>
+                    <polygon fill="white"
+                                style="filter:url(#shadow);"
+                                opacity="@(charging ? 1 : 0.3)"
+                                points="18.375,0 4.834,10.492 9.459,12.05 3.025,21.4 15.983,10.859 11.916,9.19" />
+                </svg>
+            </svg>
+        </tile>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code
+{
+    string state;
+    bool charging => state == "active";
+    Data.ECarUp.ChargingState chargingState;
+
+    async Task ToggleCharging()
+    {
+        if(state == "active")
+        {
+            await StopCharging();
+        }
+        else if(state == "inactive")
+        {
+            await StartCharging();
+        }
+    }
+
+    async Task StartCharging()
+    {
+        await client.StartCharging(TimeSpan.FromHours(1));
+        state = "activating";
+        StateHasChanged();
+        await client.WaitTillCharging();
+        state = "active";
+    }
+
+    async Task StopCharging()
+    {
+        await client.StopCharging();
+        state = "deactivating";
+        StateHasChanged();
+        await client.WaitTillNotCharging();
+        state = "inactive";
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var _ = LoopAsync();
+    }
+
+    async Task LoopAsync()
+    {
+        while (true)
+        {
+            chargingState = await client.State();
+            state = chargingState != null ? "active" : "inactive";
+            StateHasChanged();
+            await Task.Delay(TimeSpan.FromMinutes(1));
+        }
+    }
+}

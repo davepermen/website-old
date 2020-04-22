@@ -37,6 +37,7 @@ namespace Home
 
             services.AddHttpClient<Conesoft.DNSimple.Client>("dnsimple");
             services.AddHttpClient<Conesoft.Ipify.Client>("ipify");
+            services.AddHttpClient<Services.HttpClients.EvState.Client>("evstate");
 
             services.AddTransient<IScheduledTask, SimpleTicker>();
             services.AddTransient<IScheduledTask, PostFinanceMailReader>();
