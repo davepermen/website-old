@@ -66,7 +66,8 @@
         var path = IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "Github Repositories", $"{organisationOrUsername}.json");
         if (IO.File.Exists(path))
         {
-            return JsonSerializer.Deserialize<Data.GitHub.Repository[]>(await IO.File.ReadAllTextAsync(path), new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+            using var stream = IO.File.OpenRead(path);
+            return await JsonSerializer.DeserializeAsync<Data.GitHub.Repository[]>(stream, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
         }
         return Array.Empty<Data.GitHub.Repository>();
     }

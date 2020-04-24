@@ -59,7 +59,7 @@ namespace Home.Tasks
 
             var file = IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "PostFinance", "AccountBalance.txt");
             IO.Directory.CreateDirectory(IO.Path.GetDirectoryName(file));
-            await IO.File.WriteAllLinesAsync(file, results.Select(v => $"{v.value};{v.change};{v.at.ToString("o")}"));
+            await IO.File.WriteAllLinesAsync(file, results.Select(v => $"{v.value};{v.change};{v.at:o}"));
         }
     }
 }
