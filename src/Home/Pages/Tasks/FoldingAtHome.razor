@@ -1,5 +1,6 @@
 ﻿@page "/foldingathome"
 @using Conesoft.DataSources
+@using System.Text.Json
 @using IO = System.IO
 
 @inject IDataSources dataSources
@@ -19,11 +20,29 @@
         <p><a target="_blank" href="https://stats.foldingathome.org/team/223518">LinusTechTips</a></p>
         <i>my team</i>
     </tile>
-    @if (string.IsNullOrWhiteSpace(percentDone) == false)
+    @if (slots.Count() == 2)
+    {
+        <tile size="wide" class="split" title="client status">
+            @foreach (var slot in slots)
+            {
+                <b>@slot.PercentDone</b>
+            }
+            @foreach (var slot in slots)
+            {
+                <p>@slot.Description.Split(":").First().ToUpperInvariant()</p>
+            }
+            @foreach (var slot in slots)
+            {
+                <i>@slot.Eta</i>
+            }
+        </tile>
+    }
+    else if (singleSlot != null)
     {
         <tile size="wide" title="client status">
-            <b>@percentDone</b>
-            <i>@eta remaining</i>
+            <b>@singleSlot.PercentDone</b>
+            <p>@singleSlot.Description.Split(":").First().ToUpperInvariant()</p>
+            <i>@singleSlot.Eta remaining</i>
         </tile>
     }
     else
@@ -37,11 +56,10 @@
 
 @code
 {
-    int workUnits = 0;
-    int score = 0;
-
-    string percentDone = "";
-    string eta = "";
+    Data.FoldingAtHome.Client.Slot[] slots = Array.Empty<Data.FoldingAtHome.Client.Slot>();
+    Data.FoldingAtHome.Client.Slot? singleSlot => slots.FirstOrDefault();
+    int workUnits;
+    int score;
 
     protected override async Task OnInitializedAsync()
     {
@@ -58,9 +76,10 @@
 
     async Task ReadClientStatus()
     {
-        var lines = await IO.File.ReadAllLinesAsync(IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "Folding@Home", "ClientStatus.txt"));
-        percentDone = lines.First();
-        eta = lines.Last();
+
+        using var stream = IO.File.OpenRead(IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "Folding@Home", "ClientStatus.txt"));
+        slots = await JsonSerializer.DeserializeAsync<Data.FoldingAtHome.Client.Slot[]>(stream);
+        stream.Close();
     }
 
     async Task LoopAsync()

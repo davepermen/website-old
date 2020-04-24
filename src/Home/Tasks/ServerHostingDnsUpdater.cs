@@ -44,7 +44,7 @@ namespace Home.Tasks
             IO.Directory.CreateDirectory(IO.Path.GetDirectoryName(path));
             try
             {
-                IPAddress lastIp = default;
+                IPAddress lastIp = IPAddress.None;
                 if(IO.File.Exists(path))
                 {
                     lastIp = IPAddress.Parse(await IO.File.ReadAllTextAsync(path));

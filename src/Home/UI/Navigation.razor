@@ -37,14 +37,14 @@
 
 @code {
     [Parameter]
-    public string[] Entries { get; set; }
+    public string[] Entries { get; set; } = Array.Empty<string>();
 
     [Parameter]
-    public Dictionary<string, string> Names { get; set; }
+    public Dictionary<string, string> Names { get; set; } = new Dictionary<string, string>();
 
     [Parameter]
-    public string[] Authorized { get; set; }
+    public string[] Authorized { get; set; } = Array.Empty<string>();
 
     [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object> Attributes { get; set; }
+    public Dictionary<string, object> Attributes { get; set; } = new Dictionary<string, object>();
 }

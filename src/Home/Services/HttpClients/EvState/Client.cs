@@ -3,8 +3,8 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Home.Services.HttpClients.EvState
@@ -53,20 +53,10 @@ namespace Home.Services.HttpClients.EvState
 
         public async Task StopCharging() => await client.PostAsync("api/DeactivateStation/" + id, null);
 
-        public async Task<ChargingState[]> ActiveStations()
-        {
-            var response = await client.GetAsync("api/ActiveStations");
-            var content = await response.Content.ReadAsStreamAsync();
-            return await JsonSerializer.DeserializeAsync<ChargingState[]>(content);
-        }
+        public Task<ChargingState[]> ActiveStations() => client.GetFromJsonAsync<ChargingState[]>("api/ActiveStations");
 
         public async Task<ChargingState> State() => (await ActiveStations()).FirstOrDefault();
 
-        public async Task<History[]> GetHistory()
-        {
-            var response = await client.GetAsync("api/DriverHistory?startDate=2015-12-28T15%3A12%3A35.023Z");
-            var content = await response.Content.ReadAsStreamAsync();
-            return await JsonSerializer.DeserializeAsync<History[]>(content);
-        }
+        public Task<History[]> GetHistory() => client.GetFromJsonAsync<History[]>("api/DriverHistory?startDate=2015-12-28T15%3A12%3A35.023Z");
     }
 }

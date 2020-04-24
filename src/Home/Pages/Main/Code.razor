@@ -11,10 +11,10 @@
     <tile size="big" class="split wideleft" title="personal projects">
         @foreach (var repository in personalRepositories.Take(10))
         {
-            <a href="@repository.html_url" target="_blank">
-                @repository.name
+            <a href="@repository.HtmlUrl" target="_blank">
+                @repository.Name
             </a>
-            <i>@repository.updated_at.Humanize().Replace(" ago", "")</i>
+            <i>@repository.UpdatedAt.Humanize().Replace(" ago", "")</i>
         }
     </tile>
     <tile size="normal" type="clickable" style="background: black" title="/davepermen">
@@ -25,10 +25,10 @@
     <tile size="wide" class="split wideleft" title="conesoft projects">
         @foreach (var repository in conesoftRepositories.Take(4))
         {
-            <a href="@repository.html_url" target="_blank">
-                @repository.name
+            <a href="@repository.HtmlUrl" target="_blank">
+                @repository.Name
             </a>
-            <i>@repository.updated_at.Humanize().Replace(" ago", "")</i>
+            <i>@repository.UpdatedAt.Humanize().Replace(" ago", "")</i>
         }
     </tile>
     <tile size="normal" type="clickable" style="background: black" title="/conesoft">
@@ -66,7 +66,7 @@
         var path = IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "Github Repositories", $"{organisationOrUsername}.json");
         if (IO.File.Exists(path))
         {
-            return JsonSerializer.Deserialize<Data.GitHub.Repository[]>(await IO.File.ReadAllTextAsync(path));
+            return JsonSerializer.Deserialize<Data.GitHub.Repository[]>(await IO.File.ReadAllTextAsync(path), new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
         }
         return Array.Empty<Data.GitHub.Repository>();
     }

@@ -41,9 +41,9 @@
 
 @code
 {
-    string state;
+    string state = "";
     bool charging => state == "active";
-    Data.ECarUp.ChargingState chargingState;
+    Data.ECarUp.ChargingState? chargingState;
 
     async Task ToggleCharging()
     {
@@ -78,6 +78,7 @@
     protected override async Task OnInitializedAsync()
     {
         var _ = LoopAsync();
+        await Task.CompletedTask;
     }
 
     async Task LoopAsync()

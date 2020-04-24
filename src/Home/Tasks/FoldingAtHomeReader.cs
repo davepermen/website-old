@@ -1,8 +1,10 @@
 ﻿using Conesoft.DataSources;
+using Home.Data.FoldingAtHome.Client;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,9 +21,9 @@ namespace Home.Tasks
         public TimeSpan? Every => TimeSpan.FromMinutes(1);
         public TimeSpan? DailyAt => null;
 
-        public FoldingAtHomeReader(IDataSources dataSources, IConfiguration configuration)
+        public FoldingAtHomeReader(IDataSources dataSources, IConfiguration configuration, IHttpClientFactory factory)
         {
-            this.client = new HttpClient();
+            this.client = factory.CreateClient("folding@home");
             this.dataSources = dataSources;
             this.configuration = configuration.GetSection("folding@home");
         }
@@ -34,15 +36,14 @@ namespace Home.Tasks
 
         async Task CheckServerStats()
         {
-            var result = await client.GetAsync("https://stats.foldingathome.org/api/donor/davepermen");
-            var stream = await result.Content.ReadAsStreamAsync();
-            var content = await JsonSerializer.DeserializeAsync<ServerStatsData.Rootobject>(stream);
-            var team = content.teams.FirstOrDefault(team => team.name.StartsWith("LinusTechTips"));
+            var content = await client.GetFromJsonAsync<Data.FoldingAtHome.Server.Response>("https://stats.foldingathome.org/api/donor/davepermen");
+
+            var team = content.Teams.FirstOrDefault(team => team.Name.StartsWith("LinusTechTips"));
             if (team != null)
             {
                 var path = IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "Folding@Home", "ServerStats.txt");
                 IO.Directory.CreateDirectory(IO.Path.GetDirectoryName(path));
-                await IO.File.WriteAllTextAsync(path, team.wus + Environment.NewLine + team.credit);
+                await IO.File.WriteAllTextAsync(path, team.WorkUnits + Environment.NewLine + team.Credit);
             }
         }
 
@@ -104,100 +105,17 @@ namespace Home.Tasks
             }
             catch (OperationCanceledException)
             {
-
             }
 
-            var slots = ClientStatusData.Slots.FromJson(text);
+            var slots = BrokenJsonSerializer.DeserializeFromBrokenJson(text).Where(slot => slot.Status == SlotStatus.Running);
 
             var path = IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "Folding@Home", "ClientStatus.txt");
 
-            if (slots.slots.Any(slot => slot.status == "RUNNING"))
-            {
-                var slot = slots.slots.First(slot => slot.status == "RUNNING");
-                IO.Directory.CreateDirectory(IO.Path.GetDirectoryName(path));
-                await IO.File.WriteAllTextAsync(path, slot.percentdone + Environment.NewLine + slot.eta);
-            } else
-            {
-                IO.Directory.CreateDirectory(IO.Path.GetDirectoryName(path));
-                await IO.File.WriteAllTextAsync(path, "");
-            }
-        }
-    }
+            IO.Directory.CreateDirectory(IO.Path.GetDirectoryName(path));
 
-    namespace ServerStatsData
-    {
-        public class Rootobject
-        {
-            public int wus { get; set; }
-            public int rank { get; set; }
-            public int total_users { get; set; }
-            public int active_50 { get; set; }
-            public string path { get; set; }
-            public string wus_cert { get; set; }
-            public int id { get; set; }
-            public string credit_cert { get; set; }
-            public string last { get; set; }
-            public string name { get; set; }
-            public Team[] teams { get; set; }
-            public int active_7 { get; set; }
-            public int credit { get; set; }
-        }
-
-        public class Team
-        {
-            public int wus { get; set; }
-            public int uid { get; set; }
-            public int active_50 { get; set; }
-            public int active_7 { get; set; }
-            public int credit { get; set; }
-            public int team { get; set; }
-            public string name { get; set; }
-            public string last { get; set; }
-        }
-    }
-
-    namespace ClientStatusData
-    {
-        public class Slots /* modified, not original json result */
-            {
-            public Slot[] slots { get; set; }
-
-            public static Slots FromJson(string jsonContent)
-            {
-                var text = jsonContent;
-                text = text.Substring(text.IndexOf(",") + 1);
-                text = text.Substring(0, text.LastIndexOf("]"));
-                text = text.Substring(0, text.LastIndexOf("]"));
-                var objectParts = "{ \"slots\": " + text + "}";
-                return JsonSerializer.Deserialize<ClientStatusData.Slots>(objectParts);
-            }
-        }
-
-        public class Slot
-        {
-            public string id { get; set; }
-            public string status { get; set; }
-            public string description { get; set; }
-            public Options options { get; set; }
-            public string reason { get; set; }
-            public bool idle { get; set; }
-            public int unit_id { get; set; }
-            public int project { get; set; }
-            public int run { get; set; }
-            public int clone { get; set; }
-            public int gen { get; set; }
-            public string percentdone { get; set; }
-            public string eta { get; set; }
-            public string ppd { get; set; }
-            public string creditestimate { get; set; }
-            public string waitingon { get; set; }
-            public string nextattempt { get; set; }
-            public string timeremaining { get; set; }
-        }
-
-        public class Options
-        {
-            public string paused { get; set; }
+            using var stream = IO.File.Create(path);
+            await JsonSerializer.SerializeAsync(stream, slots, new JsonSerializerOptions { WriteIndented = true });
+            stream.Close();
         }
     }
 }

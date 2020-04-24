@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
     <UserSecretsId>02a610de-2288-4117-b1df-0d6cb838f7af</UserSecretsId>
   </PropertyGroup>
 
@@ -12,6 +13,7 @@
     <PackageReference Include="Conesoft.Users" Version="1.0.13" />
     <PackageReference Include="Humanizer.Core" Version="2.8.2" />
     <PackageReference Include="MailKit" Version="2.6.0" />
+    <PackageReference Include="System.Net.Http.Json" Version="5.0.0-preview.3.20214.6" />
   </ItemGroup>
 
   <ItemGroup>

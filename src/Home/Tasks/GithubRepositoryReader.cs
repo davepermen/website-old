@@ -20,7 +20,7 @@ namespace Home.Tasks
             this.dataSources = dataSources;
         }
 
-        async Task<string> GetRepository(string organisationOrUsername)
+        async Task<string?> GetRepository(string organisationOrUsername)
         {
             client.DefaultRequestHeaders.UserAgent.ParseAdd("davepermen.net");
             var result = await client.GetAsync($"https://api.github.com/users/{organisationOrUsername}/repos?sort=pushed");

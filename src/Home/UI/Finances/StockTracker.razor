@@ -23,30 +23,30 @@
         public class Rootobject
         {
             [JsonPropertyName("Global Quote")]
-            public GlobalQuote GlobalQuote { get; set; }
+            public GlobalQuote? GlobalQuote { get; set; }
         }
         public class GlobalQuote
         {
             [JsonPropertyName("01. symbol")]
-            public string _01symbol { get; set; }
+            public string? _01symbol { get; set; }
             [JsonPropertyName("02. open")]
-            public string _02open { get; set; }
+            public string? _02open { get; set; }
             [JsonPropertyName("03. high")]
-            public string _03high { get; set; }
+            public string? _03high { get; set; }
             [JsonPropertyName("04. low")]
-            public string _04low { get; set; }
+            public string? _04low { get; set; }
             [JsonPropertyName("05. price")]
-            public string _05price { get; set; }
+            public string? _05price { get; set; }
             [JsonPropertyName("06. volume")]
-            public string _06volume { get; set; }
+            public string? _06volume { get; set; }
             [JsonPropertyName("07. latest trading day")]
-            public string _07latesttradingday { get; set; }
+            public string? _07latesttradingday { get; set; }
             [JsonPropertyName("08. previous close")]
-            public string _08previousclose { get; set; }
+            public string? _08previousclose { get; set; }
             [JsonPropertyName("09. change")]
-            public string _09change { get; set; }
+            public string? _09change { get; set; }
             [JsonPropertyName("10. change percent")]
-            public string _10changepercent { get; set; }
+            public string? _10changepercent { get; set; }
         }
     }
 
@@ -62,8 +62,8 @@
 
         var result = await JsonSerializer.DeserializeAsync<StockAPI.Rootobject>(await response.Content.ReadAsStreamAsync());
 
-        Price = decimal.Parse(result.GlobalQuote._05price);
-        Change = decimal.Parse(result.GlobalQuote._09change);
-        ChangeInPercent = decimal.Parse(result.GlobalQuote._10changepercent.Substring(0, result.GlobalQuote._10changepercent.Length - 1));
+        Price = decimal.Parse(result.GlobalQuote?._05price ?? "0");
+        Change = decimal.Parse(result.GlobalQuote?._09change ?? "0");
+        ChangeInPercent = decimal.Parse(result.GlobalQuote?._10changepercent?.Substring(0, result.GlobalQuote?._10changepercent?.Length - 1 ?? 0) ?? "0");
     }
 }
