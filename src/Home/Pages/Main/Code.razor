@@ -62,7 +62,7 @@
         var file = dataSources.Local / "FromSources" / "Github Repositories" / File.Name(organisationOrUsername, "json");
         if (file.Exists)
         {
-            return await file.ReadFromJsonAsync<Data.GitHub.Repository[]>(new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+            return await file.ReadFromJson<Data.GitHub.Repository[]>(new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
         }
         return Array.Empty<Data.GitHub.Repository>();
     }

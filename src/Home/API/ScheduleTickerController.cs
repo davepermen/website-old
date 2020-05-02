@@ -19,7 +19,7 @@ namespace Home.API
         [HttpGet("log")]
         public async Task<IActionResult> GetLogAsync([FromServices] TickerScheduler tickerScheduler)
         {
-            var output = Markdown.ToHtml(await tickerScheduler.Logfile.ReadTextAsync());
+            var output = Markdown.ToHtml(await tickerScheduler.Logfile.ReadText());
             return Content(output, "text/html");
         }
 

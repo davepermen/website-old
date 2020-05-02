@@ -57,7 +57,7 @@ namespace Home.Tasks
             var results = CheckMails(configuration["server"], configuration["account"], configuration["app-password"], configuration["from"], configuration["sources"]);
             var now = DateTime.Now;
 
-            await file.WriteLinesAsync(results.Select(v => $"{v.value};{v.change};{v.at:o}"));
+            await file.WriteLines(results.Select(v => $"{v.value};{v.change};{v.at:o}"));
         }
     }
 }

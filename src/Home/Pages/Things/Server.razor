@@ -27,7 +27,7 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         var file = dataSources.Local / "FromSources" / "Ipify" / File.Name("Ip", "txt");
-        ip = await file.ReadTextAsync();
+        ip = await file.ReadText();
         lastUpdated = file.Info.LastWriteTimeUtc;
 
         StateHasChanged();

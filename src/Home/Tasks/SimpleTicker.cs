@@ -20,7 +20,7 @@ namespace Home.Tasks
         public async Task Run()
         {
             var now = DateTime.Now;
-            await file.WriteTextAsync(now.ToLongDateString() + " " + now.ToLongTimeString());
+            await file.WriteText(now.ToLongDateString() + " " + now.ToLongTimeString());
         }
     }
 }

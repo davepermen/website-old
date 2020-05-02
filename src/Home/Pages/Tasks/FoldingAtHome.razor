@@ -67,7 +67,7 @@
     async Task ReadServerStats()
     {
         var file = dataSources.Local / "FromSources" / "Folding@Home" / File.Name("ServerStats", "txt");
-        var lines = await file.ReadLinesAsync();
+        var lines = await file.ReadLines();
         workUnits = int.Parse(lines.First());
         score = int.Parse(lines.Last());
     }
@@ -75,7 +75,7 @@
     async Task ReadClientStatus()
     {
         var file = dataSources.Local / "FromSources" / "Folding@Home" / File.Name("ClientStatus", "txt");
-        slots = await file.ReadFromJsonAsync<Data.FoldingAtHome.Client.Slot[]>();
+        slots = await file.ReadFromJson<Data.FoldingAtHome.Client.Slot[]>();
     }
 
     async Task LoopAsync()

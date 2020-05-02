@@ -37,14 +37,14 @@ namespace Home.Tasks
                 var result = await GetRepository(repository);
                 if (result != null)
                 {
-                    await repositoryFile.WriteTextAsync(result);
+                    await repositoryFile.WriteText(result);
                 }
             }
 
             try
             {
                 var file = path / File.Name("rate_limit", "json");
-                await file.WriteTextAsync(await client.GetStringAsync($"https://api.github.com/rate_limit"));
+                await file.WriteText(await client.GetStringAsync($"https://api.github.com/rate_limit"));
             }
             catch (Exception)
             {

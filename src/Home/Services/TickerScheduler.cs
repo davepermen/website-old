@@ -33,22 +33,22 @@ namespace Home.Services
         {
             try
             {
-                await Logfile.AppendTextAsync($"- **{task.GetType().Name}** *executed* ");
+                await Logfile.AppendText($"- **{task.GetType().Name}** *executed* ");
                 await task.Run();
             }
             catch (Exception e)
             {
-                await Logfile.AppendLineAsync("*with error* " + e.Message + " (" + e + ")");
+                await Logfile.AppendLine("*with error* " + e.Message + " (" + e + ")");
             }
             finally
             {
-                await Logfile.AppendLineAsync("*successfully*");
+                await Logfile.AppendLine("*successfully*");
             }
         }
 
         internal async Task ForceTick(string taskName)
         {
-            await Logfile.AppendLineAsync($"# {DateTime.Now.ToShortTimeString()}");
+            await Logfile.AppendLine($"# {DateTime.Now.ToShortTimeString()}");
 
             var task = scheduledTasks.FirstOrDefault(task => task.GetType().Name.ToLowerInvariant() == taskName.ToLowerInvariant());
             if (task != null)
@@ -59,14 +59,14 @@ namespace Home.Services
 
         private async Task SkipWithLogging(IScheduledTask task)
         {
-            await Logfile.AppendLineAsync($"- **{task.GetType().Name}** *skipped*");
+            await Logfile.AppendLine($"- **{task.GetType().Name}** *skipped*");
         }
 
         public async Task Tick()
         {
             var now = DateTime.Now;
 
-            await Logfile.AppendLineAsync($"# {now.ToShortTimeString()}");
+            await Logfile.AppendLine($"# {now.ToShortTimeString()}");
 
             foreach (var scheduledTask in lastTimeRun.Keys.ToArray())
             {
@@ -124,7 +124,7 @@ namespace Home.Services
                 }
             }
 
-            await Logfile.AppendLineAsync(Environment.NewLine);
+            await Logfile.AppendLine(Environment.NewLine);
         }
     }
 }

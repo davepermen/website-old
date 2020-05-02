@@ -27,7 +27,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var lines = await (dataSources.Local / "FromSources" / "PostFinance" / File.Name("AccountBalance", "txt")).ReadLinesAsync();
+        var lines = await (dataSources.Local / "FromSources" / "PostFinance" / File.Name("AccountBalance", "txt")).ReadLines();
 
         if(lines.Length > 0)
         {

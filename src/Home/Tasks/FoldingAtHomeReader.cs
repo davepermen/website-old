@@ -44,7 +44,7 @@ namespace Home.Tasks
             var team = content.Teams.FirstOrDefault(team => team.Name.StartsWith("LinusTechTips"));
             if (team != null)
             {
-                await serverStatsFile.WriteTextAsync(team.WorkUnits + Environment.NewLine + team.Credit);
+                await serverStatsFile.WriteText(team.WorkUnits + Environment.NewLine + team.Credit);
             }
         }
 
@@ -110,7 +110,7 @@ namespace Home.Tasks
 
             var slots = BrokenJsonSerializer.DeserializeFromBrokenJson(text).Where(slot => slot.Status == SlotStatus.Running);
 
-            await clientStatusFile.WriteAsJsonAsync(slots);
+            await clientStatusFile.WriteAsJson(slots);
         }
     }
 }

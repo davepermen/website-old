@@ -46,7 +46,7 @@ namespace Home.Tasks
                 IPAddress lastIp = IPAddress.None;
                 if(file.Exists)
                 {
-                    lastIp = IPAddress.Parse(await file.ReadTextAsync());
+                    lastIp = IPAddress.Parse(await file.ReadText());
                 }
 
                 var currentIp = await ipify.GetPublicIPAddress();
@@ -54,7 +54,7 @@ namespace Home.Tasks
                 if (currentIp.ToString() != lastIp.ToString()) // urgh, value comparison, the cheap way
                 {
                     await UpdateDnsRecord(currentIp);
-                    await file.WriteTextAsync(currentIp.ToString());
+                    await file.WriteText(currentIp.ToString());
                 }
             }
             catch (Exception)
