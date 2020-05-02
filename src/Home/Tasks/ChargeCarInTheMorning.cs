@@ -9,7 +9,7 @@ namespace Home.Tasks
         private readonly Client client;
 
         public TimeSpan? Every => null;
-        public TimeSpan? DailyAt => TimeSpan.FromHours(4);
+        public TimeSpan? DailyAt => TimeSpan.FromHours(3);
 
         public ChargeCarInTheMorning(Client client)
         {
@@ -18,8 +18,8 @@ namespace Home.Tasks
 
         public async Task Run()
         {
-            var today = DateTime.Today;
-            if(today.DayOfWeek != DayOfWeek.Saturday && today.DayOfWeek != DayOfWeek.Sunday)
+            //var today = DateTime.Today;
+            //if(today.DayOfWeek != DayOfWeek.Saturday && today.DayOfWeek != DayOfWeek.Sunday)
             {
                 await client.StartCharging(TimeSpan.FromHours(5));
             }

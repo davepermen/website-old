@@ -10,7 +10,6 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.IO.Compression;
 using System.Linq;
-using System.Net.Http;
 
 namespace Home
 {
@@ -41,6 +40,7 @@ namespace Home
 
             services.AddTransient<IScheduledTask, SimpleTicker>();
             services.AddTransient<IScheduledTask, EveryDayTicker>();
+            services.AddTransient<IScheduledTask, ChargeCarInTheMorning>();
             services.AddTransient<IScheduledTask, PostFinanceMailReader>();
             services.AddTransient<IScheduledTask, FoldingAtHomeReader>();
             services.AddTransient<IScheduledTask, ServerHostingDnsUpdater>();
@@ -49,7 +49,7 @@ namespace Home
 
             services.AddRazorPages();
             services.AddServerSideBlazor();
-
+            
             services.AddHsts(options =>
             {
                 options.Preload = true;

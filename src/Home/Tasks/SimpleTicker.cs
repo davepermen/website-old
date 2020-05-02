@@ -20,7 +20,7 @@ namespace Home.Tasks
         public async Task Run()
         {
             var now = DateTime.Now;
-            var path = IO.Path.Combine(dataSources.LocalDirectory, "tick.txt");
+            var path = IO.Path.Combine(dataSources.LocalDirectory, "Tasks", "tick.txt");
             IO.Directory.CreateDirectory(IO.Path.GetDirectoryName(path));
             await IO.File.WriteAllTextAsync(path, now.ToLongDateString() + " " + now.ToLongTimeString());
         }

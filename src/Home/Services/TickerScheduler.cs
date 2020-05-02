@@ -1,16 +1,21 @@
-﻿using Home.Tasks;
+﻿using Conesoft.DataSources;
+using Home.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IO = System.IO;
 
 namespace Home.Services
 {
     public class TickerScheduler
     {
         private readonly Dictionary<IScheduledTask, DateTime> lastTimeRun;
+        private readonly string logPath;
 
-        public TickerScheduler(IEnumerable<IScheduledTask> scheduledTasks)
+        public string LogPath => logPath;
+
+        public TickerScheduler(IEnumerable<IScheduledTask> scheduledTasks, IDataSources dataSources)
         {
             this.lastTimeRun = new Dictionary<IScheduledTask, DateTime>();
 
@@ -18,11 +23,39 @@ namespace Home.Services
             {
                 lastTimeRun[scheduledTask] = DateTime.MinValue;
             }
+
+            this.logPath = IO.Path.Combine(dataSources.LocalDirectory, "Scheduler", $"{DateTime.Today.ToShortDateString()}.md");
+
+            IO.Directory.CreateDirectory(IO.Path.GetDirectoryName(logPath));
+        }
+
+        private async Task RunWithLogging(IScheduledTask task)
+        {
+            try
+            {
+                await IO.File.AppendAllTextAsync(logPath, $"- **{task.GetType().Name}** *executed* ");
+                await task.Run();
+            }
+            catch(Exception e)
+            {
+                await IO.File.AppendAllTextAsync(logPath, "*with error* " + e.Message + " (" + e + ")" + Environment.NewLine);
+            }
+            finally
+            {
+                await IO.File.AppendAllTextAsync(logPath, "*successfully*" + Environment.NewLine);
+            }
+        }
+
+        private async Task SkipWithLogging(IScheduledTask task)
+        {
+            await IO.File.AppendAllTextAsync(logPath, $"- **{task.GetType().Name}** *skipped*" + Environment.NewLine);
         }
 
         public async Task Tick()
         {
             var now = DateTime.Now;
+
+            await IO.File.AppendAllTextAsync(logPath, $"# {DateTime.Now.ToShortTimeString()}" + Environment.NewLine);
 
             foreach (var scheduledTask in lastTimeRun.Keys.ToArray())
             {
@@ -31,7 +64,7 @@ namespace Home.Services
                     var last = lastTimeRun[scheduledTask];
                     if (now - last >= scheduledTask.Every.Value - TimeSpan.FromSeconds(5)) // a little adjustment for those setting 1 minute tickers, to make sure they run
                     {
-                        await scheduledTask.Run();
+                        await RunWithLogging(scheduledTask);
                         if (lastTimeRun[scheduledTask] != DateTime.MinValue)
                         {
                             lastTimeRun[scheduledTask] += scheduledTask.Every.Value;
@@ -40,6 +73,10 @@ namespace Home.Services
                         {
                             lastTimeRun[scheduledTask] = now;
                         }
+                    }
+                    else
+                    {
+                        await SkipWithLogging(scheduledTask);
                     }
                 }
                 else if (scheduledTask.DailyAt.HasValue)
@@ -53,8 +90,12 @@ namespace Home.Services
                     {
                         if (last < today && time >= scheduledTask.DailyAt.Value - TimeSpan.FromSeconds(5)) // a little adjustment for those setting 1 minute tickers, to make sure they run
                         {
-                            await scheduledTask.Run();
+                            await RunWithLogging(scheduledTask);
                             lastTimeRun[scheduledTask] = today;
+                        }
+                        else
+                        {
+                            await SkipWithLogging(scheduledTask);
                         }
                     }
                     else
@@ -67,9 +108,12 @@ namespace Home.Services
                         {
                             lastTimeRun[scheduledTask] = today - TimeSpan.FromDays(1);
                         }
+                        await SkipWithLogging(scheduledTask);
                     }
                 }
             }
+
+            await IO.File.AppendAllTextAsync(logPath, Environment.NewLine + Environment.NewLine);
         }
     }
 }
