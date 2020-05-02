@@ -10,6 +10,7 @@ namespace Home.Services
 {
     public class TickerScheduler
     {
+        private readonly IEnumerable<IScheduledTask> scheduledTasks;
         private readonly Dictionary<IScheduledTask, DateTime> lastTimeRun;
         private readonly string logPath;
 
@@ -17,6 +18,8 @@ namespace Home.Services
 
         public TickerScheduler(IEnumerable<IScheduledTask> scheduledTasks, IDataSources dataSources)
         {
+            this.scheduledTasks = scheduledTasks;
+
             this.lastTimeRun = new Dictionary<IScheduledTask, DateTime>();
 
             foreach (var scheduledTask in scheduledTasks)
@@ -46,6 +49,16 @@ namespace Home.Services
             }
         }
 
+        internal async Task ForceTick(string taskName)
+        {
+            await IO.File.AppendAllTextAsync(logPath, $"# {DateTime.Now.ToShortTimeString()}" + Environment.NewLine);
+            var task = scheduledTasks.FirstOrDefault(task => task.GetType().Name.ToLowerInvariant() == taskName.ToLowerInvariant());
+            if(task != null)
+            {
+                await RunWithLogging(task);
+            }
+        }
+
         private async Task SkipWithLogging(IScheduledTask task)
         {
             await IO.File.AppendAllTextAsync(logPath, $"- **{task.GetType().Name}** *skipped*" + Environment.NewLine);
@@ -55,7 +68,7 @@ namespace Home.Services
         {
             var now = DateTime.Now;
 
-            await IO.File.AppendAllTextAsync(logPath, $"# {DateTime.Now.ToShortTimeString()}" + Environment.NewLine);
+            await IO.File.AppendAllTextAsync(logPath, $"# {now.ToShortTimeString()}" + Environment.NewLine);
 
             foreach (var scheduledTask in lastTimeRun.Keys.ToArray())
             {

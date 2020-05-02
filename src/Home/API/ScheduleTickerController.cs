@@ -23,5 +23,12 @@ namespace Home.API
             var output = Markdown.ToHtml(await IO.File.ReadAllTextAsync(tickerScheduler.LogPath));
             return Content(output, "text/html");
         }
+
+        [HttpPost("force-tick/{taskName}")]
+        public async Task<IActionResult> ForcePostTickAsync([FromServices] TickerScheduler tickerScheduler, string taskName)
+        {
+            await tickerScheduler.ForceTick(taskName);
+            return Ok("run " + taskName);
+        }
     }
 }
