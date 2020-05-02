@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YouTube", "YouTube\YouTube.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Home", "Home\Home.csproj", "{BF61CB1C-CFD6-4706-911F-1AF301AA7127}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Conesoft.Files", "Libraries\Conesoft.Files\Conesoft.Files.csproj", "{8E14251A-959B-4480-B150-89EF1A239CAF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,12 +73,17 @@ Global
 		{BF61CB1C-CFD6-4706-911F-1AF301AA7127}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF61CB1C-CFD6-4706-911F-1AF301AA7127}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF61CB1C-CFD6-4706-911F-1AF301AA7127}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E14251A-959B-4480-B150-89EF1A239CAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E14251A-959B-4480-B150-89EF1A239CAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E14251A-959B-4480-B150-89EF1A239CAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E14251A-959B-4480-B150-89EF1A239CAF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{FBE05E60-72DE-47BC-9FA3-FE8B2F8759C7} = {E6C138F8-C8AE-488F-9634-F41C45A70534}
+		{8E14251A-959B-4480-B150-89EF1A239CAF} = {E6C138F8-C8AE-488F-9634-F41C45A70534}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {170DC9B7-09B2-4F0D-B0F1-9AEF590F221E}

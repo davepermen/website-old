@@ -2,7 +2,6 @@
 using Markdig;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using IO = System.IO;
 
 namespace Home.API
 {
@@ -20,7 +19,7 @@ namespace Home.API
         [HttpGet("log")]
         public async Task<IActionResult> GetLogAsync([FromServices] TickerScheduler tickerScheduler)
         {
-            var output = Markdown.ToHtml(await IO.File.ReadAllTextAsync(tickerScheduler.LogPath));
+            var output = Markdown.ToHtml(await tickerScheduler.Logfile.ReadTextAsync());
             return Content(output, "text/html");
         }
 

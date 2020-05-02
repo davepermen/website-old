@@ -1,7 +1,4 @@
 ﻿@page "/foldingathome"
-@using Conesoft.DataSources
-@using System.Text.Json
-@using IO = System.IO
 
 @inject IDataSources dataSources
 
@@ -69,17 +66,16 @@
 
     async Task ReadServerStats()
     {
-        var lines = await IO.File.ReadAllLinesAsync(IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "Folding@Home", "ServerStats.txt"));
+        var file = dataSources.Local / "FromSources" / "Folding@Home" / File.Name("ServerStats", "txt");
+        var lines = await file.ReadLinesAsync();
         workUnits = int.Parse(lines.First());
         score = int.Parse(lines.Last());
     }
 
     async Task ReadClientStatus()
     {
-
-        using var stream = IO.File.OpenRead(IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "Folding@Home", "ClientStatus.txt"));
-        slots = await JsonSerializer.DeserializeAsync<Data.FoldingAtHome.Client.Slot[]>(stream);
-        stream.Close();
+        var file = dataSources.Local / "FromSources" / "Folding@Home" / File.Name("ClientStatus", "txt");
+        slots = await file.ReadFromJsonAsync<Data.FoldingAtHome.Client.Slot[]>();
     }
 
     async Task LoopAsync()

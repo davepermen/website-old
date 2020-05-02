@@ -1,7 +1,4 @@
 ﻿@page "/server"
-@using Conesoft.DataSources
-@using Humanizer
-@using IO = System.IO
 
 @inject IDataSources dataSources
 
@@ -29,11 +26,9 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var path = IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "Ipify", "Ip.txt");
-        ip = await IO.File.ReadAllTextAsync(path);
-
-        var fileinfo = new IO.FileInfo(path);
-        lastUpdated = fileinfo.LastWriteTimeUtc;
+        var file = dataSources.Local / "FromSources" / "Ipify" / File.Name("Ip", "txt");
+        ip = await file.ReadTextAsync();
+        lastUpdated = file.Info.LastWriteTimeUtc;
 
         StateHasChanged();
     }

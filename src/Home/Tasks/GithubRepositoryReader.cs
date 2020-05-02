@@ -1,15 +1,15 @@
 ﻿using Conesoft.DataSources;
+using Conesoft.Files;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using IO = System.IO;
 
 namespace Home.Tasks
 {
     public class GithubRepositoryReader : IScheduledTask
     {
         private readonly HttpClient client;
-        private readonly IDataSources dataSources;
+        private readonly Directory path;
 
         public TimeSpan? Every => TimeSpan.FromMinutes(5);
         public TimeSpan? DailyAt => null;
@@ -17,7 +17,7 @@ namespace Home.Tasks
         public GithubRepositoryReader(IHttpClientFactory httpClientFactory, IDataSources dataSources)
         {
             this.client = httpClientFactory.CreateClient();
-            this.dataSources = dataSources;
+            this.path = dataSources.Local / "FromSources" / "Github Repositories";
         }
 
         async Task<string?> GetRepository(string organisationOrUsername)
@@ -29,26 +29,22 @@ namespace Home.Tasks
 
         public async Task Run()
         {
-            var path = IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "Github Repositories");
-            IO.Directory.CreateDirectory(path);
-
             var repositories = new[] { "davepermen", "conesoft" };
 
             foreach (var repository in repositories)
             {
-                var repositoryPath = IO.Path.Combine(path, $"{repository}.json");
+                var repositoryFile = path / File.Name(repository, "json");
                 var result = await GetRepository(repository);
                 if (result != null)
                 {
-                    await IO.File.WriteAllTextAsync(repositoryPath, result);
+                    await repositoryFile.WriteTextAsync(result);
                 }
             }
 
             try
             {
-                var repositoryPath = IO.Path.Combine(path, $"rate_limit.json");
-                var result = await client.GetAsync($"https://api.github.com/rate_limit");
-                await IO.File.WriteAllTextAsync(repositoryPath, await result.Content.ReadAsStringAsync());
+                var file = path / File.Name("rate_limit", "json");
+                await file.WriteTextAsync(await client.GetStringAsync($"https://api.github.com/rate_limit"));
             }
             catch (Exception)
             {

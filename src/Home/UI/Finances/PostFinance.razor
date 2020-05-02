@@ -1,7 +1,4 @@
-﻿@using Conesoft.DataSources
-@using IO = System.IO
-
-@inject IDataSources dataSources
+﻿@inject IDataSources dataSources
 
 <AuthorizeView>
     <Authorized>
@@ -30,7 +27,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var lines = await IO.File.ReadAllLinesAsync(IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "PostFinance", "AccountBalance.txt"));
+        var lines = await (dataSources.Local / "FromSources" / "PostFinance" / File.Name("AccountBalance", "txt")).ReadLinesAsync();
 
         if(lines.Length > 0)
         {

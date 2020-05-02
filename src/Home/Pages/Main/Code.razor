@@ -1,8 +1,4 @@
 ﻿@page "/code"
-@using Conesoft.DataSources
-@using Humanizer
-@using System.Text.Json
-@using IO = System.IO
 
 @inject IDataSources dataSources
 
@@ -63,11 +59,10 @@
 {
     async Task<Data.GitHub.Repository[]> GetRepositories(string organisationOrUsername)
     {
-        var path = IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "Github Repositories", $"{organisationOrUsername}.json");
-        if (IO.File.Exists(path))
+        var file = dataSources.Local / "FromSources" / "Github Repositories" / File.Name(organisationOrUsername, "json");
+        if (file.Exists)
         {
-            using var stream = IO.File.OpenRead(path);
-            return await JsonSerializer.DeserializeAsync<Data.GitHub.Repository[]>(stream, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+            return await file.ReadFromJsonAsync<Data.GitHub.Repository[]>(new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
         }
         return Array.Empty<Data.GitHub.Repository>();
     }

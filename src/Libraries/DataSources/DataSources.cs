@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Conesoft.Files;
+using System;
 using System.Linq;
 using System.Reflection;
 using IO = System.IO;
@@ -28,5 +29,9 @@ namespace Conesoft.DataSources
         internal static string Configuration => (Current as DataSourcesImplementation).LocalConfiguration;
 
         public static IDataSources Current => new DataSourcesImplementation();
+
+        public Directory Local => new Directory(LocalDirectory);
+
+        public Directory Shared => new Directory(SharedDirectory);
     }
 }

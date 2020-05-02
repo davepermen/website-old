@@ -1,4 +1,5 @@
 ﻿using Conesoft.DataSources;
+using Conesoft.Files;
 using Home.Data.FoldingAtHome.Client;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -8,15 +9,15 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using IO = System.IO;
 
 namespace Home.Tasks
 {
     public class FoldingAtHomeReader : IScheduledTask
     {
         private readonly HttpClient client;
-        private readonly IDataSources dataSources;
         private readonly IConfigurationSection configuration;
+        private readonly File serverStatsFile;
+        private readonly File clientStatusFile;
 
         public TimeSpan? Every => TimeSpan.FromMinutes(1);
         public TimeSpan? DailyAt => null;
@@ -24,8 +25,10 @@ namespace Home.Tasks
         public FoldingAtHomeReader(IDataSources dataSources, IConfiguration configuration, IHttpClientFactory factory)
         {
             this.client = factory.CreateClient("folding@home");
-            this.dataSources = dataSources;
             this.configuration = configuration.GetSection("folding@home");
+
+            this.serverStatsFile = dataSources.Local / "FromSources" / "Folding@Home" / File.Name("ServerStats", "txt");
+            this.clientStatusFile = dataSources.Local / "FromSources" / "Folding@Home" / File.Name("ClientStatus", "txt");
         }
 
         public async Task Run()
@@ -41,9 +44,7 @@ namespace Home.Tasks
             var team = content.Teams.FirstOrDefault(team => team.Name.StartsWith("LinusTechTips"));
             if (team != null)
             {
-                var path = IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "Folding@Home", "ServerStats.txt");
-                IO.Directory.CreateDirectory(IO.Path.GetDirectoryName(path));
-                await IO.File.WriteAllTextAsync(path, team.WorkUnits + Environment.NewLine + team.Credit);
+                await serverStatsFile.WriteTextAsync(team.WorkUnits + Environment.NewLine + team.Credit);
             }
         }
 
@@ -109,13 +110,7 @@ namespace Home.Tasks
 
             var slots = BrokenJsonSerializer.DeserializeFromBrokenJson(text).Where(slot => slot.Status == SlotStatus.Running);
 
-            var path = IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "Folding@Home", "ClientStatus.txt");
-
-            IO.Directory.CreateDirectory(IO.Path.GetDirectoryName(path));
-
-            using var stream = IO.File.Create(path);
-            await JsonSerializer.SerializeAsync(stream, slots, new JsonSerializerOptions { WriteIndented = true });
-            stream.Close();
+            await clientStatusFile.WriteAsJsonAsync(slots);
         }
     }
 }

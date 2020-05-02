@@ -1,10 +1,10 @@
 ﻿using Conesoft.DataSources;
+using Conesoft.Files;
 using Home.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using IO = System.IO;
 
 namespace Home.Services
 {
@@ -12,9 +12,8 @@ namespace Home.Services
     {
         private readonly IEnumerable<IScheduledTask> scheduledTasks;
         private readonly Dictionary<IScheduledTask, DateTime> lastTimeRun;
-        private readonly string logPath;
 
-        public string LogPath => logPath;
+        internal File Logfile { get; }
 
         public TickerScheduler(IEnumerable<IScheduledTask> scheduledTasks, IDataSources dataSources)
         {
@@ -27,33 +26,32 @@ namespace Home.Services
                 lastTimeRun[scheduledTask] = DateTime.MinValue;
             }
 
-            this.logPath = IO.Path.Combine(dataSources.LocalDirectory, "Scheduler", $"{DateTime.Today.ToShortDateString()}.md");
-
-            IO.Directory.CreateDirectory(IO.Path.GetDirectoryName(logPath));
+            this.Logfile = dataSources.Local / "Scheduler" / File.Name(DateTime.Today.ToShortDateString(), "md");
         }
 
         private async Task RunWithLogging(IScheduledTask task)
         {
             try
             {
-                await IO.File.AppendAllTextAsync(logPath, $"- **{task.GetType().Name}** *executed* ");
+                await Logfile.AppendTextAsync($"- **{task.GetType().Name}** *executed* ");
                 await task.Run();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                await IO.File.AppendAllTextAsync(logPath, "*with error* " + e.Message + " (" + e + ")" + Environment.NewLine);
+                await Logfile.AppendLineAsync("*with error* " + e.Message + " (" + e + ")");
             }
             finally
             {
-                await IO.File.AppendAllTextAsync(logPath, "*successfully*" + Environment.NewLine);
+                await Logfile.AppendLineAsync("*successfully*");
             }
         }
 
         internal async Task ForceTick(string taskName)
         {
-            await IO.File.AppendAllTextAsync(logPath, $"# {DateTime.Now.ToShortTimeString()}" + Environment.NewLine);
+            await Logfile.AppendLineAsync($"# {DateTime.Now.ToShortTimeString()}");
+
             var task = scheduledTasks.FirstOrDefault(task => task.GetType().Name.ToLowerInvariant() == taskName.ToLowerInvariant());
-            if(task != null)
+            if (task != null)
             {
                 await RunWithLogging(task);
             }
@@ -61,14 +59,14 @@ namespace Home.Services
 
         private async Task SkipWithLogging(IScheduledTask task)
         {
-            await IO.File.AppendAllTextAsync(logPath, $"- **{task.GetType().Name}** *skipped*" + Environment.NewLine);
+            await Logfile.AppendLineAsync($"- **{task.GetType().Name}** *skipped*");
         }
 
         public async Task Tick()
         {
             var now = DateTime.Now;
 
-            await IO.File.AppendAllTextAsync(logPath, $"# {now.ToShortTimeString()}" + Environment.NewLine);
+            await Logfile.AppendLineAsync($"# {now.ToShortTimeString()}");
 
             foreach (var scheduledTask in lastTimeRun.Keys.ToArray())
             {
@@ -126,7 +124,7 @@ namespace Home.Services
                 }
             }
 
-            await IO.File.AppendAllTextAsync(logPath, Environment.NewLine + Environment.NewLine);
+            await Logfile.AppendLineAsync(Environment.NewLine);
         }
     }
 }

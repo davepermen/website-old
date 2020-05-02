@@ -1,4 +1,5 @@
 ﻿using Conesoft.DataSources;
+using Conesoft.Files;
 using MailKit;
 using MailKit.Net.Imap;
 using MailKit.Search;
@@ -9,7 +10,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using IO = System.IO;
 
 namespace Home.Tasks
 {
@@ -18,13 +18,13 @@ namespace Home.Tasks
         public TimeSpan? Every => TimeSpan.FromMinutes(1);
         public TimeSpan? DailyAt => null;
 
-        private readonly IDataSources dataSources;
         private readonly IConfigurationSection configuration;
+        private readonly File file;
 
         public PostFinanceMailReader(IDataSources dataSources, IConfiguration configuration)
         {
-            this.dataSources = dataSources;
             this.configuration = configuration.GetSection("postfinance-mail");
+            this.file = dataSources.Local / "FromSources" / "PostFinance" / File.Name("AccountBalance", "txt");
         }
 
         private IEnumerable<(decimal change, decimal value, DateTime at)> CheckMails(string server, string user, string password, string from, string sources)
@@ -57,9 +57,7 @@ namespace Home.Tasks
             var results = CheckMails(configuration["server"], configuration["account"], configuration["app-password"], configuration["from"], configuration["sources"]);
             var now = DateTime.Now;
 
-            var file = IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "PostFinance", "AccountBalance.txt");
-            IO.Directory.CreateDirectory(IO.Path.GetDirectoryName(file));
-            await IO.File.WriteAllLinesAsync(file, results.Select(v => $"{v.value};{v.change};{v.at:o}"));
+            await file.WriteLinesAsync(results.Select(v => $"{v.value};{v.change};{v.at:o}"));
         }
     }
 }

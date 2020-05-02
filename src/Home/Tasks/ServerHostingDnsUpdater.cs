@@ -1,28 +1,29 @@
 ﻿using Conesoft.DataSources;
+using Conesoft.Files;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using IO = System.IO;
 
 namespace Home.Tasks
 {
     public class ServerHostingDnsUpdater : IScheduledTask
     {
         private readonly IConfigurationSection configuration;
-        private readonly IDataSources dataSources;
         private readonly Conesoft.DNSimple.Client dnsimple;
         private readonly Conesoft.Ipify.Client ipify;
+        private readonly File file;
+
         public TimeSpan? Every => TimeSpan.FromMinutes(1);
         public TimeSpan? DailyAt => null;
 
         public ServerHostingDnsUpdater(IDataSources dataSources, IConfiguration configuration, Conesoft.DNSimple.Client dnsimple, Conesoft.Ipify.Client ipify)
         {
             this.configuration = configuration.GetSection("hosting");
-            this.dataSources = dataSources;
             this.dnsimple = dnsimple;
             this.ipify = ipify;
+            this.file = dataSources.Local / "FromSources" / "Ipify" / File.Name("Ip", "txt");
         }
 
         public async Task UpdateDnsRecord(IPAddress address)
@@ -40,14 +41,12 @@ namespace Home.Tasks
 
         public async Task Run()
         {
-            var path = IO.Path.Combine(dataSources.LocalDirectory, "FromSources", "Ipify", "Ip.txt");
-            IO.Directory.CreateDirectory(IO.Path.GetDirectoryName(path));
             try
             {
                 IPAddress lastIp = IPAddress.None;
-                if(IO.File.Exists(path))
+                if(file.Exists)
                 {
-                    lastIp = IPAddress.Parse(await IO.File.ReadAllTextAsync(path));
+                    lastIp = IPAddress.Parse(await file.ReadTextAsync());
                 }
 
                 var currentIp = await ipify.GetPublicIPAddress();
@@ -55,7 +54,7 @@ namespace Home.Tasks
                 if (currentIp.ToString() != lastIp.ToString()) // urgh, value comparison, the cheap way
                 {
                     await UpdateDnsRecord(currentIp);
-                    await IO.File.WriteAllTextAsync(path, currentIp.ToString());
+                    await file.WriteTextAsync(currentIp.ToString());
                 }
             }
             catch (Exception)
