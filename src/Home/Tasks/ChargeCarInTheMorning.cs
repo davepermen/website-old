@@ -9,7 +9,7 @@ namespace Home.Tasks
         private readonly Client client;
 
         public TimeSpan? Every => null;
-        public TimeSpan? DailyAt => TimeSpan.FromHours(3);
+        public TimeSpan? DailyAt => TimeSpan.FromHours(3) + TimeSpan.FromMinutes(15);
 
         public ChargeCarInTheMorning(Client client)
         {

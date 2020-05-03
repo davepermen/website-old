@@ -17,8 +17,8 @@ namespace Home
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            var usersPath = $"{DataSourcesImplementation.Current.SharedDirectory}/users";
-            services.AddUsers("davepermen.net", usersPath);
+            var users = DataSourcesImplementation.Current.Shared / "users";
+            services.AddUsers("davepermen.net", users.Path);
 
             services.AddResponseCompression(options =>
             {

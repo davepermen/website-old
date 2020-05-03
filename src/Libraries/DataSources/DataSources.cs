@@ -2,7 +2,6 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using IO = System.IO;
 
 namespace Conesoft.DataSources
 {
@@ -15,23 +14,23 @@ namespace Conesoft.DataSources
             rootType = Assembly.GetEntryAssembly().ExportedTypes.Where(t => t.Name == "Program" && t.GetMethod("Main") != null).FirstOrDefault();
         }
 
-        public string LocalDirectory => Directory(rootType.Namespace);
+        public string LocalDirectory => Local.Path;
 
-        public string SharedDirectory => Directory("shared");
+        public string SharedDirectory => Shared.Path;
 
-        string Directory(string name) => IO.Directory.Exists($@"{AppContext.BaseDirectory}\..\data\{name}")
-            ? $@"{AppContext.BaseDirectory}\..\data\{name}"
-            : $@"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\Webseiten\data\{name}"
-            ;
+        Directory ServerRoot => Directory.From(AppContext.BaseDirectory) / ".." / "data";
+        Directory DeveloperRoot => Directory.From(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)) / "Webseiten" / "data";
 
-        string LocalConfiguration => $@"{AppContext.BaseDirectory}\..\{rootType.Namespace}.json";
+        Directory Root => ServerRoot.Exists ? ServerRoot : DeveloperRoot;
 
-        internal static string Configuration => (Current as DataSourcesImplementation).LocalConfiguration;
+        File ServerConfiguration => Directory.From(AppContext.BaseDirectory) / ".." / File.Name(rootType.Namespace, "json");
+
+        public Directory Local => Root / rootType.Namespace;
+
+        public Directory Shared => Root / "shared";
+
+        internal static string Configuration => (Current as DataSourcesImplementation).ServerConfiguration.Path;
 
         public static IDataSources Current => new DataSourcesImplementation();
-
-        public Directory Local => new Directory(LocalDirectory);
-
-        public Directory Shared => new Directory(SharedDirectory);
     }
 }

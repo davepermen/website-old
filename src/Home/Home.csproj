@@ -11,7 +11,7 @@
     <PackageReference Include="Conesoft.DNSimple" Version="1.0.2" />
     <PackageReference Include="Conesoft.Ipify" Version="1.0.1" />
     <PackageReference Include="Conesoft.Users" Version="1.0.13" />
-    <PackageReference Include="Humanizer.Core" Version="2.8.2" />
+    <PackageReference Include="Humanizer.Core" Version="2.8.11" />
     <PackageReference Include="MailKit" Version="2.6.0" />
     <PackageReference Include="Markdig" Version="0.20.0" />
     <PackageReference Include="System.Net.Http.Json" Version="5.0.0-preview.3.20214.6" />
