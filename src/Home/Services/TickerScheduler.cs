@@ -12,14 +12,14 @@ namespace Home.Services
     {
         private readonly IEnumerable<IScheduledTask> scheduledTasks;
         private readonly Dictionary<IScheduledTask, DateTime> lastTimeRun;
-        private readonly IDataSource dataSource;
+        private readonly IDataSources dataSources;
 
         internal File Logfile => dataSources.Local / "Scheduler" / File.Name(DateTime.Today.ToShortDateString(), "md");
 
         public TickerScheduler(IEnumerable<IScheduledTask> scheduledTasks, IDataSources dataSources)
         {
             this.scheduledTasks = scheduledTasks;
-            this.dataSource = dataSource;
+            this.dataSources = dataSources;
 
             this.lastTimeRun = new Dictionary<IScheduledTask, DateTime>();
 

@@ -38,6 +38,8 @@ namespace UpdateFromGithub
                 app.UseHsts();
             }
 
+            app.UseDeveloperExceptionPage();
+
 
             var fileExtensionContentTypeProvider = new FileExtensionContentTypeProvider();
             fileExtensionContentTypeProvider.Mappings.Clear();
