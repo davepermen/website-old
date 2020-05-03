@@ -12,12 +12,14 @@ namespace Home.Services
     {
         private readonly IEnumerable<IScheduledTask> scheduledTasks;
         private readonly Dictionary<IScheduledTask, DateTime> lastTimeRun;
+        private readonly IDataSource dataSource;
 
-        internal File Logfile { get; }
+        internal File Logfile => dataSources.Local / "Scheduler" / File.Name(DateTime.Today.ToShortDateString(), "md");
 
         public TickerScheduler(IEnumerable<IScheduledTask> scheduledTasks, IDataSources dataSources)
         {
             this.scheduledTasks = scheduledTasks;
+            this.dataSource = dataSource;
 
             this.lastTimeRun = new Dictionary<IScheduledTask, DateTime>();
 
@@ -25,8 +27,6 @@ namespace Home.Services
             {
                 lastTimeRun[scheduledTask] = DateTime.MinValue;
             }
-
-            this.Logfile = dataSources.Local / "Scheduler" / File.Name(DateTime.Today.ToShortDateString(), "md");
         }
 
         private async Task RunWithLogging(IScheduledTask task)
