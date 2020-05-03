@@ -11,7 +11,7 @@ namespace Home.Tasks
         private readonly Tesla.Client tesla;
 
         public TimeSpan? Every => null;
-        public TimeSpan? DailyAt => TimeSpan.FromHours(3) + TimeSpan.FromMinutes(45);
+        public TimeSpan? DailyAt => TimeSpan.FromHours(3) + TimeSpan.FromMinutes(50);
 
         public ChargeCarInTheMorning(EvState.Client evState, Tesla.Client tesla)
         {
