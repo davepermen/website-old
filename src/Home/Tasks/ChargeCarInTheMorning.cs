@@ -1,4 +1,5 @@
-﻿using Home.Services.HttpClients.EvState;
+﻿using EvState = Home.Services.HttpClients.EvState;
+using Tesla = Home.Services.HttpClients.Tesla;
 using System;
 using System.Threading.Tasks;
 
@@ -6,14 +7,16 @@ namespace Home.Tasks
 {
     public class ChargeCarInTheMorning : IScheduledTask
     {
-        private readonly Client client;
+        private readonly EvState.Client evState;
+        private readonly Tesla.Client tesla;
 
         public TimeSpan? Every => null;
-        public TimeSpan? DailyAt => TimeSpan.FromHours(3) + TimeSpan.FromMinutes(25);
+        public TimeSpan? DailyAt => TimeSpan.FromHours(3) + TimeSpan.FromMinutes(45);
 
-        public ChargeCarInTheMorning(Client client)
+        public ChargeCarInTheMorning(EvState.Client evState, Tesla.Client tesla)
         {
-            this.client = client;
+            this.evState = evState;
+            this.tesla = tesla;
         }
 
         public async Task Run()
@@ -21,7 +24,8 @@ namespace Home.Tasks
             //var today = DateTime.Today;
             //if(today.DayOfWeek != DayOfWeek.Saturday && today.DayOfWeek != DayOfWeek.Sunday)
             {
-                await client.StartCharging(TimeSpan.FromHours(5));
+                await tesla.WakeUpCars();
+                await evState.StartCharging(TimeSpan.FromHours(5));
             }
         }
     }
