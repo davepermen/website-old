@@ -33,10 +33,10 @@ namespace Home.Services.HttpClients.Tesla
                 var content = new FormUrlEncodedContent(new Dictionary<string, string>
                 {
                     { "grant_type", "password" },
-                    { "client_id", configuration["teslaapi-clientid"] },
-                    { "client_secret", configuration["teslaapi-secret"] },
-                    { "email", configuration["teslaapi-email"] },
-                    { "password", configuration["teslaapi-password"] },
+                    { "client_id", configuration["clientid"] },
+                    { "client_secret", configuration["secret"] },
+                    { "email", configuration["email"] },
+                    { "password", configuration["password"] },
                 });
                 var authenticationToken = await client.PostAsync<Tesla.AuthenticationToken>("/oauth/token", content);
                 if (client.DefaultRequestHeaders.Contains("authorization"))
