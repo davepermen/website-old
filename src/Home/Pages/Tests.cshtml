@@ -1,0 +1,39 @@
+﻿@page "/test"
+@model Home.Pages.TestsModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Tests</title>
+</head>
+<body>
+    @if (Model.Vehicle != null && Model.State != null)
+    {
+        var vehicle = Model.Vehicle;
+        var state = Model.State;
+        <table>
+            <tbody>
+                <tr>
+                    <td><b>Car Name</b></td>
+                    <td>@vehicle.DisplayName</td>
+                </tr>
+                <tr>
+                    <td><b>Car State</b></td>
+                    <td>@vehicle.State</td>
+                </tr>
+                <tr>
+                    <td><b>Battery</b></td>
+                    <td>@state.charge_state.battery_level %</td>
+                </tr>
+                <tr>
+                    <td><b>Charging State</b></td>
+                    <td>@state.charge_state.charging_state</td>
+                </tr>
+            </tbody>
+        </table>
+    }
+</body>
+</html>
