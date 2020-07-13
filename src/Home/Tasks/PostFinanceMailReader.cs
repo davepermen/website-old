@@ -43,9 +43,11 @@ namespace Home.Tasks
             {
                 var message = all.GetMessage(id);
                 var body = message.GetTextBody(TextFormat.Html);
-                var values = Regex.Matches(body, @"([0-9]{1,}\.[0-9]{1,})").OfType<Match>().Select(m => decimal.Parse(m.Value));
+                var messageSegment = body.Substring(body.IndexOf("Guten Tag"));
+                messageSegment = messageSegment.Substring(0, messageSegment.IndexOf("Ihre PostFinance"));
+                var values = Regex.Matches(messageSegment, @"([0-9]{1,}\.[0-9]{1,})").OfType<Match>().Select(m => decimal.Parse(m.Value));
                 return (
-                    change: body.Contains("Lastschrift") ? -values.First() : values.First(),
+                    change: messageSegment.Contains("Lastschrift") ? -values.First() : values.First(),
                     current: values.Last(),
                     at: message.Date.UtcDateTime
                 );
