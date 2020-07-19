@@ -1,0 +1,64 @@
+﻿@page "/{section}/blog"
+@page "/{section}/blog/{page}"
+@inject IDataSources dataSources
+
+<tile>
+    <h1>Blog Post or something</h1>
+    <h2>@Section</h2>
+    <h3>@Page</h3>
+</tile>
+
+@if (HasContent)
+{
+    <section>
+        @Content
+    </section>
+}
+
+@if (HasEntries)
+{
+    <section>
+        <ul>
+            @foreach (var entry in Entries)
+            {
+                <li><a href="/@Section/blog/@entry">@entry.Humanize()</a></li>
+            }
+        </ul>
+    </section>
+}
+
+<style>
+    tile {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+
+@code {
+    [Parameter]
+    public string? Section { get; set; }
+
+    [Parameter]
+    public string? Page { get; set; }
+
+    private File contentPath => dataSources.Local / "Blog" / (Section ?? "") / (Page ?? "") / File.Name("Index", "md");
+    private MarkupString Content { get; set; }
+    public bool HasContent => Section != null && Page != null && contentPath.Exists;
+
+    public async Task<MarkupString> LoadContent() => new MarkupString(Markdig.Markdown.ToHtml(await contentPath.ReadText()));
+
+    private Directory entriesPath => dataSources.Local / "Blog" / (Section ?? "");
+    public bool HasEntries => Section != null && Page == null && entriesPath.Directories.Any();
+
+    public string[] Entries => entriesPath.Directories.Select(path => path.Name).ToArray();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if(HasContent)
+        {
+            Content = await LoadContent();
+        }
+    }
+}
