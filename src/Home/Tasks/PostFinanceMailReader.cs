@@ -45,6 +45,7 @@ namespace Home.Tasks
                 var body = message.GetTextBody(TextFormat.Html);
                 var messageSegment = body.Substring(body.IndexOf("Guten Tag"));
                 messageSegment = messageSegment.Substring(0, messageSegment.IndexOf("Ihre PostFinance"));
+                messageSegment = messageSegment.Replace("'", ""); // no thousands marks
                 var values = Regex.Matches(messageSegment, @"([0-9]{1,}\.[0-9]{1,})").OfType<Match>().Select(m => decimal.Parse(m.Value));
                 return (
                     change: messageSegment.Contains("Lastschrift") ? -values.First() : values.First(),
